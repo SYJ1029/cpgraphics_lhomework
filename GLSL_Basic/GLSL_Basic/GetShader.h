@@ -23,13 +23,35 @@ GLuint fragmentShader; //--- 프래그먼트 세이더객체
 
 GLint result;
 GLchar errorLog[512];
-GLuint vao, vbo[2];
+GLuint vao, vbo[2], EBO;
 GLchar* vertexSource;
 GLchar* fragmentSource;
 
 
 GLfloat triShape[3][3] = {
- { -0.5, -0.5, 0.0 }, { 0.5, -0.5, 0.0 }, { 0.0, 0.5, 0.0} };
+ { -0.5, -0.5, 0.0 }, { 0.0, -0.5, 0.0 }, { -0.25, 0.5, 0.0} };
+
+float triShape2[] = {
+	0.5f,  0.5f, 0.0f,  // 우측 상단
+	0.5f, -0.5f, 0.0f,  
+	-0.5f, -0.5f, 0.0f,
+	-0.5f,  0.5f, 0.0f   // 좌측 상단
+};
+
+GLfloat triShape3[3][3] = {
+ { 0.5, -0.5, 0.0 }, { 1.0, -0.5, 0.0 }, { 0.75, 0.5, 0.0} };
+
+GLfloat alltriShape[6][3] = {
+{ -0.5, -0.5, 0.0 }, { 0.0, -0.5, 0.0 }, { -0.25, 0.5, 0.0},
+{ 0.0, -0.5, 0.0 }, { 0.5, -0.5, 0.0 }, { 0.25, 0.5, 0.0}
+
+};
+
+
+int index[] = {
+	0, 1, 2,
+	3, 4, 5
+};
 const GLfloat colors[3][3] = {
    {  1.0,  0.0,  0.0  }, {  0.0,  1.0,  0.0  }, {  0.0,  0.0,  1.0  } };
 
@@ -122,18 +144,39 @@ GLvoid InitBuffer() {
 	glGenBuffers(2, vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+	glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), triShape, GL_STATIC_DRAW);
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(0);
 
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	//--- 변수 colors에서 버텍스색상을복사한다.
-	//--- colors 배열의 사이즈: 9 *float 
-	glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), colors, GL_STATIC_DRAW);
-	//--- 색상값을attribute 인덱스1번에명시한다: 버텍스당3*float
+	glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 9 * sizeof(GLfloat), colors);
+	glBufferSubData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), 9 * sizeof(GLfloat), colors);
+
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	//--- attribute 인덱스 1번을 사용가능하게함.
+
 	glEnableVertexAttribArray(1);
+}
+
+
+
+GLvoid UpdateBuffer() {
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+
+	//glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 18 * sizeof(GLfloat), alltriShape);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	//glBufferSubData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), 9 * sizeof(GLfloat), triShape2);
+	//glDrawArrays(GL_TRIANGLES, 3, 3);
+
+
+	glEnableVertexAttribArray(0);
 }

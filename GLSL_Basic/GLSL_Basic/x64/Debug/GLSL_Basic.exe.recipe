@@ -2,7 +2,7 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>E:\glproject\openglpart1\GLSL_Basic\x64\Debug\GLSL_Basic.exe</FullPath>
+      <FullPath>E:\myGit\glproject\GLSL_Basic\x64\Debug\GLSL_Basic.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

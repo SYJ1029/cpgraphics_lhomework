@@ -42,10 +42,11 @@ GLvoid drawScene() {
 	// 그리기 부분 구현: 그리기 관련 부분이 여기에 포함된다
 
 	glUseProgram(shaderProgramID);
-
 	glBindVertexArray(vao);
+	UpdateBuffer();
 
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
 
 	glutSwapBuffers(); // 화면에 출력하기
 

@@ -136,7 +136,10 @@
     <Text Include="vertex.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DrawBasic.cpp" />
+    <ClCompile Include="DrawBasic.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="DrawBasic_NO7.cpp" />
     <ClCompile Include="GLSLBasic.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
