@@ -130,6 +130,8 @@
   <ItemGroup>
     <ClInclude Include="ColorStructs.h" />
     <ClInclude Include="GetShader.h" />
+    <ClInclude Include="ObjStruct.h" />
+    <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="fragment.txt" />
@@ -139,7 +141,10 @@
     <ClCompile Include="DrawBasic.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="DrawBasic_NO7.cpp" />
+    <ClCompile Include="DrawBasic_NO7.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="DrawQurter_NO8.cpp" />
     <ClCompile Include="GLSLBasic.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>

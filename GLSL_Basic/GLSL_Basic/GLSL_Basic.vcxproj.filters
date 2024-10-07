@@ -21,6 +21,12 @@
     <ClInclude Include="ColorStructs.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="ObjStruct.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Triangle.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="fragment.txt">
@@ -38,6 +44,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="DrawBasic_NO7.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DrawQurter_NO8.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

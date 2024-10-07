@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "ColorStructs.h"
+#include "ObjStruct.h"
 #include <fstream>
 #include <sstream>
 
@@ -28,32 +28,16 @@ GLchar* vertexSource;
 GLchar* fragmentSource;
 
 
-GLfloat triShape[3][3] = {
- { -0.5, -0.5, 0.0 }, { 0.0, -0.5, 0.0 }, { -0.25, 0.5, 0.0} };
 
-float triShape2[] = {
-	0.5f,  0.5f, 0.0f,  // 우측 상단
-	0.5f, -0.5f, 0.0f,  
-	-0.5f, -0.5f, 0.0f,
-	-0.5f,  0.5f, 0.0f   // 좌측 상단
-};
+int index[6 * MAX_INDEX] = { 0 };
+int index_num = 0;
+int index_array_count = 0;
 
-GLfloat triShape3[3][3] = {
- { 0.5, -0.5, 0.0 }, { 1.0, -0.5, 0.0 }, { 0.75, 0.5, 0.0} };
-
-GLfloat alltriShape[6][3] = {
-{ -0.5, -0.5, 0.0 }, { 0.0, -0.5, 0.0 }, { -0.25, 0.5, 0.0},
-{ 0.0, -0.5, 0.0 }, { 0.5, -0.5, 0.0 }, { 0.25, 0.5, 0.0}
-
-};
-
-
-int index[] = {
-	0, 1, 2,
-	3, 4, 5
-};
 const GLfloat colors[3][3] = {
    {  1.0,  0.0,  0.0  }, {  0.0,  1.0,  0.0  }, {  0.0,  0.0,  1.0  } };
+
+
+
 
 
 GLchar* filetobuf(const char* vertexSource) {
@@ -144,7 +128,7 @@ GLvoid InitBuffer() {
 	glGenBuffers(2, vbo);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 18) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 
 	glGenBuffers(1, &EBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -155,10 +139,9 @@ GLvoid InitBuffer() {
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 9 * sizeof(GLfloat), colors);
-	glBufferSubData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), 9 * sizeof(GLfloat), colors);
+	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 9) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 
+	
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
 	glEnableVertexAttribArray(1);
@@ -166,17 +149,19 @@ GLvoid InitBuffer() {
 
 
 
-GLvoid UpdateBuffer() {
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+int ChangeValidType(int type) {
 
-	//glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+	if (type == NO7_VERTEX)
+		return GL_POINTS;
+	else if (type == NO7_LINE)
+		return GL_LINES;
+	else if(type == NO7_TRIANGLE)
+		return GL_TRIANGLES;
+	else if (type == NO7_RECT) {
+		return GL_TRIANGLES;
+	}
 
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 18 * sizeof(GLfloat), alltriShape);
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
-
-	//glBufferSubData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), 9 * sizeof(GLfloat), triShape2);
-	//glDrawArrays(GL_TRIANGLES, 3, 3);
-
-
-	glEnableVertexAttribArray(0);
 }
+
+
+
