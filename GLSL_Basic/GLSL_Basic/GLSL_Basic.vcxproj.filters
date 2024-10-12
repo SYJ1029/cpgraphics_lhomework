@@ -52,5 +52,8 @@
     <ClCompile Include="TriAnimation_NO9.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Spiral_NO10.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
