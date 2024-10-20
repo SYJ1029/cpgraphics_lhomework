@@ -131,6 +131,7 @@
     <ClInclude Include="ColorStructs.h" />
     <ClInclude Include="GetShader.h" />
     <ClInclude Include="ObjStruct.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Triangle.h" />
   </ItemGroup>
   <ItemGroup>
@@ -138,6 +139,10 @@
     <Text Include="vertex.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="9and11.cpp" />
+    <ClCompile Include="DiagramUp_NO11.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="DrawBasic.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
@@ -150,7 +155,9 @@
     <ClCompile Include="GLSLBasic.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="Spiral_NO10.cpp" />
+    <ClCompile Include="Spiral_NO10.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="TriAnimation_NO9.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>

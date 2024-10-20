@@ -7,7 +7,15 @@ using namespace std;
 #define NO7_TRIANGLE 3
 #define NO7_RECT 6
 
+#define PI 3.14159265358979
 
+void Myswap(float* value1, float* value2) {
+
+	float token = *value1;
+
+	(*value1) = *value2;
+	*value2 = token;
+}
 
 
 class Diagram
@@ -731,5 +739,521 @@ public:
 };
 
 
+#define NO11_TOLINE 6
+#define NO11_TOTRIANGLE 3
+#define NO11_TORECT 4
+#define NO11_TOPENTAGON 5
 
 
+class PlusDiagram {
+
+public:
+	int Vertexcnt;
+	float r, radian, theta;
+	GLPos Spinindex[3];
+	GLfloat Pos[6][3];
+	GLfloat col[6][3];
+	bool maked, first;
+
+
+	void Clear() {
+		Vertexcnt = 0;
+		r = 0, radian = 0, theta = 0;
+		for (int i = 0; i < 6; i++)
+			for (int j = 0; j < 3; j++)
+				Pos[i][j] = 0;
+
+		for (int i = 0; i < 3; i++) {
+			Spinindex[i] = { 0, 0, 0 };
+		}
+
+		maked = false;
+		first = true;
+	}
+
+
+	PlusDiagram() {
+		Clear();
+	}
+
+	void SetposType(int type) {
+		Vertexcnt = type;
+	}
+
+	void SetPos(GLPos Center) {
+		/*Pos = (GLPos**)malloc(sizeof(GLPos*) * Vertexcnt);
+
+		for (int i = 0; i < Vertexcnt; i++) {
+			Pos[i] = (GLPos*)malloc(sizeof(GLPos));
+		}*/
+
+		switch (Vertexcnt) {
+		case NO11_TOLINE: // 얜 5각형이긴 한데 완전한 5각형
+
+			Pos[0][0] = Center.x - 0.1;
+			Pos[1][0] = Center.x + 0.1;
+			/*Pos[2][0] = Pos[1][0];
+			Pos[4][0] = Pos[0][0];*/
+
+			Pos[0][1] = Center.y - 0.1;
+			Pos[1][1] = Pos[0][1];
+			/*Pos[2][1] = Center.y + 0.1;
+			Pos[4][1] = Pos[2][1];*/
+
+			for (int i = 0; i < 3; i++) {
+				Pos[2][i] = Pos[0][i];
+				Pos[3][i] = Pos[0][i];
+				Pos[4][i] = Pos[1][i];
+			}
+
+			Spin_by_Index(0, 4, 108);
+			Spin_by_Index(1, 2, -108);
+
+			Spin_by_Index(4, 3, 108);
+
+
+			radian = 108;
+			theta = 1;
+			r = 0.1;
+			break;
+		case NO11_TOTRIANGLE:
+			Pos[0][0] = Center.x - 0.1;
+			Pos[1][0] = Center.x + 0.1;
+			
+			Pos[0][1] = Center.y - 0.1;
+			Pos[1][1] = Pos[0][1];
+
+
+			for(int i = 0; i < 3; i++)
+				Pos[2][i] = Pos[1][i];
+			/*Pos[2][1] += 0.1;*/
+
+			radian = 0;
+			theta = 1;
+			r = 0.2;
+			break;
+		case NO11_TORECT:
+			Pos[0][0] = Center.x - 0.1;
+			Pos[1][0] = Center.x + 0.1;
+			Pos[2][0] = (Pos[1][0] - Pos[0][0])/2 + Pos[0][0];
+
+			Pos[0][1] = Center.y - 0.1;
+			Pos[1][1] = Pos[0][1];
+			Pos[2][1] = Pos[0][1] + (Pos[1][0] - Pos[0][0])/2 * 1.717;
+
+			for (int i = 0; i < 2; i++)
+				Pos[3][i] = Pos[2][i];
+			/*Pos[3][0] -= 0.1;*/
+
+
+			radian = 60;
+			theta = 1;
+			r = 0.1;
+			break;
+		case NO11_TOPENTAGON: // 사각형의 마지막 정점에 마지막 좌표가 숨겨진 놈
+			Pos[0][0] = Center.x - 0.1;
+			Pos[1][0] = Center.x + 0.1;
+			Pos[2][0] = Pos[1][0];
+			Pos[3][0] = Pos[0][0];
+
+			Pos[0][1] = Center.y - 0.1;
+			Pos[1][1] = Pos[0][1];
+			Pos[2][1] = Center.y + 0.1;
+			Pos[3][1] = Pos[2][1];
+
+			for (int i = 0; i < 3; i++)
+				Pos[4][i] = Pos[0][i];
+
+			/*Pos[4][1] += 0.5;*/
+
+			radian = 0;
+			theta = 1;
+			r = 0.1;
+			break;
+		default:
+			break;
+		}
+
+
+		maked = true;
+	}
+
+	void SetCol(MyObjCol col[3]) {
+		for (int i = 0; i < 6; i++) {
+			this->col[i][0] = col[0].R;
+			this->col[i][1] = col[0].G;
+			this->col[i][2] = col[0].B;
+		}
+	}
+
+	int GetposType() {
+		return Vertexcnt;
+	}
+
+	void Spin_by_Index(int index1, int index2, float theta) {
+		Pos[index2][0] -= Pos[index1][0];
+		Pos[index2][1] -= Pos[index1][1];
+
+		/*Pos[index2][0] = r * cos(radian / 180.0f * PI);
+		Pos[index2][1] = r * sin(radian / 180.0f * PI);*/
+		float x = Pos[index2][0];
+		Pos[index2][0] = Pos[index2][0] * cos(theta / 180.0f * PI) - Pos[index2][1] * sin(theta/180 * PI);
+		Pos[index2][1] = x * sin(theta / 180.0f * PI) + Pos[index2][1] * cos(theta/180 * PI);
+
+		Pos[index2][0] += Pos[index1][0];
+		Pos[index2][1] += Pos[index1][1];
+	}
+
+
+	bool Spin_Line_To_Tri() {
+		if (radian >= 60)
+			return false;
+
+		Spin_by_Index(0, 2, theta);
+		radian += theta;
+		
+		
+
+		return true;
+	}
+	
+	bool Spin_Tri_To_Rect() {
+		if (radian >= 90)
+			return false;
+
+		Spin_by_Index(0, 3, theta);
+		Spin_by_Index(1, 2, theta * -1);
+
+		radian += theta;
+
+		return true;
+	}
+
+	bool Spin_Rect_To_Penta() {
+		if (radian < 18) {
+			Spin_by_Index(0, 3, theta);
+			Spin_by_Index(1, 2, theta * -1);
+			first = true;
+		}
+
+		if (radian >= 108)
+			return false;
+
+		if (radian >= 18 && first) {
+			for (int i = 0; i < 3; i++) {
+				Pos[4][i] = Pos[3][i];
+				Pos[3][i] = Pos[0][i];
+			}
+
+			first = false;
+		}
+
+		Spin_by_Index(4, 3, theta);
+
+		radian += theta;
+
+		return true;
+	}
+
+	bool Spin_Penta_To_Line() {
+		if (radian <= 0) {
+			first = true;
+			return true;
+		}
+
+		Spin_by_Index(4, 3, theta * -1);
+		Spin_by_Index(1, 2, theta);
+		
+
+		radian -= theta;
+
+		return true;
+	}
+
+	bool Spin_Penta_To_Line2() {
+		if (radian >= 108) {
+			first = false;
+			return false;
+		}
+	
+
+		Spin_by_Index(0, 1, theta);
+
+		radian += theta;
+		return true;
+	}
+
+
+	bool Spin() {
+		switch (Vertexcnt) {
+		case NO11_TOLINE:
+			if (first == false) {
+				return Spin_Penta_To_Line();
+			}
+			else {
+				return Spin_Penta_To_Line2();
+			}
+			
+
+			break;
+		case NO11_TOTRIANGLE:
+			return Spin_Line_To_Tri();
+
+			break;
+		case NO11_TORECT:
+			return Spin_Tri_To_Rect();
+
+			break;
+		case NO11_TOPENTAGON:
+			return Spin_Rect_To_Penta();
+
+			break;
+		default:
+			return false;
+			break;
+		}
+
+		return true;
+
+	}
+
+
+};
+
+
+class MulandMove : public PlusDiagram{
+
+
+public:
+	GLPos Center;
+	bool clicked;
+
+
+	MulandMove() : PlusDiagram() {
+		Center = { 0 };
+		clicked = false;
+
+		for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 3; j++) {
+				Pos[i][j] = 0;
+				col[i][j] = 0;
+			}
+		}
+
+
+	}
+
+	void SetCol(MyObjCol col[3]) {
+		for (int i = 0; i < 6; i++) {
+			this->col[i][0] = col[0].R;
+			this->col[i][1] = col[0].G;
+			this->col[i][2] = col[0].B;
+		}
+	}
+
+	void SetPos(GLPos Center) {
+		this->Center = Center;
+
+		switch (Vertexcnt) {
+		case NO7_VERTEX:
+			Pos[0][0] = Center.x - 0.0075;
+			Pos[0][1] = Center.y - 0.0075;
+			Pos[1][0] = Center.x + 0.0075;
+			Pos[1][1] = Center.y - 0.0075;
+			Pos[2][0] = Center.x;
+			Pos[2][1] = Center.y + 0.0075;
+			break;
+		case NO7_LINE: // 얜 5각형이긴 한데 완전한 5각형
+
+			Pos[0][0] = Center.x - 0.1;
+			Pos[0][1] = Center.x + 0.1;
+
+			Pos[0][1] = Center.y;
+			Pos[1][1] = Center.y;
+
+			break;
+		case NO11_TOTRIANGLE:
+			Pos[0][0] = Center.x - 0.1;
+			Pos[1][0] = Center.x + 0.1;
+
+			Pos[0][1] = Center.y - 0.1;
+			Pos[1][1] = Pos[0][1];
+
+
+			for (int i = 0; i < 3; i++)
+				Pos[2][i] = Pos[1][i];
+			/*Pos[2][1] += 0.1;*/
+
+			radian = 0;
+			theta = 1;
+			r = 0.2;
+
+
+			Spin_by_Index(0, 2, 60);
+			break;
+		case NO11_TORECT:
+			Pos[0][0] = Center.x - 0.1;
+			Pos[1][0] = Center.x + 0.1;
+			Pos[2][0] = (Pos[1][0] - Pos[0][0]) / 2 + Pos[0][0];
+
+			Pos[0][1] = Center.y - 0.1;
+			Pos[1][1] = Pos[0][1];
+			Pos[2][1] = Pos[0][1] + (Pos[1][0] - Pos[0][0]) / 2 * 1.717;
+
+			for (int i = 0; i < 2; i++)
+				Pos[3][i] = Pos[2][i];
+			/*Pos[3][0] -= 0.1;*/
+
+
+			radian = 60;
+			theta = 1;
+			r = 0.1;
+
+			Spin_by_Index(0, 3, 30);
+			Spin_by_Index(1, 2, -30);
+			break;
+		case NO11_TOPENTAGON: // 사각형의 마지막 정점에 마지막 좌표가 숨겨진 놈
+
+			Pos[0][0] = Center.x - 0.1;
+			Pos[1][0] = Center.x + 0.1;
+			/*Pos[2][0] = Pos[1][0];
+			Pos[4][0] = Pos[0][0];*/
+
+			Pos[0][1] = Center.y - 0.1;
+			Pos[1][1] = Pos[0][1];
+			/*Pos[2][1] = Center.y + 0.1;
+			Pos[4][1] = Pos[2][1];*/
+
+			for (int i = 0; i < 3; i++) {
+				Pos[2][i] = Pos[0][i];
+				Pos[3][i] = Pos[0][i];
+				Pos[4][i] = Pos[1][i];
+			}
+
+			Spin_by_Index(0, 4, 108);
+			Spin_by_Index(1, 2, -108);
+
+			Spin_by_Index(4, 3, 108);
+
+
+			radian = 108;
+			theta = 1;
+			r = 0.1;
+			break;
+
+		case NO11_TOLINE:
+
+			Pos[0][0] = Center.x - 0.1;
+			Pos[1][0] = Center.x + 0.1;
+			Pos[2][0] = (Pos[1][0] - Pos[0][0]) / 2 + Pos[0][0];
+
+			Pos[0][1] = Center.y - 0.1;
+			Pos[1][1] = Pos[0][1];
+			Pos[2][1] = Pos[0][1] + (Pos[1][0] - Pos[0][0]) / 2 * 1.717;
+
+			for (int i = 0; i < 2; i++)
+				Pos[3][i] = Pos[2][i];
+			/*Pos[3][0] -= 0.1;*/
+
+			Spin_by_Index(0, 3, 30);
+			Spin_by_Index(1, 2, -30);
+
+
+
+
+			for (int i = 0; i < 3; i++) {
+				Pos[5][i] = Pos[3][i];
+				Pos[4][i] = Pos[0][i];
+				Pos[3][i] = Pos[1][i];
+
+			}
+
+
+			Spin_by_Index(0, 5, 30);
+			Spin_by_Index(1, 2, -30);
+			Spin_by_Index(5, 4, 120);
+			Spin_by_Index(2, 3, -120);
+			
+
+			break;
+		default:
+			break;
+		}
+
+
+		maked = true;
+	}
+
+
+
+	bool CheckPosIn(GLPos newpos) {
+		switch (Vertexcnt)
+		{
+		case NO7_VERTEX: case NO7_TRIANGLE:
+			if (newpos.x >= Pos[0][0] && newpos.x <= Pos[1][0] &&
+				newpos.y >= Pos[0][1] && newpos.y <= Pos[2][1])
+				return true;
+
+			break;
+		case NO7_LINE:
+			if (newpos.x >= Pos[0][0] && newpos.x <= Pos[1][0] &&
+				newpos.y >= Pos[0][1] && newpos.y <= Pos[1][1])
+				return true;
+
+
+			break;
+		case NO11_TORECT:
+			if (newpos.x >= Pos[0][0] && newpos.x <= Pos[1][0] &&
+				newpos.y >= Pos[0][1] && newpos.y <= Pos[2][1])
+				return true;
+
+
+			break;
+		case NO11_TOPENTAGON:
+			if (newpos.x >= Pos[4][0] && newpos.x <= Pos[2][0] &&
+				newpos.y >= Pos[0][1] && newpos.y <= Pos[3][1])
+				return true;
+
+			break;
+		default:
+			break;
+		}
+
+
+
+		return false;
+
+	}
+	
+
+
+	bool SetNewDiagram(int postype) {
+
+		Vertexcnt = (Vertexcnt + postype) % 6;
+		SetPos(Center);
+		
+
+
+		return true;
+	}
+
+
+
+	void MoveDrag(float deltax, float deltay, float deltaz) {
+		int token = Vertexcnt;
+		if (token == 1)token = 3;
+
+
+		for (int i = 0; i < token; i++) {
+			Pos[i][0] += deltax;
+			Pos[i][1] += deltay;
+			Pos[i][2] += deltaz;
+			Center = { Center.x + deltax, Center.y + deltay, Center.z + deltaz };
+
+		}
+	}
+
+
+
+
+};

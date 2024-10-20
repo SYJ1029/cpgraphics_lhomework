@@ -1,85 +1,215 @@
-﻿  Spiral_NO10.cpp
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(75,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+﻿  9and11.cpp
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(83,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(86,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(94,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(87,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(95,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(95,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(103,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(104,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(112,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(108,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(116,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(331,14): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(339,14): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(331,31): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(339,31): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(331,48): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(339,48): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(335,15): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(343,15): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(345,1): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(353,1): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(346,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(354,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(348,1): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(356,1): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(349,1): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(357,1): warning C4305: '+=': 'double'에서 'GLfloat'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(350,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(358,1): warning C4305: '-=': 'double'에서 'GLfloat'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(500,1): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(508,1): warning C4305: '+=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(503,1): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(511,1): warning C4305: '-=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(515,44): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(523,44): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(527,16): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(535,16): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(528,17): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(536,17): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(558,26): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(566,26): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(560,26): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  (소스 파일 'Spiral_NO10.cpp'을(를) 컴파일하는 중)
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(568,26): warning C4244: '=': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(85,34): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(86,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(91,45): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(91,31): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(155,39): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(191,39): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(254,23): warning C4312: '형식 캐스트': 'int'에서 더 큰 'void *'(으)로의 변환입니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(300,65): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(300,51): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(300,37): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(300,27): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(302,56): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(368,50): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(368,36): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(381,56): warning C4244: '=': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\GetShader.h(164): warning C4715: 'ChangeValidType': 모든 제어 경로에서 값을 반환하지는 않습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\Spiral_NO10.cpp(75): warning C4715: 'GetMaxArray': 모든 제어 경로에서 값을 반환하지는 않습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(793,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(794,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(798,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(817,8): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(820,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(821,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(823,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(833,8): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(836,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(837,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(840,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(842,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(851,8): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(854,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(855,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(859,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(861,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(871,8): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(900,62): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(901,49): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1059,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1060,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1061,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1062,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1064,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1068,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1069,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1076,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1077,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1079,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1089,8): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1095,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1096,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1099,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1101,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1110,8): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1117,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1118,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1122,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1141,8): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1146,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1147,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1150,25): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1152,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(156,34): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(157,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(162,45): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(162,31): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(222,39): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(261,39): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(272,40): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(357,22): warning C4312: '형식 캐스트': 'int'에서 더 큰 'void *'(으)로의 변환입니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(372,23): warning C4312: '형식 캐스트': 'int'에서 더 큰 'void *'(으)로의 변환입니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(405,14): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(513,50): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(513,36): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(581,57): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(581,43): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(94): warning C4715: 'GetMaxArray': 모든 제어 경로에서 값을 반환하지는 않습니다.
   GLSL_Basic.vcxproj -> E:\myGit\glproject\GLSL_Basic\x64\Debug\GLSL_Basic.exe

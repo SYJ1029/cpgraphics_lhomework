@@ -27,6 +27,9 @@
     <ClInclude Include="Triangle.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="fragment.txt">
@@ -53,6 +56,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Spiral_NO10.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="DiagramUp_NO11.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="9and11.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

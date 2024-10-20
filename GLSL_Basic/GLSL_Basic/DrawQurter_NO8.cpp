@@ -234,13 +234,32 @@ GLvoid UpdateBuffer() {
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 12) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 1000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 
 	(*counter) = 0;
 
 	for (int i = 0; i < MAX_INDEX; i++) {
 		if (diagram[i].maked && i < MAX_INDEX) {
 			if (diagram[i].GetposType() == NO7_RECT);
+
+			if (diagram[i].GetposType() == NO7_LINE) {
+				for (int j = 0; j < diagram[i].GetposType(); j++) {
+					glBufferSubData(GL_ARRAY_BUFFER, (*counter),
+						3 * sizeof(GLfloat), diagram[i].col[j]);
+
+					(*counter) += 3 * sizeof(GLfloat);
+
+					glBufferSubData(GL_ARRAY_BUFFER, (*counter),
+						3 * sizeof(GLfloat), diagram[i].col[j]);
+
+					(*counter) += 3 * sizeof(GLfloat);
+
+					if (j > 2)
+						break;
+				}
+
+
+			}
 
 			for (int j = 0; j < diagram[i].GetposType(); j++) {
 				glBufferSubData(GL_ARRAY_BUFFER, (*counter),
@@ -251,6 +270,9 @@ GLvoid UpdateBuffer() {
 				if (j > 2)
 					break;
 			}
+
+			
+
 		}
 	}
 

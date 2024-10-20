@@ -157,7 +157,7 @@ int ChangeValidType(int type) {
 		return GL_LINES;
 	else if(type == NO7_TRIANGLE)
 		return GL_TRIANGLES;
-	else if (type == NO7_RECT) {
+	else {
 		return GL_TRIANGLES;
 	}
 
