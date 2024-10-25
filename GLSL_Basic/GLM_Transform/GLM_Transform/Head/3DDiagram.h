@@ -72,6 +72,8 @@ public:
 	int* AddIndexList() {
 		static int* p = (int*)malloc(3 * 12 * sizeof(int));
 
+		cout << sizeof(*p) << endl << endl;
+
 		int index_num = 0;
 		int index_array_cnt = 0;
 		int i = 1;
@@ -173,6 +175,8 @@ public:
 
 	int* AddIndexList() {
 		static int* p = (int*)malloc(3 * 4 * sizeof(int));
+
+		cout << sizeof(*p) << endl << endl;
 
 		p[0] = 0;
 		p[1] = 1;

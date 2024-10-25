@@ -17,12 +17,17 @@ void Setindex() {
 	int* p1 = cube.AddIndexList();
 	int* p2 = tri.AddIndexList();
 
+	cout << sizeof((p1));
+
+	int present_bit = index_count;
 
 	for (index_count; index_count < 36; index_count++) {
 		index[index_count] = p1[index_count];
 	}
 
-	for (index_count; index_count < 12; index_count++) {
+	present_bit = index_count;
+
+	for (index_count; index_count < present_bit + 12; index_count++) {
 		index[index_count] = p2[index_count - 36];
 	}
 
@@ -30,7 +35,8 @@ void Setindex() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_DYNAMIC_DRAW);
 
-
+	free(p1);
+	free(p2);
 }
 
 MyObjCol SetRandObjCol() {
@@ -48,7 +54,8 @@ GLvoid SetBuffer() {
 	cube.SetCube();
 	tri.SetTet();
 
-	float* counter = new FLOAT();
+	//float* counter = new FLOAT();
+	int* counter = new INT();
 	(*counter) = 0;
 	int type = 0;
 
@@ -61,6 +68,7 @@ GLvoid SetBuffer() {
 		(*counter) += 3 * sizeof(GLfloat);
 	}
 	
+
 	for (int i = 0; i < 4; i++) {
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
 			3 * sizeof(GLfloat), tri.pos[i]);
@@ -223,7 +231,7 @@ void drawScene()
 
 	}
 
-	/*for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (tri.maked[i]) {
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
 			counter += 3 * sizeof(GLfloat);
@@ -231,10 +239,8 @@ void drawScene()
 		else {
 			counter += 3 * sizeof(GLfloat);
 		}
-	}*/
+	}
 
-	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
-	counter += 3 * sizeof(GLfloat);
 
 
 	radian += 10.0f;
