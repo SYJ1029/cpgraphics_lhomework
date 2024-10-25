@@ -197,7 +197,7 @@ void drawScene()
 
 
 	glBindVertexArray(vao);
-	
+
 
 
 
@@ -223,7 +223,7 @@ void drawScene()
 
 	}
 
-	for (int i = 0; i < 4; i++) {
+	/*for (int i = 0; i < 4; i++) {
 		if (tri.maked[i]) {
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
 			counter += 3 * sizeof(GLfloat);
@@ -231,7 +231,11 @@ void drawScene()
 		else {
 			counter += 3 * sizeof(GLfloat);
 		}
-	}
+	}*/
+
+	glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
+	counter += 3 * sizeof(GLfloat);
+
 
 	radian += 10.0f;
 
