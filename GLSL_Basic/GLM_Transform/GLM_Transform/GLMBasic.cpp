@@ -28,7 +28,7 @@ void Setindex() {
 	present_bit = index_count;
 
 	for (index_count; index_count < present_bit + 12; index_count++) {
-		index[index_count] = p2[index_count - 36];
+		index[index_count] = 8 + p2[index_count - 36];
 	}
 
 	
@@ -245,7 +245,7 @@ void drawScene()
 
 	radian += 10.0f;
 
-	if(mycnt < 4)
+	if (mycnt < 4)
 		mycnt++;
 
 	glEnable(GL_DEPTH_TEST);
