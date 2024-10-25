@@ -231,7 +231,7 @@ void drawScene()
 
 	}
 
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < mycnt; i++) {
 		if (tri.maked[i]) {
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
 			counter += 3 * sizeof(GLfloat);
@@ -244,6 +244,9 @@ void drawScene()
 
 
 	radian += 10.0f;
+
+	if(mycnt < 4)
+		mycnt++;
 
 	glEnable(GL_DEPTH_TEST);
 	glutSwapBuffers();
