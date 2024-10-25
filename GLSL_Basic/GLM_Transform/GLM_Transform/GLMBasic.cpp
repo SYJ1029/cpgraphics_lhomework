@@ -131,7 +131,6 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	make_fragmentShaders();
 	make_shaderProgram();
 	InitBuffer();
-	SetBuffer();
 
 
 	MyObjCol mycol[8];
@@ -144,6 +143,10 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	}
 	cube.Setcol(mycol);
 	tri.Setcol(mycol2);
+
+	glBindVertexArray(vao);
+	SetBuffer();
+
 
 	glutDisplayFunc(drawScene); // 출력 함수의 지정
 	glutReshapeFunc(Reshape); // 다시 그리기 함수 지정
@@ -181,6 +184,9 @@ void drawScene()
 
 	/*model = glm::translate(model, glm::vec3(0.1f, 0.5f, 0.0f));*/
 
+
+
+
 	rm = glm::rotate(model, glm::radians(10.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	rm2 = glm::rotate(model, glm::radians(radian), glm::vec3(0.0f, 1.0f, 0.0f));
 
@@ -190,9 +196,7 @@ void drawScene()
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
 
-
 	glBindVertexArray(vao);
-	SetBuffer();
 	
 
 
