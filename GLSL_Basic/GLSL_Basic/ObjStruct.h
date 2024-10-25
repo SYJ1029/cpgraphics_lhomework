@@ -1155,6 +1155,11 @@ public:
 				Pos[3][i] = Pos[2][i];
 			/*Pos[3][0] -= 0.1;*/
 
+
+			radian = 60;
+			theta = 1;
+			r = 0.1;
+
 			Spin_by_Index(0, 3, 30);
 			Spin_by_Index(1, 2, -30);
 
@@ -1204,7 +1209,7 @@ public:
 			break;
 		case NO11_TORECT:
 			if (newpos.x >= Pos[0][0] && newpos.x <= Pos[1][0] &&
-				newpos.y >= Pos[0][1] && newpos.y <= Pos[2][1])
+				newpos.y >= Pos[0][1] && newpos.y <= Pos[3][1])
 				return true;
 
 
@@ -1213,6 +1218,12 @@ public:
 			if (newpos.x >= Pos[4][0] && newpos.x <= Pos[2][0] &&
 				newpos.y >= Pos[0][1] && newpos.y <= Pos[3][1])
 				return true;
+
+			break;
+		case NO11_TOLINE:
+			if (newpos.x >= Pos[5][0] && newpos.x <= Pos[2][0] &&
+				newpos.y >= Pos[0][1] && newpos.y <= Pos[3][1])
+				return true; 
 
 			break;
 		default:
@@ -1229,7 +1240,14 @@ public:
 
 	bool SetNewDiagram(int postype) {
 
-		Vertexcnt = (Vertexcnt + postype) % 6;
+		Vertexcnt = (Vertexcnt + postype) % 7;
+		if (Vertexcnt == 0) {
+			cout << Vertexcnt << endl << endl;
+			Vertexcnt = 1;
+		}
+
+
+
 		SetPos(Center);
 		
 

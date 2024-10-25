@@ -51,13 +51,15 @@ void Setindex(int i, bool first) {
 
 
 
-
 	for (int j = 0; j < 3; j++) {
+		if (j >= 2 && type == 2)
+			break;
+
 
 		index[index_num] = index_array_count;
 		index_num++;
 		index_array_count++;
-
+		
 
 	}
 
@@ -71,12 +73,14 @@ void Setindex(int i, bool first) {
 		index_array_count++;
 	}
 
-	if (diagram[i].Vertexcnt == NO11_TOLINE) {
+	/*if (diagram[i].Vertexcnt == NO11_TOLINE) {
 		index[index_num] = index_array_count - 5;
 		index[index_num + 1] = index_array_count - 1;
+		index[index_num + 2] = index_array_count;
 
-		index_num += 2;
-	}
+		index_num += 3;
+		index_array_count++;
+	}*/
 
 
 
@@ -113,12 +117,26 @@ bool SetRect() {
 
 	}*/
 
+	int token = 1;
+	for (int i = 0; i < 18; i++) {
+		token = token % 7;
+		if (token == 0)
+			token = 1;
+
+		diagram[i].SetposType(token);
+		diagram[i].SetPos({ (float)(rand()) / RAND_MAX * 2 - 1.0f, (float)(rand()) / RAND_MAX - 0.5f });
+
+		coltoken[0] = SetRandObjCol();
+		coltoken[1] = SetRandObjCol();
+		coltoken[2] = SetRandObjCol();
+		diagram[i].SetCol(coltoken);
+
+		token++;
+	}
 
 
 
-
-
-	diagram[0].SetposType(NO11_TOTRIANGLE);
+	/*diagram[0].SetposType(NO11_TOTRIANGLE);
 	diagram[0].SetPos({ -0.5, 0.5 });
 	diagram[0].SetCol(coltoken);
 
@@ -148,7 +166,42 @@ bool SetRect() {
 	coltoken[2] = SetRandObjCol();
 	diagram[4].SetposType(NO11_TOLINE);
 	diagram[4].SetCol(coltoken);
-	diagram[4].SetPos({ 0.0, 0.0 });
+	diagram[4].SetPos({ 0.0, 0.0 });*/
+
+
+	/*diagram[5].SetposType(NO11_TOTRIANGLE);
+	diagram[5].SetPos({ -0.1, 0.1 });
+	diagram[5].SetCol(coltoken);
+
+	coltoken[0] = SetRandObjCol();
+	coltoken[1] = SetRandObjCol();
+	coltoken[2] = SetRandObjCol();
+	diagram[6].SetposType(NO11_TORECT);
+	diagram[6].SetPos({ 0.1, 0.1 });
+	diagram[6].SetCol(coltoken);
+
+	coltoken[0] = SetRandObjCol();
+	coltoken[1] = SetRandObjCol();
+	coltoken[2] = SetRandObjCol();
+	diagram[7].SetposType(NO11_TOPENTAGON);
+	diagram[7].SetCol(coltoken);
+	diagram[7].SetPos({ -0.1, -0.1 });
+
+	coltoken[0] = SetRandObjCol();
+	coltoken[1] = SetRandObjCol();
+	coltoken[2] = SetRandObjCol();
+	diagram[8].SetposType(NO7_LINE);
+	diagram[8].SetCol(coltoken);
+	diagram[8].SetPos({ 0.1, -0.1 });
+
+	coltoken[0] = SetRandObjCol();
+	coltoken[1] = SetRandObjCol();
+	coltoken[2] = SetRandObjCol();
+	diagram[9].SetposType(NO11_TOLINE);
+	diagram[9].SetCol(coltoken);
+	diagram[9].SetPos({ 0.7, 0.7 });*/
+
+
 
 	return true;
 }
@@ -213,6 +266,9 @@ GLvoid UpdateBuffer() {
 		if (diagram[i].maked) {
 			type = diagram[i].GetposType();
 
+			if (type == 6)
+				cout << "6" << endl << endl;
+
 			if (type == NO7_VERTEX)
 				type = 3;
 
@@ -267,14 +323,14 @@ GLvoid UpdateBuffer() {
 			}
 
 
-			if (diagram[i].GetposType() >= NO11_TOLINE) {
+			/*if (diagram[i].GetposType() >= NO11_TOLINE) {
 				for (int j = 0; j < 2; j++) {
 					glBufferSubData(GL_ARRAY_BUFFER, (*counter),
 						3 * sizeof(GLfloat), diagram[i].col[j]);
 
 					(*counter) += 3 * sizeof(GLfloat);
 				}
-			}
+			}*/
 
 		}
 	}
@@ -335,11 +391,11 @@ GLvoid drawScene() {
 			token = diagram[i].GetposType();
 
 
-			if (token >= NO11_TOLINE)
-				token = 5;
+			/*if (token >= NO11_TOLINE)
+				token = 5;*/
 
-			int cnttoken = token - 3;
-			cnttoken = token + cnttoken * 2;
+			int cnttoken = token;
+			/*cnttoken = token + cnttoken * 2;*/
 
 			/*if (cnttoken >= token)
 				token = cnttoken;*/
@@ -353,8 +409,20 @@ GLvoid drawScene() {
 			if (cnttoken == 1)
 				cnttoken = 3;
 			
-			glDrawElements(ChangeValidType(cnttoken), (cnttoken),
-				GL_UNSIGNED_INT, (void*)(drawcounter));
+
+			if (cnttoken == 2) {
+				glDrawElements(ChangeValidType(cnttoken), (cnttoken),
+					GL_UNSIGNED_INT, (void*)(drawcounter));
+
+				drawcounter += (cnttoken) * sizeof(GLfloat);
+			}
+
+			for (int i = 0; i < cnttoken - 2; i++) {
+				glDrawElements(ChangeValidType(cnttoken), 3,
+					GL_UNSIGNED_INT, (void*)(drawcounter));
+
+				drawcounter += 3 * sizeof(GLfloat);
+			}
 
 
 
@@ -364,15 +432,15 @@ GLvoid drawScene() {
 
 
 
-			drawcounter += (cnttoken) * sizeof(GLfloat);
+			
 			tricnt++;
 
-			if (diagram[i].GetposType() == NO11_TOLINE) {
+			/*if (diagram[i].GetposType() == NO11_TOLINE) {
 				glDrawElements(ChangeValidType(NO7_LINE), 2,
 					GL_UNSIGNED_INT, (void*)(drawcounter));
 
 				drawcounter += 2 * sizeof(GLfloat);
-			}
+			}*/
 
 			/*i* diagram[i].GetposType() * sizeof(GLfloat))*/
 		}
@@ -513,7 +581,7 @@ GLvoid Mouse(int button, int state, int x, int y) {
 		newpos = WintoGL(x, y, Screensize.x, Screensize.y);
 		switch (button) {
 		case GLUT_LEFT_BUTTON:
-			for (int i = 0; i < MAX_INDEX; i++) {
+			for (int i = 0; i < MAX_INDEX12; i++) {
 				if (diagram[i].maked && diagram[i].CheckPosIn(newpos)) {
 					prevx = newpos.x;
 					prevy = newpos.y;

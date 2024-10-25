@@ -3,6 +3,10 @@
 #include <gl/freeglut.h>
 #include <gl/freeglut_ext.h>
 #include <math.h>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
 
 #define MAX_INDEX 12
 #define MAX_INDEX10 5

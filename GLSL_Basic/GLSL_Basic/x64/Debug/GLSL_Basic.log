@@ -197,19 +197,21 @@ E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1150,25): warning C4244: '=
 E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1152,26): warning C4244: '=': 'double'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
   
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(156,34): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(157,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(162,45): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(162,31): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(222,39): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(261,39): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(272,40): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(357,22): warning C4312: '형식 캐스트': 'int'에서 더 큰 'void *'(으)로의 변환입니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(372,23): warning C4312: '형식 캐스트': 'int'에서 더 큰 'void *'(으)로의 변환입니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(405,14): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(513,50): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(513,36): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(581,57): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(581,43): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(94): warning C4715: 'GetMaxArray': 모든 제어 경로에서 값을 반환하지는 않습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\ObjStruct.h(1161,8): warning C4305: '=': 'double'에서 'float'(으)로 잘립니다.
+  (소스 파일 '9and11.cpp'을(를) 컴파일하는 중)
+  
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(209,34): warning C4326: 'main'의 반환 형식이 'int'이어야 하는데 'void'입니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(210,12): warning C4244: '인수': 'time_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(215,45): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(215,31): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(278,39): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(317,39): warning C4244: '인수': 'float'에서 'GLintptr'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(415,23): warning C4312: '형식 캐스트': 'int'에서 더 큰 'void *'(으)로의 변환입니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(422,23): warning C4312: '형식 캐스트': 'int'에서 더 큰 'void *'(으)로의 변환입니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(473,14): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(581,50): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(581,36): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(649,57): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(649,43): warning C4244: '인수': 'GLfloat'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+E:\myGit\glproject\GLSL_Basic\GLSL_Basic\9and11.cpp(98): warning C4715: 'GetMaxArray': 모든 제어 경로에서 값을 반환하지는 않습니다.
   GLSL_Basic.vcxproj -> E:\myGit\glproject\GLSL_Basic\x64\Debug\GLSL_Basic.exe
