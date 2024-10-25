@@ -103,7 +103,7 @@ GLvoid SetBuffer() {
 
 	for (int i = 0; i < 4; i++) {
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), tri.pos[i]);
+			3 * sizeof(GLfloat), tri.col[i]);
 
 		(*counter) += 3 * sizeof(GLfloat);
 	}
