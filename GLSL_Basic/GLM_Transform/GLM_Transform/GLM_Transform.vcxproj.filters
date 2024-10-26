@@ -18,6 +18,9 @@
     <ClCompile Include="GLMBasic.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GLM3D_NO12.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Head\ColorStructs.h">

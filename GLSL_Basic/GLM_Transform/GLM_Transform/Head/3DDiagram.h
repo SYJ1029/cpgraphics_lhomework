@@ -10,19 +10,34 @@ int index_array_count = 0;
 
 class Diagram {
 
+
+
 public:
-	
 	int postype;
+	GLfloat center[3];
+	GLfloat initial_center[3];
 
 
 	Diagram() {
-
+		for (int i = 0; i < 3; i++) {
+			center[i] = 0;
+			initial_center[i] = 0;
+		}
 
 		postype = POINT;
 	}
 
+	void Setcol() {
 
+	}
 	
+
+	void SetPos() {
+
+	}
+
+	int* AddIndexList() {
+	}
 };
 
 
@@ -56,7 +71,7 @@ public:
 		}
 	}
 
-	void SetCube() {
+	void SetPos() {
 		pos[0][0] = -0.5f; pos[0][1] = -0.5f; pos[0][2] = -0.5f;
 		pos[1][0] = 0.5f; pos[1][1] = -0.5f;  pos[1][2] = -0.5f;
 		pos[2][0] = 0.5f; pos[2][1] = 0.5f; pos[2][2] = -0.5f;
@@ -164,7 +179,7 @@ public:
 		}
 	}
 
-	void SetTet() {
+	void SetPos() {
 		pos[0][0] = 0.0f, pos[0][1] = 0.5f, pos[0][2] = 0.0f;
 		pos[1][0] = 0.0f, pos[1][1] = 0.0f, pos[1][2] = 0.5f;
 		pos[2][0] = 0.5f, pos[2][1] = 0.0f, pos[2][2] = 0.0f;
@@ -196,5 +211,32 @@ public:
 
 		return p;
 	}
+
+};
+
+
+
+
+class Pyramid : public Diagram{
+
+
+public:
+	GLfloat col[5][3];
+	GLfloat pos[5][3];
+	bool maked[5];
+	
+
+	Pyramid(): Diagram(){
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 3; j++) {
+				col[i][j] = 0;
+				pos[i][j] = 0;
+			}
+
+			if (i < 5)
+				maked[i] = false;
+		}
+	}
+
 
 };

@@ -51,8 +51,8 @@ GLvoid SetBuffer() {
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	//glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 10000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
-	cube.SetCube();
-	tri.SetTet();
+	cube.SetPos();
+	tri.SetPos();
 
 	//float* counter = new FLOAT();
 	int* counter = new INT();
@@ -154,7 +154,7 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 
 	glBindVertexArray(vao);
 	SetBuffer();
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 
 	glutDisplayFunc(drawScene); // 출력 함수의 지정
