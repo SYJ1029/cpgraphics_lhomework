@@ -151,7 +151,7 @@ public:
 			}
 
 			if (i < 4)
-				maked[i] = true;
+				maked[i] = false;
 		}
 	}
 

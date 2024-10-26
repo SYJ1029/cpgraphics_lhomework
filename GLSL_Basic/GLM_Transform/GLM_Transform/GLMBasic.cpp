@@ -154,6 +154,7 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 
 	glBindVertexArray(vao);
 	SetBuffer();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 
 	glutDisplayFunc(drawScene); // 출력 함수의 지정
@@ -231,7 +232,7 @@ void drawScene()
 
 	}
 
-	for (int i = 0; i < mycnt; i++) {
+	for (int i = 0; i < 4; i++) {
 		if (tri.maked[i]) {
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
 			counter += 3 * sizeof(GLfloat);
@@ -243,10 +244,6 @@ void drawScene()
 
 
 
-	radian += 10.0f;
-
-	if (mycnt < 4)
-		mycnt++;
 
 	glEnable(GL_DEPTH_TEST);
 	glutSwapBuffers();
@@ -266,18 +263,72 @@ GLvoid Mouse(int button, int state, int x, int y) {
 GLvoid Keyboard(unsigned char key, int x, int y) {
 
 	int token = (int)key - (int)'1';
+	int randnum[2];
+	randnum[0] = -1, randnum[1] = -1;
+
 	switch (key) {
 	case '1': case '2': case '3': case '4': case '5': case '6':
-		cube.maked[token] = true;
+		cube.maked[token] = !(cube.maked[token]);
 		break;
 
 	case '7':case '8': case '9': case '0':
 		token -= 6;
 
 		if (token < 0)
-			token = 0;
+			token = 3;
 
-		tri.maked[token] = true;
+		tri.maked[token] = !(tri.maked[token]);
+		break;
+	case 'c':
+		for (int i = 0; i < 6; i++) {
+			if (i < 4) {
+				tri.maked[i] = false;
+			}
+
+
+			cube.maked[i] = false;
+		}
+
+		for (int i = 0; i < 2; i++) {
+			randnum[i] = (float)((float)rand() / RAND_MAX) * 6;
+
+			if (i > 0 && randnum[i] == randnum[i - 1]) {
+				i--;
+			}
+		}
+
+
+	
+
+		cube.maked[randnum[0]] = true;
+		cube.maked[randnum[1]] = true;
+
+
+
+		break;
+	case 't':
+		for (int i = 0; i < 6; i++) {
+			if (i < 4) {
+				tri.maked[i] = false;
+			}
+
+
+			cube.maked[i] = false;
+		}
+
+		for (int i = 0; i < 2; i++) {
+			randnum[i] = (float)((float)rand() / RAND_MAX) * 4;
+
+			if (i > 0 && randnum[i] == randnum[i - 1]) {
+				i--;
+			}
+		}
+
+		tri.maked[randnum[0]] = true;
+		tri.maked[randnum[1]] = true;
+
+		break;
+	default:
 		break;
 	}
 
