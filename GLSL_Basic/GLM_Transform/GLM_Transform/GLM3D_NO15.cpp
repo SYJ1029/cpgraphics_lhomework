@@ -46,6 +46,8 @@ GLfloat base_axis_col[6][3] = {
 	0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 };
 
+int baseAxisIndex = 0;
+
 
 GLvoid Setplayground() {
 
@@ -119,6 +121,7 @@ void Setindex() {
 
 
 	present_bit = index_count;
+	baseAxisIndex = index_count;
 
 	for (index_count; index_count < present_bit + 6; index_count++, index_array_count++) {
 		index[index_count] = 12 + 5 + index_array_count;
@@ -376,94 +379,14 @@ void drawScene()
 		if (playground[i].postype == ID_PYR) {
 			glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(pyr->start_index * sizeof(GLfloat)));
 		}
+
+		model = basemat;
 	}
 
 
 
 
-	rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-	model = rm2 * rm;
-
-	model *= GetMove(cube->center);
-	model *= GetSpin(cube->center, radian, cube->axis);
-
-
-
-	modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-
-
-	for (int i = 0; i < 6; i++) {
-		if (cube->maked[i]) {
-			for (int j = 0; j < 2; j++) {
-
-				glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
-				counter += 3 * sizeof(GLfloat);
-
-			}
-		}
-		else {
-			counter += 6 * sizeof(GLfloat);
-		}
-
-
-	}
-
-	model = basemat;
-
-	rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-	model = rm2 * rm;
-
-	model *= GetMove(tri->center);
-	model *= GetSpin(tri->center, radian, tri->axis);
-
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-
-	for (int i = 0; i < 4; i++) {
-		if (tri->maked[i]) {
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
-			counter += 3 * sizeof(GLfloat);
-		}
-		else {
-			counter += 3 * sizeof(GLfloat);
-		}
-	}
-
-	model = basemat;
-
-	rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-
-	model = rm2 * rm;
-
-	model *= GetMove(pyr->center);
-	model *= GetSpin(pyr->center, radian, pyr->axis);
-
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-
-	for (int i = 0; i < 5; i++) {
-		if (pyr->maked[i]) {
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
-			counter += 3 * sizeof(GLfloat);
-
-			if (i >= 4) {
-				glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)counter);
-				counter += 3 * sizeof(GLfloat);
-			}
-		}
-		else {
-			counter += 3 * sizeof(GLfloat);
-			if (i >= 4)
-				counter += 3 * sizeof(GLfloat);
-		}
-	}
 
 
 
@@ -477,10 +400,9 @@ void drawScene()
 
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
-	for (int i = 0; i < 3; i++) {
-		glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)counter);
-		counter += 2 * sizeof(GLint);
-	}
+	glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, (void*)(baseAxisIndex * sizeof(GLfloat)));
+	counter += 6 * sizeof(GLint);
+
 
 
 
