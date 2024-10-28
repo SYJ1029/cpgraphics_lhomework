@@ -1,6 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "ObjStruct.h"
+#include "VertexMethod.h"
 #include <fstream>
 #include <sstream>
 

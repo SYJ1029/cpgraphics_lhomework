@@ -7,3 +7,16 @@ typedef struct GLPos {
 	GLfloat z;
 
 }GLPos;
+
+
+
+typedef struct GLTexture {
+	GLPos pos;
+	MyObjCol col;
+
+
+}GLTex;
+
+
+
+

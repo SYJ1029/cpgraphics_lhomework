@@ -4,41 +4,6 @@
 #define POINT 1
 #define CUBE 8
 
-int index_count = 0;
-int index_array_count = 0;
-
-glm::mat4 GetMove(GLPos Delta) {
-	glm::mat4 basemat = glm::mat4(1.0f);
-	glm::vec3 trv = glm::vec3(Delta.x, Delta.y, Delta.z);
-	glm::mat4 trm = basemat;
-	glm::mat4 model = basemat;
-
-	trm = glm::translate(basemat, trv);
-
-
-	model *= trm;
-
-	return model;
-}
-
-glm::mat4 GetSpin(GLPos Center, GLfloat radian, glm::vec3 axis) {
-	glm::mat4 basemat = glm::mat4(1.0f);
-	glm::mat4 trm = basemat;
-	glm::mat4 rm = basemat;
-	glm::mat4 rm2 = basemat;
-	glm::mat4 model = basemat;
-
-	glm::vec3 trv = glm::vec3(Center.x, Center.y, Center.z);
-
-	trm = glm::translate(basemat, trv * -1.0f);
-	rm = glm::rotate(basemat, glm::radians(radian), axis);
-	glm::mat4 trm2 = glm::translate(basemat, trv);
-
-	model = trm2 * rm * trm;
-
-	return model;
-}
-
 
 
 class Diagram {
@@ -52,6 +17,7 @@ public:
 	float radian;
 	int radcnt;
 	GLPos delta;
+	GLPos Stretch;
 
 	Diagram() {
 
@@ -63,6 +29,10 @@ public:
 		delta = { 0, 0, 0 };
 
 		radcnt = 1;
+
+		for (int i = 0; i < 3; i++) {
+			Stretch = { 1.0f };
+		}
 	}
 
 
@@ -78,13 +48,19 @@ public:
 		radcnt = 1;
 	}
 
-	virtual void Setcol(MyObjCol col[]) = 0;
+	void Setcol(MyObjCol col[]) {
 
-	virtual void SetPos() = 0;
+	}
 
-	virtual int* AddIndexList() = 0;
+	void SetPos(){
 
-	virtual ~Diagram() {
+	}
+
+	int* AddIndexList(){
+
+	}
+
+	~Diagram() {
 		cout << "Diagram is deleted" << endl << endl;
 	}
 
@@ -120,6 +96,7 @@ public:
 	GLfloat col[8][3];
 	GLfloat pos[8][3];
 	bool maked[6];
+	int start_index;
 
 	GL_Cube() : Diagram() {
 		postype = CUBE;
@@ -133,6 +110,8 @@ public:
 			if (i < 6)
 				maked[i] = false;
 		}	
+
+		start_index = 0;
 	}
 
 	void Setcol(MyObjCol col[8]) {
@@ -230,6 +209,7 @@ public:
 	GLfloat col[4][3];
 	GLfloat pos[4][3];
 	bool maked[4];
+	int start_index;
 
 	GL_Tetrahedron() : Diagram() {
 		for (int i = 0; i < 4; i++) {
@@ -241,6 +221,8 @@ public:
 			if (i < 4)
 				maked[i] = false;
 		}
+
+		start_index = 0;
 	}
 
 	void Setcol(MyObjCol col[8]) {
@@ -297,6 +279,7 @@ public:
 	GLfloat col[5][3];
 	GLfloat pos[5][3];
 	bool maked[5];
+	int start_index;
 	
 
 	GL_Pyramid() : Diagram() {
@@ -309,6 +292,8 @@ public:
 			if (i < 5)
 				maked[i] = false;
 		}
+
+		start_index = 0;
 	}
 
 	void Setcol(MyObjCol col[5]) {

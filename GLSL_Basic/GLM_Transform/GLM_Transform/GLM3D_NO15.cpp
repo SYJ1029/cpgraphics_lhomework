@@ -6,6 +6,8 @@
 #define ID_CUBE 0
 #define ID_TET 1
 #define ID_PYR 2
+#define ID_SPHERE 3
+#define ID_
 
 GLvoid Mouse(int button, int state, int x, int y);
 GLvoid Keyboard(unsigned char key, int x, int y);
@@ -21,9 +23,44 @@ GL_Cube* cube = new GL_Cube;
 GL_Tetrahedron* tri = new GL_Tetrahedron;
 GL_Pyramid* pyr = new GL_Pyramid;
 
+Diagram playground[2];
+
+
 bool depthed = true;
 bool gospin = false;
 bool direct = true;
+
+
+GLfloat base_axis[6][3] = {
+	-1.0f, 0.0f, 0.0f,
+	1.0f, 0.0f, 0.0f,
+	0.0f, -1.0f, 0.0f,
+	0.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, -1.0f,
+	0.0f, 0.0f, 1.0f
+};
+
+GLfloat base_axis_col[6][3] = {
+	1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+	0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+	0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
+};
+
+
+GLvoid Setplayground() {
+
+	playground[0].center = { -3.0f, 0.0f, 0.0f };
+	playground[1].center = { 3.0f, 0.0f, 0.0f };
+
+	playground[0].radian = 0;
+	playground[1].radian = 0;
+
+	playground[0].Stretch = { 0.2f, 0.2f, 0.2f };
+	playground[1].Stretch = { 0.2f, 0.2f, 0.2f };
+
+	playground[0].postype = ID_CUBE;
+	playground[1].postype = ID_PYR;
+}
 
 void DepthCheck() {
 	if (depthed)
@@ -44,17 +81,23 @@ void Setindex() {
 	int begin = cnt;
 
 
+
+
 	for (index_count; index_count < 36; index_count++) {
 		index[index_count] = p1[index_count];
 
 		cnt++;
 	}
 
+	cube->start_index = 0;
 	//cnt += 36;
 
 	present_bit = index_count;
 
 	begin = cnt;
+
+	tri->start_index = index_count;
+
 	for (index_count; index_count < present_bit + 12; index_count++) {
 		index[index_count] = 8 + p2[index_count - begin];
 
@@ -66,11 +109,22 @@ void Setindex() {
 	present_bit = index_count;
 	begin = cnt;
 
+	pyr->start_index = index_count;
+
 	for (index_count; index_count < present_bit + 18; index_count++) {
 		index[index_count] = 12 + p3[index_count - begin];
 	}
 
 	cnt += 15;
+
+
+	present_bit = index_count;
+
+	for (index_count; index_count < present_bit + 6; index_count++, index_array_count++) {
+		index[index_count] = 12 + 5 + index_array_count;
+	}
+
+
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_DYNAMIC_DRAW);
@@ -118,6 +172,7 @@ GLvoid SetBuffer() {
 
 
 
+
 	for (int i = 0; i < 8; i++) {
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
 			3 * sizeof(GLfloat), cube->pos[i]);
@@ -140,6 +195,15 @@ GLvoid SetBuffer() {
 		(*counter) += 3 * sizeof(GLfloat);
 	}
 
+
+
+	for (int i = 0; i < 6; i++) {
+		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
+			3 * sizeof(GLfloat), base_axis[i]);
+
+		(*counter) += 3 * sizeof(GLfloat);
+	}
+
 	/*index_count = 0;
 	index_array_count = 0;*/
 
@@ -154,6 +218,8 @@ GLvoid SetBuffer() {
 
 
 	(*counter) = 0;
+
+
 	for (int i = 0; i < 8; i++) {
 
 
@@ -175,6 +241,16 @@ GLvoid SetBuffer() {
 	for (int i = 0; i < 5; i++) {
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
 			3 * sizeof(GLfloat), pyr->col[i]);
+
+		(*counter) += 3 * sizeof(GLfloat);
+	}
+
+
+
+
+	for (int i = 0; i < 6; i++) {
+		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
+			3 * sizeof(GLfloat), base_axis_col[i]);
 
 		(*counter) += 3 * sizeof(GLfloat);
 	}
@@ -212,9 +288,9 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	InitBuffer();
 
 
-
 	glBindVertexArray(vao);
 	SetBuffer();
+	Setplayground();
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_DEPTH_TEST);
@@ -265,6 +341,44 @@ void drawScene()
 	//glm::mat4 rm3 = glm::mat4(1.0f);
 
 	/*model = glm::translate(model, glm::vec3(0.1f, 0.5f, 0.0f));*/
+	int modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
+
+	glBindVertexArray(vao);
+
+
+
+
+	int counter = 0;
+
+
+
+	for (int i = 0; i < 2; i++) {
+
+
+
+		rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+		model = rm2 * rm;
+
+		model *= GetMove(playground[i].center);
+		model *= GetSpin(playground[i].center, playground[i].radian, playground[i].axis);
+		model *= ChangeScale(playground[i].Stretch, playground[i].center);
+
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+
+		if (playground[i].postype == ID_CUBE) {
+
+			glDrawElements(GL_TRIANGLES, 6 * 6, GL_UNSIGNED_INT, (void*)(cube->start_index * sizeof(GLfloat)));
+		}
+
+		if (playground[i].postype == ID_PYR) {
+			glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(pyr->start_index * sizeof(GLfloat)));
+		}
+	}
+
+
 
 
 	rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -277,16 +391,9 @@ void drawScene()
 
 
 
-	int modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
+	modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
 	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
-
-	glBindVertexArray(vao);
-
-
-
-
-	int counter = 0;
 
 
 	for (int i = 0; i < 6; i++) {
@@ -356,6 +463,23 @@ void drawScene()
 			if (i >= 4)
 				counter += 3 * sizeof(GLfloat);
 		}
+	}
+
+
+
+
+	model = basemat;
+
+	rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+	model = rm2 * rm;
+
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+	for (int i = 0; i < 3; i++) {
+		glDrawElements(GL_LINES, 2, GL_UNSIGNED_INT, (void*)counter);
+		counter += 2 * sizeof(GLint);
 	}
 
 
