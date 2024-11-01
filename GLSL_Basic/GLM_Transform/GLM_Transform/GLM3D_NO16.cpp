@@ -19,7 +19,6 @@ GLvoid OrbitCcw(int value);
 GLvoid OrbitCw(int value);
 GLvoid specialKeyboard(int key, int x, int y);
 GLvoid MyLineMove(int value);
-GLPos linetoken[2];
 
 
 Diagram playground[2];
@@ -466,13 +465,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 			playground[i].target = playground[1 - i].center;
 			playground[i].fifo.push(playground[i].target);
 
-			linetoken[i] = { 
-				(playground[i].center.x - playground[i].target.x) / playground[i].GetDist(),
-			(playground[i].center.y - playground[i].target.y) / playground[i].GetDist(),
-			(playground[i].center.z - playground[i].target.z) / playground[i].GetDist()
-			};
-
-			linetoken[i] = linetoken[i] / 50.0f;
+			
 
 
 		}
@@ -498,9 +491,6 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		checkPoint = true;
 		for (int i = 0; i < 2; i++) {
 
-			linetoken[i] = (playground[i].center - (playground[i].AxisToGLPos() * 8.0f)) / dist(playground[i].center, (playground[i].AxisToGLPos() * 8.0f));
-
-			linetoken[i] = linetoken[i] / 50.0f;
 
 		}
 
@@ -762,7 +752,7 @@ GLvoid OrbitCw(int value) {
 
 
 GLvoid MyLineMove(int value) {
-	GLPos token;
+	GLPos token = { 0 };
 	
 	//if (checkPoint) {
 	//	token = { 0.0f, 0.8f, 0.0f };
@@ -791,7 +781,7 @@ GLvoid MyLineMove(int value) {
 
 
 
-	if (playground[value].GetCrash(linetoken[value], token) == false) {
+	if (playground[value].GetCrash(InitDelta(playground[value].center, token), token) == false) {
 		glutTimerFunc(10, MyLineMove, value);
 	}
 	else {
