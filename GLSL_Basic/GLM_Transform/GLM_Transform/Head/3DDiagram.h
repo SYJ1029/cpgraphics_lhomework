@@ -2,6 +2,7 @@
 
 #include "TimerProcedure.h"
 #include "ProjMethod.h"
+#include "CheckPointQue.h"
 
 
 #define POINT 1
@@ -25,6 +26,9 @@ public:
 	bool ccw, orbitccw;
 
 	QuadSetting qset;
+
+
+	queue<GLPos> fifo;
 
 	Diagram() {
 

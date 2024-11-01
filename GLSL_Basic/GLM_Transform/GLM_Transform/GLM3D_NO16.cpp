@@ -464,6 +464,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 
 		for (int i = 0; i < 2; i++) {
 			playground[i].target = playground[1 - i].center;
+			playground[i].fifo.push(playground[i].target);
 
 			linetoken[i] = { 
 				(playground[i].center.x - playground[i].target.x) / playground[i].GetDist(),
@@ -741,18 +742,17 @@ GLvoid OrbitCw(int value) {
 	if (goorbit && playground[value].orbitccw == false) {
 
 		if (endorbit && playground[value].Orbit.y <= -180) {
-			/*playground[value].center = playground[value].target;
-			playground[value].Orbit = 0.0f;*/
-
-			glm::mat4 result = glm::mat4(1.0);
-
-			result *= InitRotateProj(playground[value].Orbit, { 0.0f, 0.0f, 0.0f });
-			result *= InitRotateProj(playground[value].radian, playground[value].center);
-			result *= InitMoveProj(playground[value].center);
-			result *= InitScaleProj(playground[value].Stretch);
-
-			playground[value].center = GetProjedPos(playground[value].center, result);
+			playground[value].center = playground[value].target;
 			playground[value].Orbit = 0.0f;
+
+			//glm::mat4 result = glm::mat4(1.0);
+
+			//result *= InitRotateProj(playground[value].Orbit, { 0.0f, 0.0f, 0.0f });
+			//result *= InitMoveProj(playground[value].center);
+			//result *= InitScaleProj(playground[value].Stretch);
+
+			//playground[value].center = GetProjedPos(playground[value].center, result);
+			//playground[value].Orbit = 0.0f;
 		}
 		else
 			glutTimerFunc(30, OrbitCw, value);
@@ -777,8 +777,11 @@ GLvoid MyLineMove(int value) {
 
 	//playground[value].center = playground[value].center - linetoken[value];
 
-	token = playground[value].target;
-	playground[value].center += InitDelta(playground[value].center, token);
+	if (playground[value].fifo.empty());
+	else {
+		token = playground[value].fifo.front();
+		playground[value].center += InitDelta(playground[value].center, token);
+	}
 
 
 
@@ -792,10 +795,16 @@ GLvoid MyLineMove(int value) {
 		glutTimerFunc(10, MyLineMove, value);
 	}
 	else {
-
-		 
-
 		playground[value].center = token;
+
+		playground[value].fifo.pop();
+		 
+		if (playground[value].fifo.empty());
+		else {
+			glutTimerFunc(10, MyLineMove, value);
+		}
+
+
 	}
 
 	glutPostRedisplay();
