@@ -378,18 +378,7 @@ void drawScene()
 		model *= InitMoveProj(playground[i].center);
 		model *= InitScaleProj(playground[i].Stretch);
 
-		/*model *= GetSpin({ 0.0, 0.0, 0.0 }, playground[i].Orbit.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		model *= GetSpin({ 0.0, 0.0, 0.0 }, playground[i].Orbit.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		model *= GetSpin({ 0.0, 0.0, 0.0 }, playground[i].Orbit.z, glm::vec3(0.0f, 0.0f, 1.0f));
-
-		model *= GetSpin(playground[i].center, playground[i].radian.x, glm::vec3(1.0f, 0.0f, 0.0f));
-		model *= GetSpin(playground[i].center, playground[i].radian.y, glm::vec3(0.0f, 1.0f, 0.0f));
-		model *= GetSpin(playground[i].center, playground[i].radian.z, glm::vec3(0.0f, 0.0f, 1.0f));
-
-
-		model *= GetMove(playground[i].center);
-
-		model *= ChangeScale(playground[i].Stretch, { 0.0f, 0.0f, 0.0f });*/
+		
 
 
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
