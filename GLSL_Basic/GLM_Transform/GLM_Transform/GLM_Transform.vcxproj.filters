@@ -68,6 +68,9 @@
     <ClInclude Include="Head\CheckPointQue.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Head\BaseHeader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shader\vertex.txt">
