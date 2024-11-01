@@ -2,12 +2,10 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "TimerProcedure.h"
-#include "ProjMethod.h"
+#include "3DDiagram.h"
 #include <fstream>
 #include <sstream>
 
-using namespace std;
 
 void make_vertexShaders();
 void make_fragmentShaders();

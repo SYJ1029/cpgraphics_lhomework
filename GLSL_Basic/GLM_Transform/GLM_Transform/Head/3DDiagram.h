@@ -1,6 +1,7 @@
 #pragma once
 
-#include "GetShader.h"
+#include "TimerProcedure.h"
+#include "ProjMethod.h"
 
 
 #define POINT 1
