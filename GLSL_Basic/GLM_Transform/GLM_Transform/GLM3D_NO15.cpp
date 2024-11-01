@@ -1,4 +1,4 @@
-#include "Head/3DDiagram.h"
+#include "Head/LoadDiagram.h"
 
 #define MAX_INDEX 12
 #define MAX_INDEX13 2
@@ -7,31 +7,33 @@
 #define ID_TET 1
 #define ID_PYR 2
 #define ID_SPHERE 3
-#define ID_
+#define ID_CYLINDER 4
+#define ID_CONE 5
+
 
 GLvoid Mouse(int button, int state, int x, int y);
 GLvoid Keyboard(unsigned char key, int x, int y);
 GLvoid MyCcw(int value);
 GLvoid MyCw(int value);
+GLvoid OrbitCcw(int value);
+GLvoid OrbitCw(int value);
 GLvoid specialKeyboard(int key, int x, int y);
 
 
 
-MyCol mycolor = { 1.0f, 1.0f, 1.0f, 1.0f };
-GLPos Screensize = { 800, 800, 0 };
-GL_Cube* cube = new GL_Cube;
-GL_Tetrahedron* tri = new GL_Tetrahedron;
-GL_Pyramid* pyr = new GL_Pyramid;
+
+
 
 Diagram playground[2];
 
 
 bool depthed = true;
-bool gospin = false;
+bool gospin[2] = { false, false };
 bool direct = true;
+bool goorbit = false;
 
 
-GLfloat base_axis[6][3] = {
+float base_axis[6][3] = {
 	-1.0f, 0.0f, 0.0f,
 	1.0f, 0.0f, 0.0f,
 	0.0f, -1.0f, 0.0f,
@@ -40,7 +42,7 @@ GLfloat base_axis[6][3] = {
 	0.0f, 0.0f, 1.0f
 };
 
-GLfloat base_axis_col[6][3] = {
+float base_axis_col[6][3] = {
 	1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
 	0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
 	0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
@@ -51,17 +53,20 @@ int baseAxisIndex = 0;
 
 GLvoid Setplayground() {
 
-	playground[0].center = { -3.0f, 0.0f, 0.0f };
-	playground[1].center = { 3.0f, 0.0f, 0.0f };
+	playground[0].center = { -0.8f, 0.0f, 0.0f };
+	playground[1].center = { 0.8f, 0.0f, 0.0f };
 
-	playground[0].radian = 0;
-	playground[1].radian = 0;
+	playground[0].radian = { 0.0f, 0.0f, 0.0f };
+	playground[1].radian = { 0.0f, 0.0f, 0.0f };
 
 	playground[0].Stretch = { 0.2f, 0.2f, 0.2f };
 	playground[1].Stretch = { 0.2f, 0.2f, 0.2f };
 
+	playground[0].Orbit = { 0.0f, 0.0f, 0.0f };
+	playground[1].Orbit = { 0.0f, 0.0f, 0.0f };
+
 	playground[0].postype = ID_CUBE;
-	playground[1].postype = ID_PYR;
+	playground[1].postype = ID_TET;
 }
 
 void DepthCheck() {
@@ -307,6 +312,11 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 
 
 
+
+
+
+
+
 	glutMainLoop(); // 이벤트 처리 시작
 
 
@@ -326,9 +336,6 @@ glm::vec3 allAxis = glm::vec3(0.0f, 0.0f, 0.0f);
 
 void drawScene()
 {
-	Diagram* drawStage = nullptr;
-
-	drawStage = cube;
 
 
 	glClearColor(mycolor.red, mycolor.green, mycolor.blue, mycolor.alpha);
@@ -348,7 +355,7 @@ void drawScene()
 
 	glBindVertexArray(vao);
 
-
+	
 
 
 	int counter = 0;
@@ -357,27 +364,55 @@ void drawScene()
 
 	for (int i = 0; i < 2; i++) {
 
-
+		gluQuadricDrawStyle(qobj, playground[i].qset.drawstyle);
+		gluQuadricNormals(qobj, playground[i].qset.normals);
+		gluQuadricOrientation(qobj, playground[i].qset.orientation);
 
 		rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		model = rm2 * rm;
 
+
+		model *= GetSpin({ 0.0, 0.0, 0.0 }, playground[i].Orbit.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		model *= GetSpin({ 0.0, 0.0, 0.0 }, playground[i].Orbit.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		model *= GetSpin({ 0.0, 0.0, 0.0 }, playground[i].Orbit.z, glm::vec3(0.0f, 0.0f, 1.0f));
+		/*model *= GetSpin(playground[i].center * -1, playground[i].Orbit.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		model *= GetSpin(playground[i].center * -1, playground[i].Orbit.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		model *= GetSpin(playground[i].center * -1, playground[i].Orbit.z, glm::vec3(0.0f, 0.0f, 1.0f));*/
+
+		model *= GetSpin(playground[i].center, playground[i].radian.x, glm::vec3(1.0f, 0.0f, 0.0f));
+		model *= GetSpin(playground[i].center, playground[i].radian.y, glm::vec3(0.0f, 1.0f, 0.0f));
+		model *= GetSpin(playground[i].center, playground[i].radian.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+
 		model *= GetMove(playground[i].center);
-		model *= GetSpin(playground[i].center, playground[i].radian, playground[i].axis);
-		model *= ChangeScale(playground[i].Stretch, playground[i].center);
+
+		model *= ChangeScale(playground[i].Stretch, { 0.0f, 0.0f, 0.0f });
+
 
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
 
-		if (playground[i].postype == ID_CUBE) {
-
+		switch (playground[i].postype) {
+		case ID_CUBE:
 			glDrawElements(GL_TRIANGLES, 6 * 6, GL_UNSIGNED_INT, (void*)(cube->start_index * sizeof(GLfloat)));
-		}
-
-		if (playground[i].postype == ID_PYR) {
+			break;
+		case ID_TET:
+			glDrawElements(GL_TRIANGLES, 3 * 4, GL_UNSIGNED_INT, (void*)(tri->start_index * sizeof(GLfloat)));
+			break;
+		case ID_PYR:
 			glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(pyr->start_index * sizeof(GLfloat)));
+			break;
+		case ID_SPHERE:
+			gluSphere(qobj, sphere->radius, sphere->slices, sphere->stacks);
+			break;
+		case ID_CYLINDER:
+			gluCylinder(qobj, 1.0, 1.0, 2.0, 20, 8);
+			break;
+		case ID_CONE:
+			gluCylinder(qobj, 1.0, 0.0, 2.0, 20, 8);
+			break;
 		}
 
 		model = basemat;
@@ -431,48 +466,38 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	randnum[0] = -1, randnum[1] = -1;
 
 	switch (key) {
+	case '1':
+		gospin[0] = true;
+		gospin[1] = false;
+
+		break;
+	case '2':
+		gospin[0] = false;
+		gospin[1] = true;
+		break;
+	case '3':
+		gospin[0] = true;
+		gospin[1] = true;
+		break;
+	case '4':
+		gospin[0] = false;
+		gospin[1] = false;
+		break;
+
+
 	case 'c':
-		for (int i = 0; i < 6; i++) {
-			if (i < 4) {
-				tri->maked[i] = false;
-			}
+		for (int i = 0; i < 2; i++) {
+			randnum[i] = (float)((float)rand() / RAND_MAX) * 5;
 
-			if (i < 5) {
-				pyr->maked[i] = false;
+			if (i >= 1 && randnum[i] == randnum[i - 1])
+				i--;
+			else {
+				playground[i].postype = randnum[i];
 			}
-
-			cube->maked[i] = true;
 		}
 
-
-		break;
-	case 't':
-		for (int i = 0; i < 6; i++) {
-			if (i < 4) {
-				tri->maked[i] = true;
-			}
-
-			if (i < 5) {
-				pyr->maked[i] = false;
-			}
-
-			cube->maked[i] = false;
-		}
-
-		break;
-
-	case 'p':
-		for (int i = 0; i < 6; i++) {
-			if (i < 4) {
-				tri->maked[i] = false;
-			}
-
-			if (i < 5) {
-				pyr->maked[i] = true;
-			}
-
-			cube->maked[i] = false;
-		}
+		/*playground[0].postype =	(playground[0].postype + 1) % 7;
+		playground[1].postype = (playground[1].postype + 1) % 7;*/
 		break;
 	case 'h':
 		depthed = !(depthed);
@@ -482,62 +507,82 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	case 'w': case 'W':
 		if ((int)key - (int)'a' < 0) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+			for (int i = 0; i < 2; i++) {
+				playground[i].qset.drawstyle = GLU_FILL;
+			}
+
 		}
 		else {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
+			for (int i = 0; i < 2; i++) {
+				playground[i].qset.drawstyle = GLU_LINE;
+			}
 		}
 
 		break;
 
 	case 'x': case 'X':
-		gospin = true;
+
+		for (int i = 0; i < 2; i++) {
+			playground[i].axis = glm::vec3(1.0f, 0.0f, 0.0f);
+		}
 
 		if ((int)key - (int)'a' < 0) {
 			direct = true;
 
-			cube->axis = glm::vec3(1.0f, 0.0f, 0.0f);
-			tri->axis = glm::vec3(1.0f, 0.0f, 0.0f);
-			pyr->axis = glm::vec3(1.0f, 0.0f, 0.0f);
+			
 			glutTimerFunc(10, MyCcw, 0);
+			glutTimerFunc(10, MyCcw, 1);
 		}
 		else {
 			direct = false;
-
-			cube->axis = glm::vec3(1.0f, 0.0f, 0.0f);
-			tri->axis = glm::vec3(1.0f, 0.0f, 0.0f);
-			pyr->axis = glm::vec3(1.0f, 0.0f, 0.0f);
 			glutTimerFunc(10, MyCw, 0);
+			glutTimerFunc(10, MyCw, 1);
 		}
 
 		break;
 	case 'y': case 'Y':
-		gospin = true;
+
+		for (int i = 0; i < 2; i++) {
+			playground[i].axis = glm::vec3(0.0f, 1.0f, 0.0f);
+		}
 
 		if ((int)key - (int)'a' < 0) {
 			direct = true;
 
-			cube->axis = glm::vec3(0.0f, 1.0f, 0.0f);
-			tri->axis = glm::vec3(0.0f, 1.0f, 0.0f);
-			pyr->axis = glm::vec3(0.0f, 1.0f, 0.0f);
 			glutTimerFunc(10, MyCcw, 0);
+			glutTimerFunc(10, MyCcw, 1);
 		}
 		else {
 			direct = false;
 
-			cube->axis = glm::vec3(0.0f, 1.0f, 0.0f);
-			tri->axis = glm::vec3(0.0f, 1.0f, 0.0f);
-			pyr->axis = glm::vec3(0.0f, 1.0f, 0.0f);
 			glutTimerFunc(10, MyCw, 0);
+			glutTimerFunc(10, MyCw, 1);
+		}
 
+		break;
+	case 'r': case 'R':
+		goorbit = true;
+
+		if ((int)key - (int)'a' < 0) {
+			for (int i = 0; i < 2; i++) {
+				playground[i].orbitccw = true;
+				glutTimerFunc(10, OrbitCcw, i);
+			}
+		}
+		else {
+			for (int i = 0; i < 2; i++) {
+				playground[i].orbitccw = false;
+				glutTimerFunc(10, OrbitCw, i);
+			}
 		}
 
 		break;
 	case 's':
-		gospin = false;
-		cube->center = { 0 };
-		tri->center = { 0 };
-		pyr->center = { 0 };
+		goorbit = false;
+		gospin[0] = false;
+		gospin[1] = false;
+		Setplayground();
 		break;
 
 
@@ -588,21 +633,66 @@ GLvoid specialKeyboard(int key, int x, int y) {
 
 GLvoid MyCcw(int value) {
 
-	radian += 5;
+	playground[value].radian.x += (playground[value].axis.x * 5);
+
+	playground[value].radian.y += (playground[value].axis.y * 5);
+
+	playground[value].radian.z += (playground[value].axis.z * 5);
 
 
-	if (gospin && direct) {
+
+	
+	if (gospin[value] && direct) {
 		glutTimerFunc(10, MyCcw, value);
+	}
+	else if (gospin[1 - value] && direct) {
+		glutTimerFunc(10, MyCcw, 1 - value);
 	}
 	glutPostRedisplay();
 }
+
 GLvoid MyCw(int value) {
 
-	radian -= 5;
+	playground[value].radian.x -= (playground[value].axis.x * 5);
 
+	playground[value].radian.y -= (playground[value].axis.y * 5); 
 
-	if (gospin && direct == false) {
+	playground[value].radian.z -= (playground[value].axis.z * 5);
+
+	
+	
+
+	if (gospin[value] && direct == false) {
 		glutTimerFunc(10, MyCw, value);
+	}
+
+	else if (gospin[1 - value] && direct == false) {
+		glutTimerFunc(10, MyCw, 1 - value);
+	}
+
+	glutPostRedisplay();
+}
+
+
+GLvoid OrbitCcw(int value) {
+	playground[value].Orbit.x += (playground[value].OrbitAxis.x * 5);
+	playground[value].Orbit.y += (playground[value].OrbitAxis.y * 5);
+	playground[value].Orbit.z += (playground[value].OrbitAxis.z * 5);
+
+	if (goorbit && playground[value].orbitccw) {
+		glutTimerFunc(30, OrbitCcw, value);
+	}
+	glutPostRedisplay();
+}
+
+
+GLvoid OrbitCw(int value) {
+	playground[value].Orbit.x -= (playground[value].OrbitAxis.x * 5);
+	playground[value].Orbit.y -= (playground[value].OrbitAxis.y * 5);
+	playground[value].Orbit.z -= (playground[value].OrbitAxis.z * 5);
+
+	if (goorbit && playground[value].orbitccw == false) {
+		glutTimerFunc(30, OrbitCw, value);
 	}
 	glutPostRedisplay();
 }

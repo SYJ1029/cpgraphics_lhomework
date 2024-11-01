@@ -1,6 +1,9 @@
+#pragma once
+
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "VertexMethod.h"
+#include "TimerProcedure.h"
+#include "ProjMethod.h"
 #include <fstream>
 #include <sstream>
 

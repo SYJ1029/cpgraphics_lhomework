@@ -24,6 +24,15 @@
     <ClCompile Include="GLM3D_NO15.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="GLM3D_NO16.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\Proj\VPM.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\Proj\OPM.h">
+      <Filter>헤더 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Head\ColorStructs.h">
@@ -42,6 +51,18 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Head\VertexMethod.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\TimerProcedure.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\LoadDiagram.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\ProjMethod.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\Proj\WPM.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

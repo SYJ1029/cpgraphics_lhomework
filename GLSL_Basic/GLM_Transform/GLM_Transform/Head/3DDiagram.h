@@ -1,10 +1,10 @@
+#pragma once
+
 #include "GetShader.h"
 
 
 #define POINT 1
 #define CUBE 8
-
-
 
 class Diagram {
 
@@ -13,19 +13,27 @@ class Diagram {
 public:
 	int postype;
 	glm::vec3 axis;
+	glm::vec3 OrbitAxis;
 	GLPos center;
-	float radian;
+	GLPos target;
+	GLPos radian;
 	int radcnt;
 	GLPos delta;
 	GLPos Stretch;
+	GLPos Orbit;
+	bool ccw, orbitccw;
+
+	QuadSetting qset;
 
 	Diagram() {
 
 		postype = POINT;
 
-		radian = 0;
+		radian = { 0 };
 		center = { 0, 0, 0 };
+		target = { 0, 0, 0 };
 		axis = glm::vec3( 0.0f, 1.0f, 0.0f );
+		OrbitAxis = glm::vec3(0.0f, 1.0f, 0.0f);
 		delta = { 0, 0, 0 };
 
 		radcnt = 1;
@@ -33,8 +41,38 @@ public:
 		for (int i = 0; i < 3; i++) {
 			Stretch = { 1.0f };
 		}
+
+		ccw = true;
+		orbitccw = true;
+
+
+
+		qset.drawstyle = GLU_FILL;
+		qset.normals = GLU_SMOOTH;
+		qset.orientation = GLU_OUTSIDE;
 	}
 
+
+	void Setother_center(GLPos center) {
+		target = center;
+	}
+
+	GLfloat GetDist() {
+
+		return dist(center, target);
+	}
+
+	GLPos AxisToGLPos() {
+		return Vec3ToGLPos(axis);
+	}
+
+	bool GetCrash(GLPos token, GLPos target) {
+		GLPos prev = center + token;
+
+		return ((prev - target) <= 0 && (center - target) >= 0) ||
+			((prev - target) >= 0 && (center - target) <= 0);
+
+	}
 
 	void Revert() {
 		delta = { 0, 0, 0 };
@@ -42,7 +80,7 @@ public:
 
 	void Clear() {
 		Revert();
-		radian = 0;
+		radian = { 0 };
 		axis = { 0, 0, 0 };
 		
 		radcnt = 1;
@@ -76,7 +114,7 @@ public:
 	}
 
 	void Spin() {
-		radian += radcnt;
+
 	}
 
 	void Move(GLPos delta) {
@@ -347,4 +385,43 @@ public:
 		return p;
 	}
 
+};
+
+
+
+
+
+class GL_Sphere{
+
+public:
+	GLfloat radius;
+	GLint slices;
+	GLint stacks;
+
+
+	GL_Sphere(){
+		radius = 0.5;
+		slices = 50;
+		stacks = 50;
+
+
+	}
+
+};
+
+class GL_Cylinder {
+public:
+	GLdouble baseRadius;
+	GLdouble topRadius;
+	GLdouble height;
+	GLdouble slices;
+	GLdouble stacks;
+
+	GL_Cylinder() {
+		baseRadius = 1.0;
+		topRadius = 1.0;
+		height = 2.0;
+		slices = 20;
+		stacks = 8;
+	}
 };

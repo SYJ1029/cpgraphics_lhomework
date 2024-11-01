@@ -1,3 +1,5 @@
+#pragma once
+
 #include "GetShader.h"
 
 using namespace std;
