@@ -378,8 +378,6 @@ void drawScene()
 		model *= InitMoveProj(playground[i].center);
 		model *= InitScaleProj(playground[i].Stretch);
 
-		
-
 
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
@@ -784,6 +782,9 @@ GLvoid MyLineMove(int value) {
 		glutTimerFunc(10, MyLineMove, value);
 	}
 	else {
+
+
+
 		playground[value].center = token;
 	}
 

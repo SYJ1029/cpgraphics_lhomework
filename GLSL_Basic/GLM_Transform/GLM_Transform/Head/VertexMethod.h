@@ -2,10 +2,6 @@
 
 #include "ObjStruct.h"
 
-
-
-
-
 int index_count = 0;
 int index_array_count = 0;
 
@@ -39,8 +35,6 @@ glm::mat4 GetSpin(GLPos Center, GLfloat radian, glm::vec3 axis) {
 
 	return model;
 }
-
-
 
 
 glm::mat4 GetStretch(GLPos Stretch) {

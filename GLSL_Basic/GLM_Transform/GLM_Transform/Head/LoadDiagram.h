@@ -1,6 +1,6 @@
 #pragma once
 
-#include "3DDiagram.h"
+#include "GetShader.h"
 
 
 MyCol mycolor = { 1.0f, 1.0f, 1.0f, 1.0f };

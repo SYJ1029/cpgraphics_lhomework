@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Head\3DDiagram.h" />
+    <ClInclude Include="Head\CheckPointQue.h" />
     <ClInclude Include="Head\ColorStructs.h" />
     <ClInclude Include="Head\GetShader.h" />
     <ClInclude Include="Head\LoadDiagram.h" />
