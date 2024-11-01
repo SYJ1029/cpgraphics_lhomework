@@ -95,5 +95,6 @@ GLPos GetProjedPos(GLPos pos, glm::mat4 proj) {
 
 	token = proj * token;
 
-	return Vec3ToGLPos(token);
+	GLPos result = Vec3ToGLPos(glm::vec3(token));
+	return result;
 }

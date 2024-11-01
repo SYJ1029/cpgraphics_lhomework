@@ -749,6 +749,7 @@ GLvoid OrbitCw(int value) {
 			result *= InitRotateProj(playground[value].Orbit, { 0.0f, 0.0f, 0.0f });
 			result *= InitRotateProj(playground[value].radian, playground[value].center);
 			result *= InitMoveProj(playground[value].center);
+			result *= InitScaleProj(playground[value].Stretch);
 
 			playground[value].center = GetProjedPos(playground[value].center, result);
 			playground[value].Orbit = 0.0f;
