@@ -76,8 +76,24 @@ GLPos Vec3ToGLPos(glm::vec3 vector) {
 	return result;
 }
 
+glm::vec3 GLPosToVec3(GLPos pos) {
+	glm::vec3 result = { pos.x, pos.y, pos.z };
+
+
+	return result;
+}
+
 
 GLfloat dist(GLPos a, GLPos b) {
 
 	return glm::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y) + (b.z - a.z) * (b.z - a.z));
+}
+
+
+GLPos GetProjedPos(GLPos pos, glm::mat4 proj) {
+	glm::vec4 token = glm::vec4(GLPosToVec3(pos), 1.0f);
+
+	token = proj * token;
+
+	return Vec3ToGLPos(token);
 }

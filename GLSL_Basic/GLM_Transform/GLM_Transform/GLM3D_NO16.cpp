@@ -743,6 +743,15 @@ GLvoid OrbitCw(int value) {
 		if (endorbit && playground[value].Orbit.y <= -180) {
 			/*playground[value].center = playground[value].target;
 			playground[value].Orbit = 0.0f;*/
+
+			glm::mat4 result = glm::mat4(1.0);
+
+			result *= InitRotateProj(playground[value].Orbit, { 0.0f, 0.0f, 0.0f });
+			result *= InitRotateProj(playground[value].radian, playground[value].center);
+			result *= InitMoveProj(playground[value].center);
+
+			playground[value].center = GetProjedPos(playground[value].center, result);
+			playground[value].Orbit = 0.0f;
 		}
 		else
 			glutTimerFunc(30, OrbitCw, value);
@@ -783,7 +792,7 @@ GLvoid MyLineMove(int value) {
 	}
 	else {
 
-
+		 
 
 		playground[value].center = token;
 	}
