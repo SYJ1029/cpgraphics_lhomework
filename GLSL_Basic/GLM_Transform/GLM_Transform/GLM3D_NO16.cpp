@@ -19,6 +19,7 @@ GLvoid OrbitCcw(int value);
 GLvoid OrbitCw(int value);
 GLvoid specialKeyboard(int key, int x, int y);
 GLvoid MyLineMove(int value);
+GLvoid MyStretch(int value);
 
 
 Diagram playground[2];
@@ -523,6 +524,14 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 
 		break;
 	case '5':
+		goorbit = true;
+		for (int i = 0; i < 2; i++) {
+			gospin[i] = true;
+			playground[i].orbitccw = true;
+			glutTimerFunc(10, MyCcw, i);
+			glutTimerFunc(10, OrbitCcw, i);
+		}
+
 		break;
 
 	case 'c':
@@ -807,4 +816,9 @@ GLvoid MyLineMove(int value) {
 	}
 
 	glutPostRedisplay();
+}
+
+
+GLvoid MyStretch(int value) {
+
 }
