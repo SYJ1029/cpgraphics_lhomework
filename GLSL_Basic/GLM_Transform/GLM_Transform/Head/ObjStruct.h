@@ -114,3 +114,7 @@ typedef struct GL_QuadObj {
 }QuadSetting;
 
 
+typedef struct GL_Rect {
+	GLPos pos1;
+	GLPos pos2;
+}GL_Rect;

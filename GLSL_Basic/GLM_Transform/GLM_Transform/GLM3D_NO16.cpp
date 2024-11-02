@@ -490,9 +490,18 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		
 		checkPoint = true;
 		for (int i = 0; i < 2; i++) {
+			playground[i].target = { 0.0, 0.8, 0.0 };
+			playground[i].target = playground[i].target * mulcount;
+			playground[i].fifo.push(playground[i].target);
 
+			playground[i].target = playground[1 - i].center;
+			playground[i].fifo.push(playground[i].target);
 
+			mulcount *= -1;
 		}
+
+		glutTimerFunc(10, MyLineMove, 0);
+		glutTimerFunc(10, MyLineMove, 1);
 
 		/*for (int i = 0; i < 2; i++) {
 			playground[i].other_center = playground[1 - i].center;

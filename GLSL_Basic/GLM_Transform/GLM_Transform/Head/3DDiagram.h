@@ -71,11 +71,16 @@ public:
 		return Vec3ToGLPos(axis);
 	}
 
+	
+
+
 	bool GetCrash(GLPos token, GLPos target) {
 		GLPos prev = center + token;
+		GL_Rect newtoken = Getbb(prev, center);
 
-		return ((prev - target) <= 0 && (center - target) >= 0) ||
-			((prev - target) >= 0 && (center - target) <= 0);
+		return (target.x >= newtoken.pos1.x && target.x <= newtoken.pos2.x) &&
+			(target.y <= newtoken.pos2.y && target.y >= newtoken.pos1.y) &&
+			(target.z >= newtoken.pos2.z && target.z <= newtoken.pos1.z);
 
 	}
 
