@@ -15,6 +15,8 @@ Projection* proj;
 #define ID_CYLINDER 4
 #define ID_CONE 5
 
+#define PROJED true
+
 
 GLvoid Mouse(int button, int state, int x, int y);
 GLvoid Keyboard(unsigned char key, int x, int y);
@@ -89,6 +91,8 @@ GLvoid SetProjection(int projtype) {
 	else {
 		proj->InitPerspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
 	}
+
+	IsobjsProjed(false);
 }
 
 void DepthCheck() {

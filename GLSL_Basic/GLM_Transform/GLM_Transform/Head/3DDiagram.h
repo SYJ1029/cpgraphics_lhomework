@@ -182,7 +182,13 @@ public:
 		pos[7][0] = 0.5f; pos[7][1] = 0.5f; pos[7][2] = 0.5f;
 	}
 
-
+	void SetTranPos(int mulcount) {
+		for (int i = 0; i < 8; i++) {
+			for (int j = 0; j < 3; j++) {
+				pos[i][j] *= mulcount;
+			}
+		}
+	}
 
 	int* AddIndexList() {
 		static int* p = (int*)malloc(3 * 12 * sizeof(int));
@@ -290,6 +296,13 @@ public:
 
 	}
 
+	void SetTranPos(int mulcount) {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 3; j++) {
+				pos[i][j] *= mulcount;
+			}
+		}
+	}
 
 	int* AddIndexList() {
 		static int* p = (int*)malloc(3 * 4 * sizeof(int));
@@ -361,6 +374,14 @@ public:
 		pos[3][0] = 0.5f, pos[3][1] = -0.5f, pos[3][2] = 0.5f;
 		pos[4][0] = -0.5f, pos[4][1] = -0.5f, pos[4][2] = 0.5f;
 
+	}
+
+	void SetTranPos(int mulcount) {
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 3; j++) {
+				pos[i][j] *= mulcount;
+			}
+		}
 	}
 
 	int* AddIndexList() {
