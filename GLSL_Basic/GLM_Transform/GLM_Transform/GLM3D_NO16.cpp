@@ -768,10 +768,6 @@ GLvoid OrbitCcw(int value) {
 
 	playground[value].Orbit += Vec3ToGLPos(playground[value].OrbitAxis) * 5;
 
-	/*playground[value].Orbit.x += (playground[value].OrbitAxis.x * 5);
-	playground[value].Orbit.y += (playground[value].OrbitAxis.y * 5);
-	playground[value].Orbit.z += (playground[value].OrbitAxis.z * 5);*/
-
 	if (goorbit && playground[value].orbitccw) {
 		glutTimerFunc(30, OrbitCcw, value);
 	}
@@ -785,10 +781,6 @@ GLvoid OrbitCcw(int value) {
 GLvoid OrbitCw(int value) {
 	playground[value].Orbit -= Vec3ToGLPos(playground[value].OrbitAxis) * 5;
 
-
-	/*playground[value].Orbit.x -= (playground[value].OrbitAxis.x * 5);
-	playground[value].Orbit.y -= (playground[value].OrbitAxis.y * 5);
-	playground[value].Orbit.z -= (playground[value].OrbitAxis.z * 5);*/
 
 	if (goorbit && playground[value].orbitccw == false) {
 
@@ -873,9 +865,7 @@ GLvoid MySpiralCw(int value) {
 
 
 
-	playground[value].Orbit.x -= (playground[value].OrbitAxis.x * 5);
-	playground[value].Orbit.y -= (playground[value].OrbitAxis.y * 5);
-	playground[value].Orbit.z -= (playground[value].OrbitAxis.z * 5);
+	playground[value].Orbit -= Vec3ToGLPos(playground[value].OrbitAxis) * 5;
 
 
 	if (goorbit && playground[value].orbitccw == false) {
@@ -885,9 +875,7 @@ GLvoid MySpiralCw(int value) {
 }
 
 GLvoid MySpiralCcw(int value) {
-	playground[value].Orbit.x += (playground[value].OrbitAxis.x * 5);
-	playground[value].Orbit.y += (playground[value].OrbitAxis.y * 5);
-	playground[value].Orbit.z += (playground[value].OrbitAxis.z * 5);
+	playground[value].Orbit += Vec3ToGLPos(playground[value].OrbitAxis) * 5;
 
 	if (goorbit && playground[value].orbitccw) {
 		glutTimerFunc(30, MySpiralCcw, value);
