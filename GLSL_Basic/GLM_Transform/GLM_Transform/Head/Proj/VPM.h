@@ -1,4 +1,6 @@
-#include "../VertexMethod.h"
+#pragma once
+
+#include "../ObjStruct.h"
 
 
 class Camera {
