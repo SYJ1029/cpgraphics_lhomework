@@ -469,17 +469,14 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		playground[0].orbitccw = true;
 		playground[1].orbitccw = false;
 		for (int i = 0; i < 2; i++) {
-			firstttoken = { 0.01f, 0.0f, 0.0f };
-			playground[i].target = playground[i].center + (firstttoken * mulcount);
-			playground[i].fifo.push(playground[i].target);
-
+			playground[i].center = { 0.0f, 0.0f, 0.0f };
 			//glutTimerFunc(30, MyLineMove, i);
 
 			mulcount *= -1;
 		}
 
-		glutTimerFunc(30, OrbitCcw, 0);
-		glutTimerFunc(30, OrbitCw, 1);
+		glutTimerFunc(30, MySpiralCcw, 0);
+		glutTimerFunc(30, MySpiralCw, 1);
 		break;
 	case '2':
 		checkPoint = false;
@@ -814,14 +811,6 @@ GLvoid MyLineMove(int value) {
 		playground[value].center += InitDelta(playground[value].center, token);
 	}
 
-
-
-	/*playground[1 - value].center.x += token.x;
-	playground[1 - value].center.y += token.y;
-	playground[1 - value].center.z += token.z;*/
-
-
-
 	if (playground[value].GetCrash(InitDelta(playground[value].center, token), token) == false) {
 		glutTimerFunc(10, MyLineMove, value);
 	}
@@ -862,23 +851,40 @@ GLvoid MyStretch(int value) {
 GLvoid MySpiralCw(int value) {
 	// 원을 따라가되
 	// 중심을 옮긴다
+	GLPos token = { 0.01f, 0.0f, 0.0f };
 
-
-
+	playground[value].center += token;
 	playground[value].Orbit -= Vec3ToGLPos(playground[value].OrbitAxis) * 5;
 
 
 	if (goorbit && playground[value].orbitccw == false) {
-		glutTimerFunc(30, MySpiralCw, value);
+		if (playground[value].Orbit.y <= -540) {
+			playground[value].orbitccw = !(playground[value].orbitccw);
+
+			glutTimerFunc(30, MySpiralCcw, value);
+		}
+		else
+			glutTimerFunc(30, MySpiralCw, value);
 	}
 	glutPostRedisplay();
 }
 
 GLvoid MySpiralCcw(int value) {
+	GLPos token = { 0.01f, 0.0f, 0.0f };
+
+	playground[value].center += token * -1;
 	playground[value].Orbit += Vec3ToGLPos(playground[value].OrbitAxis) * 5;
 
 	if (goorbit && playground[value].orbitccw) {
-		glutTimerFunc(30, MySpiralCcw, value);
+
+		if (playground[value].Orbit.y >= 540) {
+			playground[value].orbitccw = !(playground[value].orbitccw);
+
+			glutTimerFunc(30, MySpiralCw, value);
+		}
+
+		else
+			glutTimerFunc(30, MySpiralCcw, value);
 	}
 	glutPostRedisplay();
 }

@@ -98,3 +98,4 @@ GLPos GetProjedPos(GLPos pos, glm::mat4 proj) {
 	GLPos result = Vec3ToGLPos(glm::vec3(token));
 	return result;
 }
+
