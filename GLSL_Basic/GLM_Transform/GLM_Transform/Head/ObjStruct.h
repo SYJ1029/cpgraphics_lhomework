@@ -120,18 +120,3 @@ typedef struct GL_Rect {
 }GL_Rect;
 
 
-
-
-GLPos Vec3ToGLPos(glm::vec3 vector) {
-	GLPos result = { vector.x, vector.y, vector.z };
-
-
-	return result;
-}
-
-glm::vec3 GLPosToVec3(GLPos pos) {
-	glm::vec3 result = { pos.x, pos.y, pos.z };
-
-
-	return result;
-}

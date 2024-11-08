@@ -70,6 +70,21 @@ glm::mat4 ChangeScale(GLPos Stretch, GLPos Delta) {
 
 
 
+
+GLPos Vec3ToGLPos(glm::vec3 vector) {
+	GLPos result = { vector.x, vector.y, vector.z };
+
+
+	return result;
+}
+
+glm::vec3 GLPosToVec3(GLPos pos) {
+	glm::vec3 result = { pos.x, pos.y, pos.z };
+
+
+	return result;
+}
+
 GLfloat dist(GLPos a, GLPos b) {
 
 	return glm::sqrt((b.x - a.x) * (b.x - a.x) + (b.y - a.y) * (b.y - a.y) + (b.z - a.z) * (b.z - a.z));
