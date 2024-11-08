@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Head/LoadDiagram.h"
 
 #define MAX_INDEX 12
