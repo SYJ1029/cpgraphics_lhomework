@@ -4,10 +4,12 @@
 
 
 class Camera {
-public:
+private:
 	glm::vec3 EYE;
 	glm::vec3 AT;
 	glm::vec3 UP;
+public:
+
 
 	Camera() {
 		EYE = glm::vec3(0.0f);
