@@ -17,6 +17,12 @@ public:
 		UP = glm::vec3(0.0f);
 	}
 
+	Camera(glm::vec3 EYE, glm::vec3 AT, glm::vec3 UP) {
+		this->EYE = EYE;
+		this->AT = AT;
+		this->UP = UP;
+	}
+
 
 	glm::mat4 GetViewMatix() {
 		glm::mat4 view = glm::lookAt(EYE, AT, UP);

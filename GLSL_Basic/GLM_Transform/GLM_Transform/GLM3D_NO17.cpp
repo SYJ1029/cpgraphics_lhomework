@@ -2,6 +2,9 @@
 
 #include "Head/LoadDiagram.h"
 
+Camera* camera;
+Projection* proj;
+
 #define MAX_INDEX 12
 #define MAX_INDEX13 2
 
@@ -69,6 +72,12 @@ GLvoid Setplayground() {
 	playground.Orbit = { 0.0f, 0.0f, 0.0f };
 
 	playground.postype = ID_CUBE;
+}
+
+
+GLvoid SetCamera() {
+
+	camera = new Camera(glm::vec3(0.3f, 0.3f, 0.3f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void DepthCheck() {
@@ -301,6 +310,7 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	glBindVertexArray(vao);
 	SetBuffer();
 	Setplayground();
+	SetCamera();
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_DEPTH_TEST);
@@ -370,8 +380,8 @@ void drawScene()
 		gluQuadricNormals(qobj, playground.qset.normals);
 		gluQuadricOrientation(qobj, playground.qset.orientation);
 
-		rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		/*rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));*/
 
 		model = rm2 * rm;
 
@@ -381,8 +391,16 @@ void drawScene()
 		model *= InitScaleProj(playground.Stretch);
 
 
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
+
+		glm::mat4 view = glm::mat4(1.0);
+
+		view = camera->GetViewMatix();
+
+		unsigned int viewLocation = glGetUniformLocation(shaderProgramID, "viewTransform");
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
 		switch (playground.postype) {
 		case ID_CUBE:
@@ -414,12 +432,10 @@ void drawScene()
 
 
 
-
-
 	model = basemat;
 
-	rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	/*rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));*/
 
 	model = rm2 * rm;
 
