@@ -392,8 +392,6 @@ void drawScene()
 		gluQuadricNormals(qobj, playground.qset.normals);
 		gluQuadricOrientation(qobj, playground.qset.orientation);
 
-		/*rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));*/
 
 		model = rm2 * rm;
 
@@ -450,8 +448,6 @@ void drawScene()
 
 	model = basemat;
 
-	/*rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));*/
 
 	model = rm2 * rm;
 
