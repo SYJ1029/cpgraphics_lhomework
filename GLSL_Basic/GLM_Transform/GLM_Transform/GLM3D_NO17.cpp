@@ -25,7 +25,7 @@ GLvoid MySpiralCcw(int value);
 
 
 
-Diagram playground[2];
+Diagram playground;
 
 
 bool depthed = true;
@@ -58,20 +58,15 @@ int baseAxisIndex = 0;
 
 GLvoid Setplayground() {
 
-	playground[0].center = { -0.8f, 0.0f, 0.0f };
-	playground[1].center = { 0.8f, 0.0f, 0.0f };
+	playground.center = { 0.0f, 0.0f, 0.0f };
 
-	playground[0].radian = { 0.0f, 0.0f, 0.0f };
-	playground[1].radian = { 0.0f, 0.0f, 0.0f };
+	playground.radian = { 0.0f, 0.0f, 0.0f };
 
-	playground[0].Stretch = { 0.2f, 0.2f, 0.2f };
-	playground[1].Stretch = { 0.2f, 0.2f, 0.2f };
+	playground.Stretch = { 0.2f, 0.2f, 0.2f };
 
-	playground[0].Orbit = { 0.0f, 0.0f, 0.0f };
-	playground[1].Orbit = { 0.0f, 0.0f, 0.0f };
+	playground.Orbit = { 0.0f, 0.0f, 0.0f };
 
-	playground[0].postype = ID_CUBE;
-	playground[1].postype = ID_TET;
+	playground.postype = ID_CUBE;
 }
 
 void DepthCheck() {
@@ -369,25 +364,25 @@ void drawScene()
 
 	for (int i = 0; i < 2; i++) {
 
-		gluQuadricDrawStyle(qobj, playground[i].qset.drawstyle);
-		gluQuadricNormals(qobj, playground[i].qset.normals);
-		gluQuadricOrientation(qobj, playground[i].qset.orientation);
+		gluQuadricDrawStyle(qobj, playground.qset.drawstyle);
+		gluQuadricNormals(qobj, playground.qset.normals);
+		gluQuadricOrientation(qobj, playground.qset.orientation);
 
 		rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		model = rm2 * rm;
 
-		model *= InitRotateProj(playground[i].Orbit, { 0.0f, 0.0f, 0.0f });
-		model *= InitRotateProj(playground[i].radian, playground[i].center);
-		model *= InitMoveProj(playground[i].center);
-		model *= InitScaleProj(playground[i].Stretch);
+		model *= InitRotateProj(playground.Orbit, { 0.0f, 0.0f, 0.0f });
+		model *= InitRotateProj(playground.radian, playground.center);
+		model *= InitMoveProj(playground.center);
+		model *= InitScaleProj(playground.Stretch);
 
 
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
 
-		switch (playground[i].postype) {
+		switch (playground.postype) {
 		case ID_CUBE:
 			glDrawElements(GL_TRIANGLES, 6 * 6, GL_UNSIGNED_INT, (void*)(cube->start_index * sizeof(GLfloat)));
 			break;
@@ -461,124 +456,6 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	GLPos firstttoken = { 0.0f, 0.8f, 0.0f };
 
 	switch (key) {
-	case '1':
-		goStretch = false;
-		goSpiral = true;
-		goorbit = true;
-
-		playground[0].orbitccw = true;
-		playground[1].orbitccw = false;
-		for (int i = 0; i < 2; i++) {
-			playground[i].center = { 0.0f, 0.0f, 0.0f };
-			//glutTimerFunc(30, MyLineMove, i);
-
-			mulcount *= -1;
-		}
-
-		glutTimerFunc(30, MySpiralCcw, 0);
-		glutTimerFunc(30, MySpiralCw, 1);
-		break;
-	case '2':
-		checkPoint = false;
-		goStretch = false;
-
-		for (int i = 0; i < 2; i++) {
-			playground[i].target = playground[1 - i].center;
-			playground[i].fifo.push(playground[i].target);
-
-
-
-
-		}
-
-
-
-		glutTimerFunc(10, MyLineMove, 0);
-		glutTimerFunc(10, MyLineMove, 1);
-
-		break;
-	case '3':
-		goorbit = true;
-		endorbit = true;
-		goStretch = false;
-
-		for (int i = 0; i < 2; i++) {
-			playground[i].orbitccw = false;
-			playground[i].target = playground[1 - i].center;
-			glutTimerFunc(10, OrbitCw, i);
-		}
-
-		break;
-	case '4':
-		goStretch = false;
-		checkPoint = true;
-
-		for (int i = 0; i < 2; i++) {
-			playground[i].target = { 0.0, 0.8, 0.0 };
-			playground[i].target = playground[i].target * mulcount;
-			playground[i].fifo.push(playground[i].target);
-
-			playground[i].target = playground[1 - i].center;
-			playground[i].fifo.push(playground[i].target);
-
-			mulcount *= -1;
-		}
-
-		glutTimerFunc(10, MyLineMove, 0);
-		glutTimerFunc(10, MyLineMove, 1);
-
-		/*for (int i = 0; i < 2; i++) {
-			playground[i].other_center = playground[1 - i].center;
-
-			linetoken[i] = {
-				(playground[i].center.x - playground[i].other_center.x) / playground[i].GetDist(),
-			(playground[i].center.y - playground[i].other_center.y) / playground[i].GetDist(),
-			(playground[i].center.z - playground[i].other_center.z) / playground[i].GetDist()
-			};
-
-			linetoken[i] = linetoken[i] / 50.0f;
-
-			mulcount *= -1;
-		}
-		glutTimerFunc(10, MyLineMove, 0);
-		glutTimerFunc(10, MyLineMove, 1);*/
-
-
-
-		break;
-	case '5':
-		goorbit = true;
-		goStretch = true;
-
-		for (int i = 0; i < 2; i++) {
-			gospin[i] = true;
-			playground[i].orbitccw = true;
-			playground[i].delta = { 0.02f, 0.02f, 0.02f };
-			playground[i].delta = playground[i].delta * mulcount;
-
-			glutTimerFunc(10, MyCcw, i);
-			glutTimerFunc(10, OrbitCcw, i);
-			glutTimerFunc(10, MyStretch, i);
-
-			mulcount *= -1;
-		}
-
-		break;
-
-	case 'c':
-		for (int i = 0; i < 2; i++) {
-			randnum[i] = (float)((float)rand() / RAND_MAX) * 5;
-
-			if (i >= 1 && randnum[i] == randnum[i - 1])
-				i--;
-			else {
-				playground[i].postype = randnum[i];
-			}
-		}
-
-		/*playground[0].postype =	(playground[0].postype + 1) % 7;
-		playground[1].postype = (playground[1].postype + 1) % 7;*/
-		break;
 	case 'h':
 		depthed = !(depthed);
 		DepthCheck();
@@ -588,14 +465,14 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		if ((int)key - (int)'a' < 0) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			for (int i = 0; i < 2; i++) {
-				playground[i].qset.drawstyle = GLU_FILL;
+				playground.qset.drawstyle = GLU_FILL;
 			}
 
 		}
 		else {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			for (int i = 0; i < 2; i++) {
-				playground[i].qset.drawstyle = GLU_LINE;
+				playground.qset.drawstyle = GLU_LINE;
 			}
 		}
 
@@ -605,9 +482,8 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		gospin[0] = true;
 		gospin[1] = true;
 
-		for (int i = 0; i < 2; i++) {
-			playground[i].axis = glm::vec3(1.0f, 0.0f, 0.0f);
-		}
+		playground.axis = glm::vec3(1.0f, 0.0f, 0.0f);
+		
 
 		if ((int)key - (int)'a' < 0) {
 			direct = true;
@@ -627,9 +503,8 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		gospin[0] = true;
 		gospin[1] = true;
 
-		for (int i = 0; i < 2; i++) {
-			playground[i].axis = glm::vec3(0.0f, 1.0f, 0.0f);
-		}
+		playground.axis = glm::vec3(0.0f, 1.0f, 0.0f);
+		
 
 		if ((int)key - (int)'a' < 0) {
 			direct = true;
@@ -650,16 +525,14 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		goorbit = true;
 
 		if ((int)key - (int)'a' < 0) {
-			for (int i = 0; i < 2; i++) {
-				playground[i].orbitccw = true;
-				glutTimerFunc(10, OrbitCcw, i);
-			}
+			playground.orbitccw = true;
+			glutTimerFunc(10, OrbitCcw, 0);
+
 		}
 		else {
-			for (int i = 0; i < 2; i++) {
-				playground[i].orbitccw = false;
-				glutTimerFunc(10, OrbitCw, i);
-			}
+			playground.orbitccw = false;
+			glutTimerFunc(10, OrbitCw, 0);
+
 		}
 
 		break;
@@ -720,11 +593,11 @@ GLvoid specialKeyboard(int key, int x, int y) {
 
 GLvoid MyCcw(int value) {
 
-	playground[value].radian.x += (playground[value].axis.x * 5);
+	playground.radian.x += (playground.axis.x * 5);
 
-	playground[value].radian.y += (playground[value].axis.y * 5);
+	playground.radian.y += (playground.axis.y * 5);
 
-	playground[value].radian.z += (playground[value].axis.z * 5);
+	playground.radian.z += (playground.axis.z * 5);
 
 
 
@@ -740,11 +613,11 @@ GLvoid MyCcw(int value) {
 
 GLvoid MyCw(int value) {
 
-	playground[value].radian.x -= (playground[value].axis.x * 5);
+	playground.radian.x -= (playground.axis.x * 5);
 
-	playground[value].radian.y -= (playground[value].axis.y * 5);
+	playground.radian.y -= (playground.axis.y * 5);
 
-	playground[value].radian.z -= (playground[value].axis.z * 5);
+	playground.radian.z -= (playground.axis.z * 5);
 
 
 
@@ -763,9 +636,9 @@ GLvoid MyCw(int value) {
 
 GLvoid OrbitCcw(int value) {
 
-	playground[value].Orbit += Vec3ToGLPos(playground[value].OrbitAxis) * 5;
+	playground.Orbit += Vec3ToGLPos(playground.OrbitAxis) * 5;
 
-	if (goorbit && playground[value].orbitccw) {
+	if (goorbit && playground.orbitccw) {
 		glutTimerFunc(30, OrbitCcw, value);
 	}
 	glutPostRedisplay();
@@ -776,14 +649,14 @@ GLvoid OrbitCcw(int value) {
 
 
 GLvoid OrbitCw(int value) {
-	playground[value].Orbit -= Vec3ToGLPos(playground[value].OrbitAxis) * 5;
+	playground.Orbit -= Vec3ToGLPos(playground.OrbitAxis) * 5;
 
 
-	if (goorbit && playground[value].orbitccw == false) {
+	if (goorbit && playground.orbitccw == false) {
 
-		if (endorbit && playground[value].Orbit.y <= -180) {
-			playground[value].center = playground[value].target;
-			playground[value].Orbit = 0.0f;
+		if (endorbit && playground.Orbit.y <= -180) {
+			playground.center = playground.target;
+			playground.Orbit = 0.0f;
 
 			//glm::mat4 result = glm::mat4(1.0);
 
@@ -801,90 +674,3 @@ GLvoid OrbitCw(int value) {
 }
 
 
-GLvoid MyLineMove(int value) {
-	GLPos token = { 0 };
-
-
-	if (playground[value].fifo.empty());
-	else {
-		token = playground[value].fifo.front();
-		playground[value].center += InitDelta(playground[value].center, token);
-	}
-
-	if (playground[value].GetCrash(InitDelta(playground[value].center, token), token) == false) {
-		glutTimerFunc(10, MyLineMove, value);
-	}
-	else {
-		playground[value].center = token;
-
-		playground[value].fifo.pop();
-
-		if (playground[value].fifo.empty()) {
-
-		}
-		else {
-			glutTimerFunc(30, MyLineMove, value);
-		}
-
-
-	}
-
-	glutPostRedisplay();
-}
-
-
-GLvoid MyStretch(int value) {
-
-	playground[value].Stretch += playground[value].delta;
-
-	if ((playground[value].delta < 0 && playground[value].Stretch < 0.1f) ||
-		(playground[value].delta > 0 && playground[value].Stretch > 0.4f)) {
-		playground[value].delta = playground[value].delta * -1;
-	}
-
-	if (goStretch)
-		glutTimerFunc(30, MyStretch, value);
-
-	glutPostRedisplay();
-}
-
-GLvoid MySpiralCw(int value) {
-	// 원을 따라가되
-	// 중심을 옮긴다
-	GLPos token = { 0.01f, 0.0f, 0.0f };
-
-	playground[value].center += token;
-	playground[value].Orbit -= Vec3ToGLPos(playground[value].OrbitAxis) * 5;
-
-
-	if (goorbit && playground[value].orbitccw == false) {
-		if (playground[value].Orbit.y <= -540) {
-			playground[value].orbitccw = !(playground[value].orbitccw);
-
-			glutTimerFunc(30, MySpiralCcw, value);
-		}
-		else
-			glutTimerFunc(30, MySpiralCw, value);
-	}
-	glutPostRedisplay();
-}
-
-GLvoid MySpiralCcw(int value) {
-	GLPos token = { 0.01f, 0.0f, 0.0f };
-
-	playground[value].center += token * -1;
-	playground[value].Orbit += Vec3ToGLPos(playground[value].OrbitAxis) * 5;
-
-	if (goorbit && playground[value].orbitccw) {
-
-		if (playground[value].Orbit.y >= 540) {
-			playground[value].orbitccw = !(playground[value].orbitccw);
-
-			glutTimerFunc(30, MySpiralCw, value);
-		}
-
-		else
-			glutTimerFunc(30, MySpiralCcw, value);
-	}
-	glutPostRedisplay();
-}
