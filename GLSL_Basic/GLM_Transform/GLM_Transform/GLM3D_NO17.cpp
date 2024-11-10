@@ -25,10 +25,17 @@ GLvoid MyCw(int value);
 GLvoid OrbitCcw(int value);
 GLvoid OrbitCw(int value);
 GLvoid specialKeyboard(int key, int x, int y);
-GLvoid MyLineMove(int value);
+GLvoid MyLineMoveCube(int value);
 GLvoid MyStretch(int value);
 GLvoid MySpiralCw(int value);
 GLvoid MySpiralCcw(int value);
+GLvoid MyCwCube(int value);
+GLvoid MyCcwCube(int value);
+GLvoid MyStretchCube(int value);
+
+
+
+
 
 
 
@@ -36,6 +43,7 @@ Diagram playground;
 
 
 bool depthed = true;
+bool gopersepective = true;
 bool gospin[2] = { false, false };
 bool direct = true;
 bool goorbit = false;
@@ -61,6 +69,7 @@ float base_axis_col[6][3] = {
 };
 
 int baseAxisIndex = 0;
+int mulcount = 1;
 
 
 GLvoid Setplayground() {
@@ -78,15 +87,18 @@ GLvoid Setplayground() {
 
 
 GLvoid SetCamera() {
+	delete camera;
 
-	camera = new Camera(glm::vec3(1.0f, 1.0f, 1.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	camera = new Camera(glm::vec3(3.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 GLvoid SetProjection(int projtype) {
+	delete proj;
+
 	proj = new Projection();
 
 	if (projtype == PROJ_ORTHO) {
-		proj->InitOrtho(-100.0f, 100.0f, -100.0f, 100.0f, -100.0f, 100.0f);
+		proj->InitOrtho(-5.0f, 5.0f, 5.0f, -5.0f, -30.0f, 15.0f);
 	}
 	else {
 		proj->InitPerspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
@@ -327,6 +339,7 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	Setplayground();
 	SetCamera();
 	SetProjection(PROJ_PERSPECTIVE);
+	cube->SetTranPos(200);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_DEPTH_TEST);
@@ -376,6 +389,7 @@ void drawScene()
 	glm::mat4 rm = basemat;
 	glm::mat4 rm2 = basemat;
 	glm::mat4 model = basemat;
+	glm::mat4 submodel = basemat;
 	//glm::mat4 rm3 = glm::mat4(1.0f);
 
 	/*model = glm::translate(model, glm::vec3(0.1f, 0.5f, 0.0f));*/
@@ -397,14 +411,11 @@ void drawScene()
 		gluQuadricOrientation(qobj, playground.qset.orientation);
 
 
-		model = rm2 * rm;
 
-		model *= InitRotateProj(playground.Orbit, { 0.0f, 0.0f, 0.0f });
-		model *= InitRotateProj(playground.radian, playground.center);
-		model *= InitMoveProj(playground.center);
-		model *= InitScaleProj(playground.Stretch);
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
+		glm::mat4 projection = glm::mat4(1.0);
+		projection = proj->GetProjMatrix();
+		unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
+		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
 
 		glm::mat4 view = glm::mat4(1.0);
@@ -414,15 +425,35 @@ void drawScene()
 
 
 
-		glm::mat4 projection = glm::mat4(1.0);
-		projection = proj->GetProjMatrix();
-		unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
-		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+		model *= InitRotateProj(playground.Orbit, { 0.0f, 0.0f, 0.0f });
+		model *= InitRotateProj(playground.radian, playground.center);
+		model *= InitMoveProj(playground.center);
+		//model *= InitScaleProj(playground.Stretch);
+		//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+
+
+
+
+
 
 
 		switch (playground.postype) {
 		case ID_CUBE:
-			glDrawElements(GL_TRIANGLES, 6 * 6, GL_UNSIGNED_INT, (void*)(cube->start_index * sizeof(GLfloat)));
+			counter = cube->start_index;
+			for (int i = 0; i < 6; i++) {
+				submodel = model;
+
+				submodel *= cube->GetWorldTransMatrix(projection, view, i);
+				glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+				counter += 6;
+			}
+
+
+
+			//glDrawElements(GL_TRIANGLES, 6 * 6, GL_UNSIGNED_INT, (void*)(cube->start_index * sizeof(GLfloat)));
 			break;
 		case ID_TET:
 			glDrawElements(GL_TRIANGLES, 3 * 4, GL_UNSIGNED_INT, (void*)(tri->start_index * sizeof(GLfloat)));
@@ -486,8 +517,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	int token = (int)key - (int)'1';
 	int randnum[2];
 	randnum[0] = -1, randnum[1] = -1;
-	int mulcount = -1;
-	GLPos firstttoken = { 0.0f, 0.8f, 0.0f };
+	GLPos firsttoken = { 0.0f, 0.8f, 0.0f };
 
 	switch (key) {
 	case 'h':
@@ -495,6 +525,89 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		DepthCheck();
 		break;
 
+	case 'p':
+		gopersepective = !(gopersepective);
+		SetProjection(gopersepective);
+		break;
+	case 't':
+		switch (playground.postype) {
+		case ID_CUBE:
+			cube->endspin[4] = false;
+			cube->axis[4] = glm::vec3(1.0f, 0.0f, 0.0f);
+
+			if ((int)key - (int)'a' < 0) {
+				direct = true;
+
+
+				glutTimerFunc(10, MyCcwCube, 4);
+			}
+			else {
+				direct = false;
+				cube->spin[4] = !(cube->spin[4]);
+				glutTimerFunc(10, MyCwCube, 4);
+			}
+			break;
+		default:
+			playground.postype = ID_CUBE;
+			break;
+		}
+
+		break;
+	case 'f':
+		switch (playground.postype) {
+		case ID_CUBE:
+			cube->axis[2] = glm::vec3(0.0f, 0.0f, 1.0f);
+
+			cube->spin[2] = true;
+			cube->endspin[2] = true;
+			cube->ccw[2] = !(cube->ccw[2]);
+
+			if (cube->ccw[2])
+				glutTimerFunc(10, MyCcwCube, 2);
+			else
+				glutTimerFunc(10, MyCwCube, 2);
+			break;
+		default:
+			playground.postype = ID_CUBE;
+			break;
+		}
+
+		break;
+	case 's':
+		switch (playground.postype) {
+		case ID_CUBE:
+
+			for (int i = 0; i < 2; i++) {
+				firsttoken = { cube->center[i].x, cube->center[i].y + (200.0f * mulcount), cube->center[i].z };
+				//firsttoken = firsttoken * mulcount;
+				cube->fifo[i].push(firsttoken);
+
+				glutTimerFunc(30, MyLineMoveCube, i);
+			}
+
+			mulcount *= -1;
+			break;
+		default:
+			playground.postype = ID_CUBE;
+			break;
+		}
+
+		break;
+	case 'b':
+		switch (playground.postype) {
+		case ID_CUBE:
+			cube->StretchDelta[3] = cube->StretchDelta[3] * -1;
+
+
+			glutTimerFunc(30, MyStretchCube, 3);
+
+			break;
+		default:
+			playground.postype = ID_CUBE;
+			break;
+		}
+
+		break;
 	case 'w': case 'W':
 		if ((int)key - (int)'a' < 0) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -510,6 +623,27 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 			}
 		}
 
+		break;
+
+	case 'o':
+		switch (playground.postype) {
+		case ID_PYR:
+
+			break;
+		default:
+			playground.postype = ID_PYR;
+			break;
+		}
+		break;
+	case 'R':
+		switch (playground.postype) {
+		case ID_PYR:
+
+			break;
+		default:
+			playground.postype = ID_PYR;
+			break;
+		}
 		break;
 
 	case 'x': case 'X':
@@ -554,23 +688,9 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		}
 
 		break;
-	case 'r': case 'R':
-		goStretch = false;
-		goorbit = true;
-
-		if ((int)key - (int)'a' < 0) {
-			playground.orbitccw = true;
-			glutTimerFunc(10, OrbitCcw, 0);
-
-		}
-		else {
-			playground.orbitccw = false;
-			glutTimerFunc(10, OrbitCw, 0);
-
-		}
 
 		break;
-	case 's':
+	case 'm':
 		goorbit = false;
 		gospin[0] = false;
 		gospin[1] = false;
@@ -582,10 +702,10 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 
 
 	case 'q':
-
 		delete cube;
 		delete tri;
 		delete pyr;
+
 		glutLeaveMainLoop();
 		break;
 
@@ -599,24 +719,16 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 GLvoid specialKeyboard(int key, int x, int y) {
 	switch (key) {
 	case GLUT_KEY_LEFT:
-		cube->center.x -= 0.02f;
-		tri->center.x -= 0.02f;
-		pyr->center.x -= 0.02f;
+		playground.center -= {1.0f, 0.0f, 0.0f};
 		break;
 	case GLUT_KEY_RIGHT:
-		cube->center.x += 0.02f;
-		tri->center.x += 0.02f;
-		pyr->center.x += 0.02f;
+		playground.center += {1.0f, 0.0f, 0.0f};
 		break;
 	case GLUT_KEY_UP:
-		cube->center.y += 0.02f;
-		tri->center.y += 0.02f;
-		pyr->center.y += 0.02f;
+		playground.center -= {0.0f, 1.0f, 0.0f};
 		break;
 	case GLUT_KEY_DOWN:
-		cube->center.y -= 0.02f;
-		tri->center.y -= 0.02f;
-		pyr->center.y -= 0.02f;
+		playground.center += {0.0f, 1.0f, 0.0f};
 		break;
 	}
 
@@ -653,7 +765,8 @@ GLvoid MyCw(int value) {
 
 	playground.radian.z -= (playground.axis.z * 5);
 
-
+	if (playground.radian.x <= -180)
+		cout << "pause" << endl << endl;
 
 
 	if (gospin[value] && direct == false) {
@@ -708,3 +821,111 @@ GLvoid OrbitCw(int value) {
 }
 
 
+
+GLvoid MyLineMoveCube(int value) {
+	GLPos token = { 0 };
+
+
+	//cube->center[value] += {0.0f, 2.0f, 0.0f};
+
+
+
+	if (cube->fifo[value].empty());
+	else {
+		token = cube->fifo[value].front();
+		cube->center[value] += InitDelta(cube->center[value], token) * cube->mulcount;
+	}
+
+	if (cube->GetCrash(InitDelta(cube->center[value], token) * cube->mulcount, token, value) == false) {
+		glutTimerFunc(10, MyLineMoveCube, value);
+	}
+
+	else {
+		cube->center[value] = token;
+
+		cube->fifo[value].pop();
+
+		if (cube->fifo[value].empty()) {
+			cout << "empty!" << endl << endl;
+		}
+		else {
+			glutTimerFunc(30, MyLineMoveCube, value);
+		}
+
+
+	}
+
+	glutPostRedisplay();
+}
+
+
+GLvoid MyCwCube(int value) {
+	if (cube->spin[value]) {
+
+		cube->radian[value].x -= (cube->axis[value].x * 5);
+
+		cube->radian[value].y -= (cube->axis[value].y * 5);
+
+		cube->radian[value].z -= (cube->axis[value].z * 5);
+
+		
+		if (cube->endspin[value] && cube->radian[value].z <= -90) {
+			cube->spin[value] = false;
+		}
+		else {
+			if (cube->ccw[value]) {
+				glutTimerFunc(30, MyCcwCube, value);
+
+			}
+			else
+				glutTimerFunc(30, MyCwCube, value);
+		}
+	}
+	glutPostRedisplay();
+}
+
+GLvoid MyCcwCube(int value) {
+	if (cube->spin[value]) {
+		cube->radian[value].x += (cube->axis[value].x * 5);
+
+		cube->radian[value].y += (cube->axis[value].y * 5);
+
+		cube->radian[value].z += (cube->axis[value].z * 5);
+
+		if (cube->endspin[value] && cube->radian[value].z >= 0) {
+			cube->spin[value] = false;
+		}
+		else {
+			if (cube->ccw[value]) {
+				glutTimerFunc(30, MyCcwCube, value);
+
+			}
+			else
+				glutTimerFunc(30, MyCwCube, value);
+		}
+	}
+	glutPostRedisplay();
+}
+
+GLvoid MyStretchCube(int value) {
+	bool TimerOn = true;
+
+	cube->Stretch[value] += cube->StretchDelta[value];
+
+	if ((cube->StretchDelta[value].x <= 0.0f && cube->Stretch[value].x < 0.0f)||
+		(cube->StretchDelta[value].x >= 0.0f && cube->Stretch[value].x >= 1.0f)) {
+		TimerOn = false;
+	}
+	else;
+
+	//if (cube->StretchDelta[value].x >= 0.0f && cube->Stretch[value].x >= 1.0f) {
+	//	TimerOn = false;
+	//}
+	//else;
+
+
+	if(TimerOn)
+		glutTimerFunc(30, MyStretchCube, value);
+
+	glutPostRedisplay();
+}

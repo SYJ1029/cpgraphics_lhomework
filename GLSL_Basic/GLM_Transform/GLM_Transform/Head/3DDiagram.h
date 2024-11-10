@@ -144,7 +144,20 @@ public:
 	GLfloat col[8][3];
 	GLfloat pos[8][3];
 	bool maked[6];
+	bool spin[6];
+	bool endspin[6];
+	bool ccw[6];
 	int start_index;
+	int mulcount;
+
+	GLPos center[6];
+	GLPos Delta[6];
+	GLPos radian[6];
+	GLPos Stretch[6];
+	GLPos StretchDelta[6];
+	glm::vec3 axis[6];
+
+	queue<GLPos> fifo[6];
 
 	GL_Cube() : Diagram() {
 		postype = CUBE;
@@ -155,11 +168,26 @@ public:
 				col[i][j] = 0;
 			}
 
-			if (i < 6)
+			if (i < 6) {
 				maked[i] = false;
+				spin[i] = false;
+				endspin[i] = false;
+				ccw[i] = true;
+			}
 		}	
 
+		for (int i = 0; i < 6; i++) {
+			center[i] = { 0.0f, 0.0f, 0.0f };
+			Delta[i] = { 0.0f, 0.0f, 0.0f };
+			radian[i] = { 0.0f, 0.0f, 0.0f };
+			Stretch[i] = { 1.0f, 1.0f, 1.0f };
+			StretchDelta[i] = { -0.02f, -0.02f, -0.02f };
+			axis[i] = glm::vec3(0.0f);
+			
+		}
+
 		start_index = 0;
+		mulcount = 1;
 	}
 
 	void Setcol(MyObjCol col[8]) {
@@ -180,6 +208,21 @@ public:
 		pos[5][0] = -0.5f; pos[5][1] = -0.5f;  pos[5][2] = 0.5f;
 		pos[6][0] = -0.5f; pos[6][1] = 0.5f; pos[6][2] = 0.5f;
 		pos[7][0] = 0.5f; pos[7][1] = 0.5f; pos[7][2] = 0.5f;
+
+
+		Delta[0] = { 0.0f, 0.0f, -0.5f };
+		Delta[1] = { 0.0f, 0.0f, 0.5f }; 
+		Delta[2] = { 0.5f, -0.5f, 0.0f }; 
+		Delta[3] = { 0.5f, 0.0f, 0.25f }; 
+		Delta[4] = { 0.0f, 0.5f, 0.0f }; 
+		Delta[5] = { 0.0f, -0.5f, 0.0f };
+
+
+		
+	}
+
+	void SetTranform() {
+
 	}
 
 	void SetTranPos(int mulcount) {
@@ -188,6 +231,47 @@ public:
 				pos[i][j] *= mulcount;
 			}
 		}
+
+		for (int i = 0; i < 6; i++) {
+			center[i] = center[i] * mulcount;
+			Delta[i] = Delta[i] * mulcount;
+		}
+		this->mulcount = mulcount;
+	}
+
+	void Move(GLPos Delta, int index) {
+		center[index] += Delta;
+	}
+
+	void Spin(GLPos Delta, int index) {
+		// 회전축의 기준을 정할 때는 각 축 기준으로 쪼개서 각 radian 에게 넣어준다.
+
+		radian[index] += Delta;
+	}
+
+	void InitScale(GLPos Delta, int index) {
+
+		Stretch[index] += Delta;
+	}
+
+	bool GetCrash(GLPos token, GLPos target, int index) {
+		GLPos prev = center[index] + token;
+		GL_Rect newtoken = Getbb(prev, center[index]);
+
+		return (target.x >= newtoken.pos1.x && target.x <= newtoken.pos2.x) &&
+			(target.y <= newtoken.pos2.y && target.y >= newtoken.pos1.y) &&
+			(target.z >= newtoken.pos2.z && target.z <= newtoken.pos1.z);
+
+	}
+
+	glm::mat4 GetWorldTransMatrix(glm::mat4 projection, glm::mat4 view,int index) {
+		glm::mat4 result = glm::mat4(1.0f);
+
+		result *= InitMoveProj(center[index] / mulcount);
+		result *= InitRotateProj(radian[index], Delta[index] / mulcount);
+		result *= ChangeScale(Stretch[index], Delta[index] / mulcount);
+
+		return result;
 	}
 
 	int* AddIndexList() {

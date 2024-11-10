@@ -689,32 +689,32 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	glutPostRedisplay();
 }
 
-GLvoid specialKeyboard(int key, int x, int y) {
-	switch (key) {
-	case GLUT_KEY_LEFT:
-		cube->center.x -= 0.02f;
-		tri->center.x -= 0.02f;
-		pyr->center.x -= 0.02f;
-		break;
-	case GLUT_KEY_RIGHT:
-		cube->center.x += 0.02f;
-		tri->center.x += 0.02f;
-		pyr->center.x += 0.02f;
-		break;
-	case GLUT_KEY_UP:
-		cube->center.y += 0.02f;
-		tri->center.y += 0.02f;
-		pyr->center.y += 0.02f;
-		break;
-	case GLUT_KEY_DOWN:
-		cube->center.y -= 0.02f;
-		tri->center.y -= 0.02f;
-		pyr->center.y -= 0.02f;
-		break;
-	}
-
-	glutPostRedisplay();
-}
+//GLvoid specialKeyboard(int key, int x, int y) {
+//	switch (key) {
+//	case GLUT_KEY_LEFT:
+//		cube->center.x -= 0.02f;
+//		tri->center.x -= 0.02f;
+//		pyr->center.x -= 0.02f;
+//		break;
+//	case GLUT_KEY_RIGHT:
+//		cube->center.x += 0.02f;
+//		tri->center.x += 0.02f;
+//		pyr->center.x += 0.02f;
+//		break;
+//	case GLUT_KEY_UP:
+//		cube->center.y += 0.02f;
+//		tri->center.y += 0.02f;
+//		pyr->center.y += 0.02f;
+//		break;
+//	case GLUT_KEY_DOWN:
+//		cube->center.y -= 0.02f;
+//		tri->center.y -= 0.02f;
+//		pyr->center.y -= 0.02f;
+//		break;
+//	}
+//
+//	glutPostRedisplay();
+//}
 
 
 

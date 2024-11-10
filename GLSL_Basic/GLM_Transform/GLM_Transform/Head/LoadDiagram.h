@@ -22,4 +22,6 @@ GLvoid IsobjsProjed(bool proj) {
 		pyr->SetTranPos(SIZEMAKRO);
 	}
 
+
+
 }
