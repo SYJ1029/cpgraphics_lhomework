@@ -635,7 +635,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 			break;
 		}
 		break;
-	case 'R':
+	case 'R': case'r':
 		switch (playground.postype) {
 		case ID_PYR:
 
