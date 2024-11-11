@@ -32,6 +32,8 @@ GLvoid MySpiralCcw(int value);
 GLvoid MyCwCube(int value);
 GLvoid MyCcwCube(int value);
 GLvoid MyStretchCube(int value);
+GLvoid MyCcwPyr(int value);
+GLvoid MyCwPyr(int value);
 
 
 
@@ -51,6 +53,7 @@ bool endorbit = false;
 bool checkPoint = false;
 bool goStretch = false;
 bool goSpiral = false;
+bool spinSequence = false;
 
 
 float base_axis[6][3] = {
@@ -340,6 +343,7 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	SetCamera();
 	SetProjection(PROJ_PERSPECTIVE);
 	cube->SetTranPos(200);
+	pyr->SetTranPos(200);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_DEPTH_TEST);
@@ -441,10 +445,10 @@ void drawScene()
 		switch (playground.postype) {
 		case ID_CUBE:
 			counter = cube->start_index;
-			for (int i = 0; i < 6; i++) {
+			for (int j = 0; j < 6; j++) {
 				submodel = model;
 
-				submodel *= cube->GetWorldTransMatrix(projection, view, i);
+				submodel *= cube->GetWorldTransMatrix(projection, view, j);
 				glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
 
 				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
@@ -459,7 +463,23 @@ void drawScene()
 			glDrawElements(GL_TRIANGLES, 3 * 4, GL_UNSIGNED_INT, (void*)(tri->start_index * sizeof(GLfloat)));
 			break;
 		case ID_PYR:
-			glDrawElements(GL_TRIANGLES, 18, GL_UNSIGNED_INT, (void*)(pyr->start_index * sizeof(GLfloat)));
+			counter = pyr->start_index;
+
+			for (int j = 0; j < 4; j++) {
+				submodel = model;
+
+				submodel *= pyr->GetWorldTransMatrix(projection, view, j);
+				glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+
+				glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+				counter += 3;
+			}
+
+			submodel = model;
+			submodel *= pyr->GetWorldTransMatrix(projection, view, 4);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+
 			break;
 		case ID_SPHERE:
 			gluSphere(qobj, sphere->radius, sphere->slices, sphere->stacks);
@@ -628,6 +648,31 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	case 'o':
 		switch (playground.postype) {
 		case ID_PYR:
+			spinSequence = false;
+
+			for (int i = 0; i < 4; i++) {
+				if (i % 2 == 0) {
+					pyr->axis[i] = glm::vec3(1.0f, 0.0f, 0.0f);
+				}
+				else {
+					pyr->axis[i] = glm::vec3(0.0f, 0.0f, 1.0f);
+				}
+
+				
+
+				pyr->spin[i] = true;
+				pyr->endspin[i] = true;
+
+
+				pyr->ccw[i] = !(pyr->ccw[i]);
+
+				if (pyr->ccw[i]) {
+					glutTimerFunc(10, MyCwPyr, i);
+				}
+				else {
+					glutTimerFunc(10, MyCcwPyr, i);
+				}
+			}
 
 			break;
 		default:
@@ -638,7 +683,38 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	case 'R': case'r':
 		switch (playground.postype) {
 		case ID_PYR:
+			spinSequence = true;
+			for (int i = 0; i < 4; i++) {
+				if (i % 2 == 0) {
+					pyr->axis[i] = glm::vec3(1.0f, 0.0f, 0.0f);
+				}
+				else {
+					pyr->axis[i] = glm::vec3(0.0f, 0.0f, 1.0f);
+				}
 
+				if (i == 0 || i == 1) {
+					pyr->ccw[i] = true;
+
+				}
+				else {
+					pyr->ccw[i] = false;
+				}
+
+				pyr->spin[i] = true;
+				pyr->endspin[i] = true;
+
+
+				pyr->ccw[i] = !(pyr->ccw[i]);
+
+				
+			}
+
+			if (pyr->ccw[0]) {
+				glutTimerFunc(10, MyCwPyr, 0);
+			}
+			else {
+				glutTimerFunc(10, MyCcwPyr, 0);
+			}
 			break;
 		default:
 			playground.postype = ID_PYR;
@@ -893,6 +969,7 @@ GLvoid MyCcwCube(int value) {
 		cube->radian[value].z += (cube->axis[value].z * 5);
 
 		if (cube->endspin[value] && cube->radian[value].z >= 0) {
+
 			cube->spin[value] = false;
 		}
 		else {
@@ -927,5 +1004,86 @@ GLvoid MyStretchCube(int value) {
 	if(TimerOn)
 		glutTimerFunc(30, MyStretchCube, value);
 
+	glutPostRedisplay();
+}
+
+
+GLvoid MyCcwPyr(int value) {
+	if (pyr->spin[value]) {
+		pyr->radian[value].x += (pyr->axis[value].x * 5);
+
+		pyr->radian[value].y += (pyr->axis[value].y * 5);
+
+		pyr->radian[value].z += (pyr->axis[value].z * 5);
+
+		float token = glm::atan(2 / glm::sqrt(2)) * 180 / 3.141592;
+
+		if (pyr->endspin[value] && 
+			(pyr->radian[value].z >= 180 + token) || 
+			(pyr->radian[value].x >= 180 + token)
+			) 
+		{
+
+			if (spinSequence && value < 3) {
+
+				if (pyr->ccw[value + 1]) {
+					glutTimerFunc(10, MyCcwPyr, value + 1);
+				}
+				else {
+					glutTimerFunc(10, MyCwPyr, value + 1);
+				}
+			}
+			else
+				pyr->spin[value] = false;
+		}
+		else {
+			if (pyr->ccw[value]) {
+				glutTimerFunc(30, MyCcwPyr, value);
+
+			}
+			else
+				glutTimerFunc(30, MyCwPyr, value);
+		}
+	}
+	glutPostRedisplay();
+}
+
+GLvoid MyCwPyr(int value) {
+	if (pyr->spin[value]) {
+
+		pyr->radian[value].x -= (pyr->axis[value].x * 5);
+
+		pyr->radian[value].y -= (pyr->axis[value].y * 5);
+
+		pyr->radian[value].z -= (pyr->axis[value].z * 5);
+
+		float token = glm::atan(2 / glm::sqrt(2)) * 180 / 3.141592;
+
+		if (pyr->endspin[value] &&
+			(pyr->radian[value].z <= - 180 + (-1 * token) || (pyr->radian[value].x <= -180 + (-1 *  token)))
+			) 
+		{
+
+			if (spinSequence && value < 3) {
+				
+				if (pyr->ccw[value + 1]) {
+					glutTimerFunc(10, MyCcwPyr, value + 1);
+				}
+				else {
+					glutTimerFunc(10, MyCwPyr, value + 1);
+				}
+			}
+			else
+				pyr->spin[value] = false;
+		}
+		else {
+			if (pyr->ccw[value]) {
+				glutTimerFunc(30, MyCcwPyr, value);
+
+			}
+			else
+				glutTimerFunc(30, MyCwPyr, value);
+		}
+	}
 	glutPostRedisplay();
 }

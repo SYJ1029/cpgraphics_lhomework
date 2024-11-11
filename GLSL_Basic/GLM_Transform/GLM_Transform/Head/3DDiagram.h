@@ -424,8 +424,18 @@ public:
 	GLfloat col[5][3];
 	GLfloat pos[5][3];
 	bool maked[5];
+	bool spin[5];
+	bool endspin[5];
+	bool ccw[5];
 	int start_index;
+	int mulcount;
 	
+	GLPos center[5];
+	GLPos Delta[5];
+	GLPos radian[5];
+	GLPos Stretch[5];
+	GLPos StretchDelta[5];
+	glm::vec3 axis[5];
 
 	GL_Pyramid() : Diagram() {
 		for (int i = 0; i < 5; i++) {
@@ -434,11 +444,21 @@ public:
 				pos[i][j] = 0;
 			}
 
-			if (i < 5)
-				maked[i] = false;
+			center[i] = { 0.0f, 0.0f, 0.0f };
+			Delta[i] = { 0.0f, 0.0f, 0.0f };
+			radian[i] = { 0.0f, 0.0f, 0.0f };
+			Stretch[i] = { 1.0f, 1.0f, 1.0f };
+			StretchDelta[i] = { -0.02f, -0.02f, -0.02f };
+			axis[i] = glm::vec3(0.0f);
+
+			maked[i] = false;
+			spin[i] = true;
+			endspin[i] = false;
+			ccw[i] = false;
 		}
 
 		start_index = 0;
+		mulcount = 1;
 	}
 
 	void Setcol(MyObjCol col[5]) {
@@ -458,6 +478,13 @@ public:
 		pos[3][0] = 0.5f, pos[3][1] = -0.5f, pos[3][2] = 0.5f;
 		pos[4][0] = -0.5f, pos[4][1] = -0.5f, pos[4][2] = 0.5f;
 
+		Delta[0] = { 0.0f, -0.5f, -0.5f };
+		Delta[1] = { 0.5f, -0.5f, 0.0f };
+		Delta[2] = { 0.0f, -0.5f, 0.5f };
+		Delta[3] = { -0.5f, -0.5f, 0.0f };
+		Delta[4] = { 0.0f, -0.5f, 0.0f };
+
+
 	}
 
 	void SetTranPos(int mulcount) {
@@ -465,7 +492,28 @@ public:
 			for (int j = 0; j < 3; j++) {
 				pos[i][j] *= mulcount;
 			}
+
+			if (i == 0 || i == 1) {
+				ccw[i] = true;
+
+			}
+			else if(i < 4){
+				ccw[i] = false;
+			}
+
+			Delta[i] = Delta[i] * mulcount;
 		}
+		this->mulcount = mulcount;
+	}
+
+	glm::mat4 GetWorldTransMatrix(glm::mat4 projection, glm::mat4 view, int index) {
+		glm::mat4 result = glm::mat4(1.0f);
+
+		result *= InitMoveProj(center[index] / mulcount);
+		result *= InitRotateProj(radian[index], Delta[index] / mulcount);
+		result *= ChangeScale(Stretch[index], Delta[index] / mulcount);
+
+		return result;
 	}
 
 	int* AddIndexList() {
