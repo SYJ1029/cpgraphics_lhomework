@@ -664,13 +664,16 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 				pyr->endspin[i] = true;
 
 
-				pyr->ccw[i] = !(pyr->ccw[i]);
+				pyr->ccw[i] = !(pyr->ccw[i]);				
+				pyr->goThrough[i] = !(pyr->goThrough[i]);
+
+
 
 				if (pyr->ccw[i]) {
-					glutTimerFunc(10, MyCwPyr, i);
+					glutTimerFunc(10, MyCcwPyr, i);
 				}
 				else {
-					glutTimerFunc(10, MyCcwPyr, i);
+					glutTimerFunc(10, MyCwPyr, i);
 				}
 			}
 
@@ -685,6 +688,8 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		case ID_PYR:
 			spinSequence = true;
 			for (int i = 0; i < 4; i++) {
+				pyr->goThrough[i] = true;
+				pyr->radian[i] = 0.0f;
 				if (i % 2 == 0) {
 					pyr->axis[i] = glm::vec3(1.0f, 0.0f, 0.0f);
 				}
@@ -1016,12 +1021,17 @@ GLvoid MyCcwPyr(int value) {
 
 		pyr->radian[value].z += (pyr->axis[value].z * 5);
 
-		float token = glm::atan(2 / glm::sqrt(2)) * 180 / 3.141592;
+		float token = glm::atan(2 / glm::sqrt(2)) * (!(spinSequence)+1) * 90 / 3.141592;
 
-		if (pyr->endspin[value] && 
-			(pyr->radian[value].z >= 180 + token) || 
-			(pyr->radian[value].x >= 180 + token)
-			) 
+		int spintoken = ((!(spinSequence)+1) * 90 + token) * pyr->goThrough[value];
+
+		if (pyr->goThrough[value] == false)
+			cout << (pyr->axis[value].x * 5) << endl;
+
+		if (pyr->endspin[value] &&
+			((int)pyr->radian[value].z >= (int)((!(spinSequence)+1) * 90 + token)) ||
+			((int)pyr->radian[value].x >= (int)((!(spinSequence)+1) * 90 + token))
+			)
 		{
 
 			if (spinSequence && value < 3) {
@@ -1033,10 +1043,19 @@ GLvoid MyCcwPyr(int value) {
 					glutTimerFunc(10, MyCwPyr, value + 1);
 				}
 			}
-			else
+			else {
+				pyr->pos[value][1] *= -1;
 				pyr->spin[value] = false;
+			}
 		}
 		else {
+			if (pyr->goThrough[value] == false) {
+				if(pyr->axis[value].x > 0.0f && pyr->radian[value].x >= 0.0f ||
+					pyr->axis[value].z > 0.0f && pyr->radian[value].z >= 0.0f){
+					pyr->spin[value] = false;
+				}
+			}
+
 			if (pyr->ccw[value]) {
 				glutTimerFunc(30, MyCcwPyr, value);
 
@@ -1057,10 +1076,17 @@ GLvoid MyCwPyr(int value) {
 
 		pyr->radian[value].z -= (pyr->axis[value].z * 5);
 
-		float token = glm::atan(2 / glm::sqrt(2)) * 180 / 3.141592;
+		float token = glm::atan(2 / glm::sqrt(2)) * (!(spinSequence)+1) * 90 / 3.141592;
+
+		int spintoken = (-(!(spinSequence)+1) * 90 + token) * pyr->goThrough[value];
+
+		if (pyr->goThrough[value] == false)
+			cout << "Back" << endl;
 
 		if (pyr->endspin[value] &&
-			(pyr->radian[value].z <= - 180 + (-1 * token) || (pyr->radian[value].x <= -180 + (-1 *  token)))
+			((int)pyr->radian[value].z <= (-(!(spinSequence)+1) * 90 + (-1 * token)) ||
+				(int)pyr->radian[value].x <= (-(!(spinSequence)+1) * 90 + (-1 * token))
+				)
 			) 
 		{
 
@@ -1073,10 +1099,19 @@ GLvoid MyCwPyr(int value) {
 					glutTimerFunc(10, MyCwPyr, value + 1);
 				}
 			}
-			else
+			else {
+				pyr->pos[value][1] *= -1;
 				pyr->spin[value] = false;
+			}
 		}
 		else {
+			if (pyr->goThrough[value] == false) {
+				if (pyr->axis[value].x > 0.0f && pyr->radian[value].x <= 0.0f ||
+					pyr->axis[value].z > 0.0f && pyr->radian[value].z <= 0.0f) {
+					pyr->spin[value] = false;
+				}
+			}
+
 			if (pyr->ccw[value]) {
 				glutTimerFunc(30, MyCcwPyr, value);
 

@@ -427,6 +427,7 @@ public:
 	bool spin[5];
 	bool endspin[5];
 	bool ccw[5];
+	bool goThrough[5];
 	int start_index;
 	int mulcount;
 	
@@ -455,6 +456,7 @@ public:
 			spin[i] = true;
 			endspin[i] = false;
 			ccw[i] = false;
+			goThrough[i] = false;
 		}
 
 		start_index = 0;
