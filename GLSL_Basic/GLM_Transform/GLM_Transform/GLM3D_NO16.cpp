@@ -17,7 +17,6 @@ GLvoid MyCcw(int value);
 GLvoid MyCw(int value);
 GLvoid OrbitCcw(int value);
 GLvoid OrbitCw(int value);
-GLvoid specialKeyboard(int key, int x, int y);
 GLvoid MyLineMove(int value);
 GLvoid MyStretch(int value);
 GLvoid MySpiralCw(int value); 
@@ -312,7 +311,6 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	glutDisplayFunc(drawScene); // 출력 함수의 지정
 	glutReshapeFunc(Reshape); // 다시 그리기 함수 지정
 	glutKeyboardFunc(Keyboard);
-	glutSpecialFunc(specialKeyboard);
 	glutMouseFunc(Mouse);
 
 
