@@ -10,6 +10,9 @@
 #define ID_CYLINDER 4
 #define ID_CONE 5
 
+Camera* camera;
+Projection* proj;
+
 
 GLvoid Mouse(int button, int state, int x, int y);
 GLvoid Keyboard(unsigned char key, int x, int y);
@@ -53,6 +56,27 @@ float base_axis_col[6][3] = {
 };
 
 int baseAxisIndex = 0;
+
+GLvoid SetCamera() {
+	delete camera;
+
+	camera = new Camera(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+GLvoid SetProjection(int projtype) {
+	delete proj;
+
+	proj = new Projection();
+
+	if (projtype == PROJ_ORTHO) {
+		proj->InitOrtho(-5.0f, 5.0f, 5.0f, -5.0f, -30.0f, 15.0f);
+	}
+	else {
+		proj->InitPerspective(glm::radians(45.0f), 1.0f, 0.1f, 10.0f);
+	}
+
+	IsobjsProjed(false);
+}
 
 
 GLvoid Setplayground() {
@@ -303,6 +327,10 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	glBindVertexArray(vao);
 	SetBuffer();
 	Setplayground();
+	SetCamera();
+	SetProjection(PROJ_PERSPECTIVE);
+	cube->SetTranPos(200);
+	pyr->SetTranPos(200);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_DEPTH_TEST);
@@ -358,7 +386,16 @@ void drawScene()
 
 	glBindVertexArray(vao);
 
+	glm::mat4 projection = glm::mat4(1.0);
+	projection = proj->GetProjMatrix();
+	unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
+
+	glm::mat4 view = glm::mat4(1.0);
+	view = camera->GetViewMatix();
+	unsigned int viewLocation = glGetUniformLocation(shaderProgramID, "viewTransform");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
 
 	int counter = 0;
@@ -371,8 +408,6 @@ void drawScene()
 		gluQuadricNormals(qobj, playground[i].qset.normals);
 		gluQuadricOrientation(qobj, playground[i].qset.orientation);
 
-		rm = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		rm2 = glm::rotate(basemat, glm::radians(30.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 		model = rm2 * rm;
 
