@@ -3,6 +3,7 @@
 #include "GetShader.h"
 #define SIZEMAKRO 200
 
+
 #define ID_CUBE 0
 
 #define ID_BG 10
@@ -13,6 +14,8 @@
 
 
 GL_Cube* cube = new GL_Cube;
+
+
 
 
 class Crain : public Diagram {
@@ -93,9 +96,6 @@ public:
 
 
 };
-
-
-
 
 
 GLvoid IsobjsProjed(bool proj) {

@@ -22,6 +22,15 @@
     <Filter Include="헤더 파일\No19">
       <UniqueIdentifier>{8de62437-f5de-4abc-8836-0fbf876e558a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="헤더 파일\prevheader">
+      <UniqueIdentifier>{7da41b28-3e65-4881-8a0d-6c95910642ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\sensitiveheader">
+      <UniqueIdentifier>{61e79051-84a9-4a7d-82df-6bfa5762c406}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\BaseHeader">
+      <UniqueIdentifier>{dd236d9f-f17d-4b8e-a3a5-93a82aa897f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GLM3D_NO19.cpp">
@@ -38,27 +47,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Head\ColorStructs.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\GetShader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\ObjStruct.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\VertexMethod.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\TimerProcedure.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\LoadDiagram.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\BaseHeader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Head\Proj\WPM.h">
       <Filter>헤더 파일\Proj</Filter>
     </ClInclude>
@@ -67,6 +55,27 @@
     </ClInclude>
     <ClInclude Include="Head\ProjMethod.h">
       <Filter>헤더 파일\Proj</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\LoadDiagram.h">
+      <Filter>헤더 파일\prevheader</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\TimerProcedure.h">
+      <Filter>헤더 파일\sensitiveheader</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\VertexMethod.h">
+      <Filter>헤더 파일\sensitiveheader</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\ColorStructs.h">
+      <Filter>헤더 파일\BaseHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\BaseHeader.h">
+      <Filter>헤더 파일\BaseHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\ObjStruct.h">
+      <Filter>헤더 파일\BaseHeader</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\GetShader.h">
+      <Filter>헤더 파일\sensitiveheader</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

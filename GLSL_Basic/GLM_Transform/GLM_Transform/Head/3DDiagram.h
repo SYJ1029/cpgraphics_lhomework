@@ -3,9 +3,10 @@
 #include "TimerProcedure.h"
 #include "ProjMethod.h"
 
-
-#define POINT 1
+#define POINT 0
 #define CUBE 8
+
+
 
 class Diagram {
 
@@ -589,3 +590,5 @@ public:
 		stacks = 8;
 	}
 };
+
+
