@@ -1,19 +1,21 @@
 #pragma once
-
-#include "Head/LoadDiagram.h"
+#include "Head/LoadDiagramCrain.h"
 
 Camera* camera;
 Projection* proj;
 
+MyCol mycolor = { 1.0f, 1.0f, 1.0f, 1.0f };
+GLPos Screensize = { 800, 800, 0 };
+GL_Cube* background = new GL_Cube;
+
+GLUquadricObj* qobj = gluNewQuadric();
+
+
+
+
+
 #define MAX_INDEX 12
 #define MAX_INDEX13 2
-
-#define ID_CUBE 0
-#define ID_TET 1
-#define ID_PYR 2
-#define ID_SPHERE 3
-#define ID_CYLINDER 4
-#define ID_CONE 5
 
 #define PROJED true
 
@@ -119,8 +121,6 @@ void DepthCheck() {
 
 void Setindex() {
 	int* p1 = cube->AddIndexList();
-	int* p2 = tri->AddIndexList();
-	int* p3 = pyr->AddIndexList();
 
 	cout << sizeof((p1));
 
@@ -144,26 +144,7 @@ void Setindex() {
 
 	begin = cnt;
 
-	tri->start_index = index_count;
-
-	for (index_count; index_count < present_bit + 12; index_count++) {
-		index[index_count] = 8 + p2[index_count - begin];
-
-		cnt++;
-	}
-
 	//cnt += 12;
-
-	present_bit = index_count;
-	begin = cnt;
-
-	pyr->start_index = index_count;
-
-	for (index_count; index_count < present_bit + 18; index_count++) {
-		index[index_count] = 12 + p3[index_count - begin];
-	}
-
-	cnt += 15;
 
 
 	present_bit = index_count;
@@ -179,8 +160,6 @@ void Setindex() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_DYNAMIC_DRAW);
 
 	free(p1);
-	free(p2);
-	free(p3);
 }
 
 MyObjCol SetRandObjCol() {
@@ -204,15 +183,11 @@ GLvoid SetBuffer() {
 		mycol3[i] = SetRandObjCol();
 	}
 	cube->Setcol(mycol);
-	tri->Setcol(mycol2);
-	pyr->Setcol(mycol3);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	//glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 10000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 	cube->SetPos();
-	tri->SetPos();
-	pyr->SetPos();
 
 	//float* counter = new FLOAT();
 	int* counter = new INT();
@@ -229,20 +204,6 @@ GLvoid SetBuffer() {
 		(*counter) += 3 * sizeof(GLfloat);
 	}
 
-
-	for (int i = 0; i < 4; i++) {
-		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), tri->pos[i]);
-
-		(*counter) += 3 * sizeof(GLfloat);
-	}
-
-	for (int i = 0; i < 5; i++) {
-		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), pyr->pos[i]);
-
-		(*counter) += 3 * sizeof(GLfloat);
-	}
 
 
 
@@ -278,20 +239,6 @@ GLvoid SetBuffer() {
 		(*counter) += 3 * sizeof(GLfloat);
 
 		//cout << "(" << cube.pos[i][0] << ", " << cube.pos[i][1] << ", " << cube.pos[i][2] << ')' << endl << endl;
-	}
-
-	for (int i = 0; i < 4; i++) {
-		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), tri->col[i]);
-
-		(*counter) += 3 * sizeof(GLfloat);
-	}
-
-	for (int i = 0; i < 5; i++) {
-		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), pyr->col[i]);
-
-		(*counter) += 3 * sizeof(GLfloat);
 	}
 
 
@@ -343,7 +290,6 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	SetCamera();
 	SetProjection(PROJ_PERSPECTIVE);
 	cube->SetTranPos(200);
-	pyr->SetTranPos(200);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_DEPTH_TEST);
@@ -458,37 +404,6 @@ void drawScene()
 
 
 			//glDrawElements(GL_TRIANGLES, 6 * 6, GL_UNSIGNED_INT, (void*)(cube->start_index * sizeof(GLfloat)));
-			break;
-		case ID_TET:
-			glDrawElements(GL_TRIANGLES, 3 * 4, GL_UNSIGNED_INT, (void*)(tri->start_index * sizeof(GLfloat)));
-			break;
-		case ID_PYR:
-			counter = pyr->start_index;
-
-			for (int j = 0; j < 4; j++) {
-				submodel = model;
-
-				submodel *= pyr->GetWorldTransMatrix(projection, view, j);
-				glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
-
-				glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
-				counter += 3;
-			}
-
-			submodel = model;
-			submodel *= pyr->GetWorldTransMatrix(projection, view, 4);
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
-
-			break;
-		case ID_SPHERE:
-			gluSphere(qobj, sphere->radius, sphere->slices, sphere->stacks);
-			break;
-		case ID_CYLINDER:
-			gluCylinder(qobj, 1.0, 1.0, 2.0, 20, 8);
-			break;
-		case ID_CONE:
-			gluCylinder(qobj, 1.0, 0.0, 2.0, 20, 8);
 			break;
 		}
 
@@ -646,85 +561,8 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case 'o':
-		switch (playground.postype) {
-		case ID_PYR:
-			spinSequence = false;
-
-			for (int i = 0; i < 4; i++) {
-				if (i % 2 == 0) {
-					pyr->axis[i] = glm::vec3(1.0f, 0.0f, 0.0f);
-				}
-				else {
-					pyr->axis[i] = glm::vec3(0.0f, 0.0f, 1.0f);
-				}
-
-				
-
-				pyr->spin[i] = true;
-				pyr->endspin[i] = true;
-
-
-				pyr->ccw[i] = !(pyr->ccw[i]);				
-				pyr->goThrough[i] = !(pyr->goThrough[i]);
-
-
-
-				if (pyr->ccw[i]) {
-					glutTimerFunc(10, MyCcwPyr, i);
-				}
-				else {
-					glutTimerFunc(10, MyCwPyr, i);
-				}
-			}
-
-			break;
-		default:
-			playground.postype = ID_PYR;
-			break;
-		}
 		break;
 	case 'R': case'r':
-		switch (playground.postype) {
-		case ID_PYR:
-			spinSequence = true;
-			for (int i = 0; i < 4; i++) {
-				pyr->goThrough[i] = true;
-				pyr->radian[i] = 0.0f;
-				if (i % 2 == 0) {
-					pyr->axis[i] = glm::vec3(1.0f, 0.0f, 0.0f);
-				}
-				else {
-					pyr->axis[i] = glm::vec3(0.0f, 0.0f, 1.0f);
-				}
-
-				if (i == 0 || i == 1) {
-					pyr->ccw[i] = true;
-
-				}
-				else {
-					pyr->ccw[i] = false;
-				}
-
-				pyr->spin[i] = true;
-				pyr->endspin[i] = true;
-
-
-				pyr->ccw[i] = !(pyr->ccw[i]);
-
-				
-			}
-
-			if (pyr->ccw[0]) {
-				glutTimerFunc(10, MyCwPyr, 0);
-			}
-			else {
-				glutTimerFunc(10, MyCcwPyr, 0);
-			}
-			break;
-		default:
-			playground.postype = ID_PYR;
-			break;
-		}
 		break;
 
 	case 'x': case 'X':
@@ -732,7 +570,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		gospin[1] = true;
 
 		playground.axis = glm::vec3(1.0f, 0.0f, 0.0f);
-		
+
 
 		if ((int)key - (int)'a' < 0) {
 			direct = true;
@@ -753,7 +591,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		gospin[1] = true;
 
 		playground.axis = glm::vec3(0.0f, 1.0f, 0.0f);
-		
+
 
 		if ((int)key - (int)'a' < 0) {
 			direct = true;
@@ -784,8 +622,6 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 
 	case 'q':
 		delete cube;
-		delete tri;
-		delete pyr;
 
 		glutLeaveMainLoop();
 		break;
@@ -949,7 +785,7 @@ GLvoid MyCwCube(int value) {
 
 		cube->radian[value].z -= (cube->axis[value].z * 5);
 
-		
+
 		if (cube->endspin[value] && cube->radian[value].z <= -90) {
 			cube->spin[value] = false;
 		}
@@ -994,7 +830,7 @@ GLvoid MyStretchCube(int value) {
 
 	cube->Stretch[value] += cube->StretchDelta[value];
 
-	if ((cube->StretchDelta[value].x <= 0.0f && cube->Stretch[value].x < 0.0f)||
+	if ((cube->StretchDelta[value].x <= 0.0f && cube->Stretch[value].x < 0.0f) ||
 		(cube->StretchDelta[value].x >= 0.0f && cube->Stretch[value].x >= 1.0f)) {
 		TimerOn = false;
 	}
@@ -1006,119 +842,10 @@ GLvoid MyStretchCube(int value) {
 	//else;
 
 
-	if(TimerOn)
+	if (TimerOn)
 		glutTimerFunc(30, MyStretchCube, value);
 
 	glutPostRedisplay();
 }
 
 
-GLvoid MyCcwPyr(int value) {
-	if (pyr->spin[value]) {
-		pyr->radian[value].x += (pyr->axis[value].x * 5);
-
-		pyr->radian[value].y += (pyr->axis[value].y * 5);
-
-		pyr->radian[value].z += (pyr->axis[value].z * 5);
-
-		float token = glm::atan(2 / glm::sqrt(2)) * (!(spinSequence)+1) * 90 / 3.141592;
-
-		int spintoken = ((!(spinSequence)+1) * 90 + token) * pyr->goThrough[value];
-
-		if (pyr->goThrough[value] == false)
-			cout << (pyr->axis[value].x * 5) << endl;
-
-		if (pyr->endspin[value] &&
-			((int)pyr->radian[value].z >= (int)((!(spinSequence)+1) * 90 + token)) ||
-			((int)pyr->radian[value].x >= (int)((!(spinSequence)+1) * 90 + token))
-			)
-		{
-
-			if (spinSequence && value < 3) {
-
-				if (pyr->ccw[value + 1]) {
-					glutTimerFunc(10, MyCcwPyr, value + 1);
-				}
-				else {
-					glutTimerFunc(10, MyCwPyr, value + 1);
-				}
-			}
-			else {
-				pyr->pos[value][1] *= -1;
-				pyr->spin[value] = false;
-			}
-		}
-		else {
-			if (pyr->goThrough[value] == false) {
-				if(pyr->axis[value].x > 0.0f && pyr->radian[value].x >= 0.0f ||
-					pyr->axis[value].z > 0.0f && pyr->radian[value].z >= 0.0f){
-					pyr->spin[value] = false;
-				}
-			}
-
-			if (pyr->ccw[value]) {
-				glutTimerFunc(30, MyCcwPyr, value);
-
-			}
-			else
-				glutTimerFunc(30, MyCwPyr, value);
-		}
-	}
-	glutPostRedisplay();
-}
-
-GLvoid MyCwPyr(int value) {
-	if (pyr->spin[value]) {
-
-		pyr->radian[value].x -= (pyr->axis[value].x * 5);
-
-		pyr->radian[value].y -= (pyr->axis[value].y * 5);
-
-		pyr->radian[value].z -= (pyr->axis[value].z * 5);
-
-		float token = glm::atan(2 / glm::sqrt(2)) * (!(spinSequence)+1) * 90 / 3.141592;
-
-		int spintoken = (-(!(spinSequence)+1) * 90 + token) * pyr->goThrough[value];
-
-		if (pyr->goThrough[value] == false)
-			cout << "Back" << endl;
-
-		if (pyr->endspin[value] &&
-			((int)pyr->radian[value].z <= (-(!(spinSequence)+1) * 90 + (-1 * token)) ||
-				(int)pyr->radian[value].x <= (-(!(spinSequence)+1) * 90 + (-1 * token))
-				)
-			) 
-		{
-
-			if (spinSequence && value < 3) {
-				
-				if (pyr->ccw[value + 1]) {
-					glutTimerFunc(10, MyCcwPyr, value + 1);
-				}
-				else {
-					glutTimerFunc(10, MyCwPyr, value + 1);
-				}
-			}
-			else {
-				pyr->pos[value][1] *= -1;
-				pyr->spin[value] = false;
-			}
-		}
-		else {
-			if (pyr->goThrough[value] == false) {
-				if (pyr->axis[value].x > 0.0f && pyr->radian[value].x <= 0.0f ||
-					pyr->axis[value].z > 0.0f && pyr->radian[value].z <= 0.0f) {
-					pyr->spin[value] = false;
-				}
-			}
-
-			if (pyr->ccw[value]) {
-				glutTimerFunc(30, MyCcwPyr, value);
-
-			}
-			else
-				glutTimerFunc(30, MyCwPyr, value);
-		}
-	}
-	glutPostRedisplay();
-}

@@ -13,28 +13,28 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="헤더 파일\Proj">
+      <UniqueIdentifier>{2fafde08-4c37-40c1-b7c2-1ed8dbe60aec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\Objclass">
+      <UniqueIdentifier>{63b5becc-c8f1-416a-ae84-f5f75eb0a8f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\No19">
+      <UniqueIdentifier>{8de62437-f5de-4abc-8836-0fbf876e558a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GLMBasic_NO13.cpp">
+    <ClCompile Include="GLM3D_NO19.cpp">
       <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GLM3D_NO14.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GLM3D_NO15.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="GLM3D_NO16.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Head\Proj\VPM.h">
-      <Filter>헤더 파일</Filter>
     </ClCompile>
     <ClCompile Include="Head\Proj\OPM.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\Proj</Filter>
     </ClCompile>
-    <ClCompile Include="GLM3D_NO17.cpp">
-      <Filter>소스 파일</Filter>
+    <ClCompile Include="Head\Proj\VPM.h">
+      <Filter>헤더 파일\Proj</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\LoadDiagramCrain.h">
+      <Filter>헤더 파일\No19</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -44,13 +44,7 @@
     <ClInclude Include="Head\GetShader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Head\Triangle.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Head\ObjStruct.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\3DDiagram.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Head\VertexMethod.h">
@@ -62,17 +56,17 @@
     <ClInclude Include="Head\LoadDiagram.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Head\ProjMethod.h">
+    <ClInclude Include="Head\BaseHeader.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Head\Proj\WPM.h">
-      <Filter>헤더 파일</Filter>
+      <Filter>헤더 파일\Proj</Filter>
     </ClInclude>
-    <ClInclude Include="Head\CheckPointQue.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Head\3DDiagram.h">
+      <Filter>헤더 파일\Objclass</Filter>
     </ClInclude>
-    <ClInclude Include="Head\BaseHeader.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="Head\ProjMethod.h">
+      <Filter>헤더 파일\Proj</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
