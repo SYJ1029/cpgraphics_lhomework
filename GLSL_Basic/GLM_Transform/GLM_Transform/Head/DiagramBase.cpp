@@ -15,8 +15,8 @@ public:
 	int postype;
 	glm::vec3 axis;
 	glm::vec3 OrbitAxis;
-	GLPos center;
-	GLPos target;
+	glm::vec3 center;
+	glm::vec3 target;
 	GLPos radian;
 	int radcnt;
 	GLPos delta;
@@ -34,8 +34,8 @@ public:
 		postype = GLPOINT;
 
 		radian = { 0 };
-		center = { 0, 0, 0 };
-		target = { 0, 0, 0 };
+		center = glm::vec3(0.0f, 1.0f, 0.0f);
+		target = glm::vec3(0.0f, 1.0f, 0.0f);
 		axis = glm::vec3(0.0f, 1.0f, 0.0f);
 		OrbitAxis = glm::vec3(0.0f, 1.0f, 0.0f);
 		delta = { 0, 0, 0 };
@@ -57,13 +57,13 @@ public:
 	}
 
 
-	void Setother_center(GLPos center) {
+	void Setother_center(glm::vec3 center) {
 		target = center;
 	}
 
-	GLfloat GetDist() {
+	float GetDist() {
 
-		return dist(center, target);
+		return glm::distance(center, target);
 	}
 
 	GLPos AxisToGLPos() {
@@ -74,8 +74,8 @@ public:
 
 
 	bool GetCrash(GLPos token, GLPos target) {
-		GLPos prev = center + token;
-		GL_Rect newtoken = Getbb(prev, center);
+		GLPos prev = Vec3ToGLPos(center) + token;
+		GL_Rect newtoken = Getbb(prev, Vec3ToGLPos(center));
 
 		return (target.x >= newtoken.pos1.x && target.x <= newtoken.pos2.x) &&
 			(target.y <= newtoken.pos2.y && target.y >= newtoken.pos1.y) &&

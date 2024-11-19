@@ -135,9 +135,9 @@ public:
 	glm::mat4 GetWorldTransMatrix(glm::mat4 projection, glm::mat4 view,int index) {
 		glm::mat4 result = glm::mat4(1.0f);
 
-		result *= InitMoveProj(center[index] / mulcount);
-		result *= InitRotateProj(radian[index], Delta[index] / mulcount);
-		result *= ChangeScale(Stretch[index], Delta[index] / mulcount);
+		result *= InitMoveProj(GLPosToVec3(center[index] / mulcount) );
+		result *= InitRotateProj(radian[index], GLPosToVec3(Delta[index] / mulcount));
+		result *= ChangeScale(Stretch[index], GLPosToVec3(Delta[index] / mulcount));
 
 		return result;
 	}
@@ -379,9 +379,9 @@ public:
 	glm::mat4 GetWorldTransMatrix(glm::mat4 projection, glm::mat4 view, int index) {
 		glm::mat4 result = glm::mat4(1.0f);
 
-		result *= InitMoveProj(center[index] / mulcount);
-		result *= InitRotateProj(radian[index], Delta[index] / mulcount);
-		result *= ChangeScale(Stretch[index], Delta[index] / mulcount);
+		result *= InitMoveProj(GLPosToVec3(center[index] / mulcount));
+		result *= InitRotateProj(radian[index], GLPosToVec3(Delta[index] / mulcount));
+		result *= ChangeScale(Stretch[index], GLPosToVec3(Delta[index] / mulcount));
 
 		return result;
 	}

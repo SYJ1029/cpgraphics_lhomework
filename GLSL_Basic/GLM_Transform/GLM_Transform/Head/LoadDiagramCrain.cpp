@@ -46,10 +46,14 @@ public:
 	}
 
 	GLvoid InitCrain() {
-
+		this->center = glm::vec3(0.0f, 0.5f, 0.0f);
+		
+		body->postype = ID_CUBE;
+		body->center = { 0, 0.1f, 0 };
+		body->Stretch = { 0.75f, 0.125f, 0.75f };
 	}
 
-	void Move(int id, GLPos Delta) {
+	void Move(int id, glm::vec3 Delta) {
 		switch (id) {
 		case ID_BODY:case ID_HEAD:
 			body->center += Delta;
