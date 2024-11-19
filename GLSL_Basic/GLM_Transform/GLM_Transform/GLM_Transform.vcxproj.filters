@@ -47,9 +47,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Head\Proj\WPM.h">
-      <Filter>헤더 파일\Proj</Filter>
-    </ClInclude>
     <ClInclude Include="Head\3DDiagram.h">
       <Filter>헤더 파일\Objclass</Filter>
     </ClInclude>

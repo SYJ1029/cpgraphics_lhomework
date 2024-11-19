@@ -141,7 +141,6 @@
     <ClInclude Include="Head\LoadDiagram.h" />
     <ClInclude Include="Head\ObjStruct.h" />
     <ClInclude Include="Head\ProjMethod.h" />
-    <ClInclude Include="Head\Proj\WPM.h" />
     <ClInclude Include="Head\TimerProcedure.h" />
     <ClInclude Include="Head\VertexMethod.h" />
   </ItemGroup>

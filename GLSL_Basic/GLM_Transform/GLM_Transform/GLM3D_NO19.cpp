@@ -6,7 +6,6 @@ Projection* proj;
 
 MyCol mycolor = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLPos Screensize = { 800, 800, 0 };
-GL_Cube* background = new GL_Cube;
 
 GLUquadricObj* qobj = gluNewQuadric();
 
