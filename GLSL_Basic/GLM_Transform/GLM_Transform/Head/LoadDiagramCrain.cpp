@@ -45,6 +45,10 @@ public:
 		}
 	}
 
+	GLvoid InitCrain() {
+
+	}
+
 	void Move(int id, GLPos Delta) {
 		switch (id) {
 		case ID_BODY:case ID_HEAD:

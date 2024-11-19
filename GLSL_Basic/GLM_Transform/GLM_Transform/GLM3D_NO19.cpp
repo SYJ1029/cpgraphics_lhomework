@@ -40,7 +40,7 @@ GLvoid MyCwPyr(int value);
 
 
 
-
+Crain* crain = new Crain;
 
 Diagram playground;
 
@@ -353,7 +353,6 @@ void drawScene()
 
 
 
-	for (int i = 0; i < 2; i++) {
 
 		gluQuadricDrawStyle(qobj, playground.qset.drawstyle);
 		gluQuadricNormals(qobj, playground.qset.normals);
@@ -372,11 +371,11 @@ void drawScene()
 		unsigned int viewLocation = glGetUniformLocation(shaderProgramID, "viewTransform");
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
+	for (int i = 0; i < 2; i++) {
 
-
-		model *= InitRotateProj(playground.Orbit, { 0.0f, 0.0f, 0.0f });
-		model *= InitRotateProj(playground.radian, playground.center);
-		model *= InitMoveProj(playground.center);
+		model *= InitRotateProj(crain->Orbit, { 0.0f, 0.0f, 0.0f });
+		model *= InitRotateProj(crain->radian, crain->center);
+		model *= InitMoveProj(crain->center);
 		//model *= InitScaleProj(playground.Stretch);
 		//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 

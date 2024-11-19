@@ -5,13 +5,13 @@
 int index_count = 0;
 int index_array_count = 0;
 
-glm::mat4 GetMove(GLPos Delta) {
+glm::mat4 GetMove(glm::vec3 Delta) {
 	glm::mat4 basemat = glm::mat4(1.0f);
-	glm::vec3 trv = glm::vec3(Delta.x, Delta.y, Delta.z);
+	glm::vec3 trv = Delta;
 	glm::mat4 trm = basemat;
 	glm::mat4 model = basemat;
 
-	trm = glm::translate(basemat, trv);
+	trm = glm::translate(basemat, Delta);
 
 
 	model *= trm;
@@ -19,7 +19,7 @@ glm::mat4 GetMove(GLPos Delta) {
 	return model;
 }
 
-glm::mat4 GetSpin(GLPos Center, GLfloat radian, glm::vec3 axis) {
+glm::mat4 GetSpin(glm::vec3 Center, GLfloat radian, glm::vec3 axis) {
 	glm::mat4 basemat = glm::mat4(1.0f);
 	glm::mat4 trm = basemat;
 	glm::mat4 rm = basemat;
@@ -27,9 +27,9 @@ glm::mat4 GetSpin(GLPos Center, GLfloat radian, glm::vec3 axis) {
 
 	glm::vec3 trv = glm::vec3(Center.x, Center.y, Center.z);
 
-	trm = glm::translate(basemat, trv * -1.0f);
+	trm = glm::translate(basemat, Center * -1.0f);
 	rm = glm::rotate(basemat, glm::radians(radian), axis);
-	glm::mat4 trm2 = glm::translate(basemat, trv);
+	glm::mat4 trm2 = glm::translate(basemat, Center);
 
 	model = trm2 * rm * trm;
 
@@ -55,7 +55,7 @@ glm::mat4 GetStretch(GLPos Stretch) {
 }
 
 
-glm::mat4 ChangeScale(GLPos Stretch, GLPos Delta) {
+glm::mat4 ChangeScale(GLPos Stretch, glm::vec3 Delta) {
 
 	glm::mat4 model = glm::mat4(1.0f);
 
@@ -101,7 +101,7 @@ GLPos GetProjedPos(GLPos pos, glm::mat4 proj) {
 }
 
 
-glm::mat4 InitMoveProj(GLPos delta) {
+glm::mat4 InitMoveProj(glm::vec3 delta) {
 	glm::mat4 result = glm::mat4(1.0);
 
 	result *= GetMove(delta);
@@ -110,7 +110,7 @@ glm::mat4 InitMoveProj(GLPos delta) {
 }
 
 
-glm::mat4 InitRotateProj(GLPos radian, GLPos center) {
+glm::mat4 InitRotateProj(GLPos radian, glm::vec3 center) {
 	glm::mat4 result = glm::mat4(1.0);
 
 	result *= GetSpin(center, radian.x, glm::vec3(1.0f, 0.0f, 0.0f));
