@@ -1,5 +1,5 @@
 #pragma once
-#include "Head/LoadDiagramCrain.h"
+#include "Head/LoadDiagramCrain.cpp"
 
 Camera* camera;
 Projection* proj;

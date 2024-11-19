@@ -45,22 +45,28 @@
     <ClCompile Include="Head\LoadDiagramCrain.h">
       <Filter>헤더 파일\No19</Filter>
     </ClCompile>
+    <ClCompile Include="Head\3DDiagram.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\GetShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\LoadDiagramCrain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\TimerProcedure.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\VertexMethod.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Head\3DDiagram.h">
-      <Filter>헤더 파일\Objclass</Filter>
-    </ClInclude>
     <ClInclude Include="Head\ProjMethod.h">
       <Filter>헤더 파일\Proj</Filter>
     </ClInclude>
     <ClInclude Include="Head\LoadDiagram.h">
       <Filter>헤더 파일\prevheader</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\TimerProcedure.h">
-      <Filter>헤더 파일\sensitiveheader</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\VertexMethod.h">
-      <Filter>헤더 파일\sensitiveheader</Filter>
     </ClInclude>
     <ClInclude Include="Head\ColorStructs.h">
       <Filter>헤더 파일\BaseHeader</Filter>
@@ -71,8 +77,8 @@
     <ClInclude Include="Head\ObjStruct.h">
       <Filter>헤더 파일\BaseHeader</Filter>
     </ClInclude>
-    <ClInclude Include="Head\GetShader.h">
-      <Filter>헤더 파일\sensitiveheader</Filter>
+    <ClInclude Include="Head\DiagramBase.cpp">
+      <Filter>소스 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

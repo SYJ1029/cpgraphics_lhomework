@@ -129,20 +129,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GLM3D_NO19.cpp" />
-    <ClCompile Include="Head\LoadDiagramCrain.h" />
+    <ClCompile Include="Head\3DDiagram.cpp" />
+    <ClCompile Include="Head\GetShader.cpp" />
+    <ClCompile Include="Head\LoadDiagramCrain.cpp" />
     <ClCompile Include="Head\Proj\OPM.h" />
     <ClCompile Include="Head\Proj\VPM.h" />
+    <ClCompile Include="Head\TimerProcedure.cpp" />
+    <ClCompile Include="Head\VertexMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Head\3DDiagram.h" />
     <ClInclude Include="Head\BaseHeader.h" />
     <ClInclude Include="Head\ColorStructs.h" />
-    <ClInclude Include="Head\GetShader.h" />
+    <ClInclude Include="Head\DiagramBase.cpp" />
     <ClInclude Include="Head\LoadDiagram.h" />
     <ClInclude Include="Head\ObjStruct.h" />
     <ClInclude Include="Head\ProjMethod.h" />
-    <ClInclude Include="Head\TimerProcedure.h" />
-    <ClInclude Include="Head\VertexMethod.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shader\fragment.txt" />
