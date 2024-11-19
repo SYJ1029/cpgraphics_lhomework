@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ObjStruct.h"
+#include "../BaseHeader.h"
 
 #define PROJ_ORTHO 0
 #define PROJ_PERSPECTIVE 1

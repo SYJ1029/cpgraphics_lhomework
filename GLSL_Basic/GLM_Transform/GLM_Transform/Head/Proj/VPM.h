@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ObjStruct.h"
+#include "../BaseHeader.h"
 
 
 class Camera {
