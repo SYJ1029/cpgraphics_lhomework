@@ -134,7 +134,6 @@
     <ClCompile Include="Head\LoadDiagramCrain.cpp" />
     <ClCompile Include="Head\Proj\OPM.h" />
     <ClCompile Include="Head\Proj\VPM.h" />
-    <ClCompile Include="Head\TimerProcedure.cpp" />
     <ClCompile Include="Head\VertexMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
