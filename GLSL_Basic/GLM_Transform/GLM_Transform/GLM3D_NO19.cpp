@@ -381,24 +381,19 @@ void drawScene()
 
 
 
-
-
-
-
-	switch (crain->body->postype) {
-	case ID_CUBE:
+	for (int i = ID_BODY; i <= ID_PAW; i++) {
 		counter = cube->start_index;
+		submodel = model * crain->GetModelTransform(i);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
 		for (int j = 0; j < 6; j++) {
-			submodel = model * InitScaleProj(crain->body->Stretch);
 
-			submodel *= cube->GetWorldTransMatrix(projection, view, j);
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
 			counter += 6;
 		}
-		break;
 	}
+
+	
 
 
 

@@ -53,6 +53,27 @@ public:
 		body->Stretch = { 0.75f, 0.125f, 0.75f };
 	}
 
+	glm::mat4 GetModelTransform(int id) {
+		glm::mat4 result = glm::mat4(1.0f);
+		switch (id) {
+		case ID_BODY:
+			result *= InitScaleProj(body->Stretch);
+
+			break;
+		case ID_HEAD:
+			
+			break;
+		case ID_EDGE:
+			
+			break;
+		case ID_PAW:
+			
+			break;
+		}
+
+		return result;
+	}
+
 	void Move(int id, glm::vec3 Delta) {
 		switch (id) {
 		case ID_BODY:case ID_HEAD:
