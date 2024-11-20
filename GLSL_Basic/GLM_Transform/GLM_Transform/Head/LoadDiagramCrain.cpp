@@ -50,7 +50,7 @@ public:
 		
 		body->postype = ID_CUBE;
 		body->center = { 0, 0.1f, 0 };
-		body->Stretch = { 0.75f, 0.125f, 0.75f };
+		body->Stretch = { 0.75f, 0.15f, 0.75f };
 
 		head->postype = ID_CUBE;
 		head->center = { 0, 0.1f, 0 };
