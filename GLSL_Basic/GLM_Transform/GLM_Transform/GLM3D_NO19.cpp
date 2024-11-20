@@ -21,20 +21,12 @@ GLUquadricObj* qobj = gluNewQuadric();
 
 GLvoid Mouse(int button, int state, int x, int y);
 GLvoid Keyboard(unsigned char key, int x, int y);
-GLvoid MyCcw(int value);
 GLvoid MyCw(int value);
 GLvoid OrbitCcw(int value);
 GLvoid OrbitCw(int value);
 GLvoid specialKeyboard(int key, int x, int y);
-GLvoid MyLineMoveCube(int value);
 GLvoid MyStretch(int value);
-GLvoid MySpiralCw(int value);
-GLvoid MySpiralCcw(int value);
-GLvoid MyCwCube(int value);
-GLvoid MyCcwCube(int value);
-GLvoid MyStretchCube(int value);
-GLvoid MyCcwPyr(int value);
-GLvoid MyCwPyr(int value);
+GLvoid MyMove(int value);
 
 
 
@@ -53,8 +45,7 @@ bool goorbit = false;
 bool endorbit = false;
 bool checkPoint = false;
 bool goStretch = false;
-bool goSpiral = false;
-bool spinSequence = false;
+bool gomove = false;
 
 
 float base_axis[6][3] = {
@@ -381,7 +372,7 @@ void drawScene()
 
 
 
-	for (int i = ID_BODY; i <= ID_PAW; i++) {
+	for (int i = ID_BODY; i <= ID_PAW2; i++) {
 		counter = cube->start_index;
 		submodel = model * crain->GetModelTransform(i);
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
@@ -455,84 +446,114 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		gopersepective = !(gopersepective);
 		SetProjection(gopersepective);
 		break;
-	case 't':
-		switch (playground.postype) {
-		case ID_CUBE:
-			cube->endspin[4] = false;
-			cube->axis[4] = glm::vec3(1.0f, 0.0f, 0.0f);
+	case 't': case 'T':
+		for (int i = 0, j = 1; i < 2; i++, j *= -1) {
+			crain->paw[i]->axis = { 0.0f, 0.0f, 1.0f };
+
+
 
 			if ((int)key - (int)'a' < 0) {
-				direct = true;
 
-
-				glutTimerFunc(10, MyCcwCube, 4);
+				crain->paw[i]->radcnt = j;
 			}
 			else {
-				direct = false;
-				cube->spin[4] = !(cube->spin[4]);
-				glutTimerFunc(10, MyCwCube, 4);
+				crain->paw[i]->radcnt = j * -1;
 			}
-			break;
-		default:
-			playground.postype = ID_CUBE;
-			break;
+
+			if (crain->paw[i]->radcnt == crain->paw[i]->prevrad) {
+				crain->paw[i]->spin = false;
+				crain->paw[i]->radcnt = 0;
+				break;
+			}
+			else {
+
+				crain->paw[i]->prevrad = crain->paw[i]->radcnt;
+			}
+
+			if (crain->paw[i]->spin == false) {
+				crain->paw[i]->spin = true;
+
+				glutTimerFunc(10, MyCw, ID_PAW1 + i);
+			}
 		}
+
 
 		break;
-	case 'f':
-		switch (playground.postype) {
-		case ID_CUBE:
-			cube->axis[2] = glm::vec3(0.0f, 0.0f, 1.0f);
+	case 'f': case 'F':
+		for (int i = 0, j = 1; i < 2; i++, j *= -1) {
+			crain->edge[i]->axis = {0.0f, 1.0f, 0.0f};
 
-			cube->spin[2] = true;
-			cube->endspin[2] = true;
-			cube->ccw[2] = !(cube->ccw[2]);
 
-			if (cube->ccw[2])
-				glutTimerFunc(10, MyCcwCube, 2);
-			else
-				glutTimerFunc(10, MyCwCube, 2);
-			break;
-		default:
-			playground.postype = ID_CUBE;
-			break;
+
+			if ((int)key - (int)'a' < 0) {
+
+				crain->edge[i]->radcnt = j;
+			}
+			else {
+				crain->edge[i]->radcnt = j * -1;
+			}
+
+			if (crain->edge[i]->radcnt == crain->edge[i]->prevrad) {
+				crain->edge[i]->spin = false;
+				crain->edge[i]->radcnt = 0;
+				break;
+			}
+			else {
+
+				crain->edge[i]->prevrad = crain->edge[i]->radcnt;
+			}
+
+			if (crain->edge[i]->spin == false) {
+				crain->edge[i]->spin = true;
+
+				glutTimerFunc(10, MyCw, ID_EDGE1 + i);
+			}
 		}
+
 
 		break;
 	case 's':
-		switch (playground.postype) {
-		case ID_CUBE:
+		gomove = false;
 
-			for (int i = 0; i < 2; i++) {
-				firsttoken = { cube->center[i].x, cube->center[i].y + (200.0f * mulcount), cube->center[i].z };
-				//firsttoken = firsttoken * mulcount;
-				cube->fifo[i].push(firsttoken);
-
-				glutTimerFunc(30, MyLineMoveCube, i);
-			}
-
-			mulcount *= -1;
-			break;
-		default:
-			playground.postype = ID_CUBE;
-			break;
-		}
-
+		crain->Revert();
 		break;
-	case 'b':
-		switch (playground.postype) {
-		case ID_CUBE:
-			cube->StretchDelta[3] = cube->StretchDelta[3] * -1;
-
-
-			glutTimerFunc(30, MyStretchCube, 3);
-
-			break;
-		default:
-			playground.postype = ID_CUBE;
-			break;
+	case 'm': case 'M':
+		crain->head->axis = { 0.0f, 1.0f, 0.0f };
+		if ((int)key - (int)'a' < 0) {
+			if (crain->head->radcnt > 0) {
+				crain->head->spin = false;
+				crain->head->radcnt = 0;
+				break;
+			}
+			crain->head->radcnt = 1;
+		}
+		else {
+			if (crain->head->radcnt < 0) {
+				crain->head->spin = false;
+				crain->head->radcnt = 0;
+				break;
+			}
+			crain->head->radcnt = -1;
 		}
 
+		if (crain->head->spin == false) {
+			crain->head->spin = true;
+
+			glutTimerFunc(10, MyCw, ID_HEAD);
+		}
+		break;
+	case 'b': case 'B':
+		if ((int)key - (int)'a' < 0) {
+			crain->delta = { 0.02f, 0.0f, 0.0f };
+		}
+		else {
+			crain->delta = { -0.02f, 0.0f, 0.0f };
+		}
+
+		if (gomove == false) {
+			gomove = true;
+			glutTimerFunc(10, MyMove, ID_BODY);
+		}
 		break;
 	case 'w': case 'W':
 		if ((int)key - (int)'a' < 0) {
@@ -557,60 +578,9 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case 'x': case 'X':
-		gospin[0] = true;
-		gospin[1] = true;
-
-		playground.axis = glm::vec3(1.0f, 0.0f, 0.0f);
-
-
-		if ((int)key - (int)'a' < 0) {
-			direct = true;
-
-
-			glutTimerFunc(10, MyCcw, 0);
-			glutTimerFunc(10, MyCcw, 1);
-		}
-		else {
-			direct = false;
-			glutTimerFunc(10, MyCw, 0);
-			glutTimerFunc(10, MyCw, 1);
-		}
-
 		break;
 	case 'y': case 'Y':
-		gospin[0] = true;
-		gospin[1] = true;
-
-		playground.axis = glm::vec3(0.0f, 1.0f, 0.0f);
-
-
-		if ((int)key - (int)'a' < 0) {
-			direct = true;
-
-			glutTimerFunc(10, MyCcw, 0);
-			glutTimerFunc(10, MyCcw, 1);
-		}
-		else {
-			direct = false;
-
-			glutTimerFunc(10, MyCw, 0);
-			glutTimerFunc(10, MyCw, 1);
-		}
-
 		break;
-
-		break;
-	case 'm':
-		goorbit = false;
-		gospin[0] = false;
-		gospin[1] = false;
-		goStretch = false;
-		goSpiral = false;
-		Setplayground();
-		break;
-
-
-
 	case 'q':
 		delete cube;
 
@@ -645,45 +615,106 @@ GLvoid specialKeyboard(int key, int x, int y) {
 
 
 
-GLvoid MyCcw(int value) {
-
-	playground.radian.x += (playground.axis.x * 5);
-
-	playground.radian.y += (playground.axis.y * 5);
-
-	playground.radian.z += (playground.axis.z * 5);
-
-
-
-
-	if (gospin[value] && direct) {
-		glutTimerFunc(10, MyCcw, value);
-	}
-	else if (gospin[1 - value] && direct) {
-		glutTimerFunc(10, MyCcw, 1 - value);
-	}
-	glutPostRedisplay();
-}
+//GLvoid MyCcw(int value) {
+//
+//	.radian.x += (playground.axis.x * 5);
+//
+//	playground.radian.y += (playground.axis.y * 5);
+//
+//	playground.radian.z += (playground.axis.z * 5);
+//
+//
+//
+//
+//	if (gospin[value] && direct) {
+//		glutTimerFunc(10, MyCcw, value);
+//	}
+//	else if (gospin[1 - value] && direct) {
+//		glutTimerFunc(10, MyCcw, 1 - value);
+//	}
+//	glutPostRedisplay();
+//}
 
 GLvoid MyCw(int value) {
 
-	playground.radian.x -= (playground.axis.x * 5);
+	switch (value) {
+	case ID_HEAD:
+		crain->head->radian.x += (crain->head->axis.x * 5) * (float)crain->head->radcnt;
 
-	playground.radian.y -= (playground.axis.y * 5);
+		crain->head->radian.y += (crain->head->axis.y * 5) * (float)crain->head->radcnt;
 
-	playground.radian.z -= (playground.axis.z * 5);
-
-	if (playground.radian.x <= -180)
-		cout << "pause" << endl << endl;
+		crain->head->radian.z += (crain->head->axis.z * 5) * (float)crain->head->radcnt;
 
 
-	if (gospin[value] && direct == false) {
-		glutTimerFunc(10, MyCw, value);
+		if (crain->head->spin)
+			glutTimerFunc(30, MyCw, value);
+		else {
+			if (crain->head->radcnt != 0)
+				crain->head->Clear();
+		}
+		break;
+	case ID_EDGE1:
+		crain->edge[0]->radian.x += (crain->edge[0]->axis.x * 5) * (float)crain->edge[0]->radcnt;
+
+		crain->edge[0]->radian.y += (crain->edge[0]->axis.y * 5) * (float)crain->edge[0]->radcnt;
+
+		crain->edge[0]->radian.z += (crain->edge[0]->axis.z * 5) * (float)crain->edge[0]->radcnt;
+
+
+		if (crain->edge[0]->spin)
+			glutTimerFunc(30, MyCw, value);
+		else {
+			if (crain->edge[0]->radcnt != 0)
+				crain->edge[0]->Clear();
+		}
+		break;
+	case ID_EDGE2:
+		crain->edge[1]->radian.x += (crain->edge[1]->axis.x * 5) * (float)crain->edge[1]->radcnt;
+
+		crain->edge[1]->radian.y += (crain->edge[1]->axis.y * 5) * (float)crain->edge[1]->radcnt;
+
+		crain->edge[1]->radian.z += (crain->edge[1]->axis.z * 5) * (float)crain->edge[1]->radcnt;
+
+
+		if (crain->edge[1]->spin)
+			glutTimerFunc(30, MyCw, value);
+		else {
+			if (crain->edge[1]->radcnt != 0)
+				crain->edge[1]->Clear();
+		}
+		break;
+	case ID_PAW1:
+		crain->paw[0]->radian.x += (crain->paw[0]->axis.x * 5) * (float)crain->paw[0]->radcnt;
+
+		crain->paw[0]->radian.y += (crain->paw[0]->axis.y * 5) * (float)crain->paw[0]->radcnt;
+
+		crain->paw[0]->radian.z += (crain->paw[0]->axis.z * 5) * (float)crain->paw[0]->radcnt;
+
+
+		if (crain->paw[0]->spin && crain->paw[0]->radian.z * (float)crain->paw[0]->radcnt <= 90.0f)
+			glutTimerFunc(30, MyCw, value);
+		else {
+			if (crain->paw[0]->radcnt != 0)
+				crain->paw[0]->Clear();
+		}
+		break;
+	case ID_PAW2:
+		crain->paw[1]->radian.x += (crain->paw[1]->axis.x * 5) * (float)crain->paw[1]->radcnt;
+
+		crain->paw[1]->radian.y += (crain->paw[1]->axis.y * 5) * (float)crain->paw[1]->radcnt;
+
+		crain->paw[1]->radian.z += (crain->paw[1]->axis.z * 5) * (float)crain->paw[1]->radcnt;
+
+
+		if (crain->paw[1]->spin && crain->paw[1]->radian.z * (float)crain->paw[1]->radcnt <= 90.0f)
+			glutTimerFunc(30, MyCw, value);
+		else {
+			if (crain->paw[1]->radcnt != 0)
+				crain->paw[1]->Clear();
+		}
+		break;
 	}
 
-	else if (gospin[1 - value] && direct == false) {
-		glutTimerFunc(10, MyCw, 1 - value);
-	}
 
 	glutPostRedisplay();
 }
@@ -730,91 +761,43 @@ GLvoid OrbitCw(int value) {
 
 
 
-GLvoid MyLineMoveCube(int value) {
-	GLPos token = { 0 };
+//GLvoid MyLineMoveCube(int value) {
+//	GLPos token = { 0 };
+//
+//
+//	//cube->center[value] += {0.0f, 2.0f, 0.0f};
+//
+//
+//
+//	if (cube->fifo[value].empty());
+//	else {
+//		token = cube->fifo[value].front();
+//		cube->center[value] += InitDelta(cube->center[value], token) * cube->mulcount;
+//	}
+//
+//	if (cube->GetCrash(InitDelta(cube->center[value], token) * cube->mulcount, token, value) == false) {
+//		glutTimerFunc(10, MyLineMoveCube, value);
+//	}
+//
+//	else {
+//		cube->center[value] = token;
+//
+//		cube->fifo[value].pop();
+//
+//		if (cube->fifo[value].empty()) {
+//			cout << "empty!" << endl << endl;
+//		}
+//		else {
+//			glutTimerFunc(30, MyLineMoveCube, value);
+//		}
+//
+//
+//	}
+//
+//	glutPostRedisplay();
+//}
 
 
-	//cube->center[value] += {0.0f, 2.0f, 0.0f};
-
-
-
-	if (cube->fifo[value].empty());
-	else {
-		token = cube->fifo[value].front();
-		cube->center[value] += InitDelta(cube->center[value], token) * cube->mulcount;
-	}
-
-	if (cube->GetCrash(InitDelta(cube->center[value], token) * cube->mulcount, token, value) == false) {
-		glutTimerFunc(10, MyLineMoveCube, value);
-	}
-
-	else {
-		cube->center[value] = token;
-
-		cube->fifo[value].pop();
-
-		if (cube->fifo[value].empty()) {
-			cout << "empty!" << endl << endl;
-		}
-		else {
-			glutTimerFunc(30, MyLineMoveCube, value);
-		}
-
-
-	}
-
-	glutPostRedisplay();
-}
-
-
-GLvoid MyCwCube(int value) {
-	if (cube->spin[value]) {
-
-		cube->radian[value].x -= (cube->axis[value].x * 5);
-
-		cube->radian[value].y -= (cube->axis[value].y * 5);
-
-		cube->radian[value].z -= (cube->axis[value].z * 5);
-
-
-		if (cube->endspin[value] && cube->radian[value].z <= -90) {
-			cube->spin[value] = false;
-		}
-		else {
-			if (cube->ccw[value]) {
-				glutTimerFunc(30, MyCcwCube, value);
-
-			}
-			else
-				glutTimerFunc(30, MyCwCube, value);
-		}
-	}
-	glutPostRedisplay();
-}
-
-GLvoid MyCcwCube(int value) {
-	if (cube->spin[value]) {
-		cube->radian[value].x += (cube->axis[value].x * 5);
-
-		cube->radian[value].y += (cube->axis[value].y * 5);
-
-		cube->radian[value].z += (cube->axis[value].z * 5);
-
-		if (cube->endspin[value] && cube->radian[value].z >= 0) {
-
-			cube->spin[value] = false;
-		}
-		else {
-			if (cube->ccw[value]) {
-				glutTimerFunc(30, MyCcwCube, value);
-
-			}
-			else
-				glutTimerFunc(30, MyCwCube, value);
-		}
-	}
-	glutPostRedisplay();
-}
 
 GLvoid MyStretchCube(int value) {
 	bool TimerOn = true;
@@ -840,3 +823,15 @@ GLvoid MyStretchCube(int value) {
 }
 
 
+GLvoid MyMove(int value) {
+	int token = value - ID_BODY;
+	
+
+	crain->Move(ID_BODY, GLPosToVec3(crain->delta));
+
+
+	if(gomove)
+		glutTimerFunc(10, MyMove, value);
+
+	glutPostRedisplay();
+}

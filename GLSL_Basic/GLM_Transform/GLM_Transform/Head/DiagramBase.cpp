@@ -19,10 +19,12 @@ public:
 	glm::vec3 target;
 	GLPos radian;
 	int radcnt;
+	int prevrad;
 	GLPos delta;
 	GLPos Stretch;
 	GLPos Orbit;
 	bool ccw, orbitccw;
+	bool spin;
 
 	QuadSetting qset;
 
@@ -41,6 +43,7 @@ public:
 		delta = { 0, 0, 0 };
 
 		radcnt = 1;
+		prevrad = 0;
 
 		for (int i = 0; i < 3; i++) {
 			Stretch = { 1.0f };
@@ -48,6 +51,7 @@ public:
 
 		ccw = true;
 		orbitccw = true;
+		spin = false;
 
 
 

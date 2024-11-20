@@ -9,8 +9,10 @@
 #define ID_BG 10
 #define ID_BODY 11
 #define ID_HEAD 12
-#define ID_EDGE 13
-#define ID_PAW 14
+#define ID_EDGE1 13
+#define ID_EDGE2 14
+#define ID_PAW1 15
+#define ID_PAW2 16
 
 
 GL_Cube* cube = new GL_Cube;
@@ -27,7 +29,13 @@ public:
 
 	glm::vec3 center;
 
+
+
 	Crain() : Diagram() {
+		Clear();
+	}
+
+	GLvoid Clear() {
 		body = new Diagram;
 		head = new Diagram;
 		edge[0] = new Diagram;
@@ -43,6 +51,12 @@ public:
 			edge[i]->postype = ID_CUBE;
 			head->postype = ID_CUBE;
 		}
+
+	}
+
+	GLvoid Revert() {
+		Clear();
+		InitCrain();
 	}
 
 	GLvoid InitCrain() {
@@ -56,32 +70,45 @@ public:
 		head->center = { 0, 0.1f, 0 };
 		head->Stretch = { 0.5f, 0.1f, 0.5f };
 
+		edge[0]->center = { 0.0f, 0.0f, 0.1f };
 		edge[0]->Stretch = {0.125f / 2, 0.75f, 0.125f / 2};
+		edge[1]->center = { 0.0f, 0.0f, -0.1f };
+		edge[1]->Stretch = { 0.125f / 2, 0.75f, 0.125f / 2 };
 
-		paw[0]->center = { 0.5f, 0.0f, 0.0f };
+
+		paw[0]->center = { 0.5f, 0.0f, 0.2f };
 		paw[0]->Stretch = { edge[0]->Stretch.y, edge[0]->Stretch.x, edge[0]->Stretch.z };
+
+		paw[1]->center = { 0.5f, 0.0f, -0.2f };
+		paw[1]->Stretch = { edge[0]->Stretch.y, edge[0]->Stretch.x, edge[0]->Stretch.z };
 	}
 
 	glm::mat4 GetModelTransform(int id) {
 		glm::mat4 result = glm::mat4(1.0f);
+
+		result *= InitMoveProj(body->center);
 		switch (id) {
 		case ID_BODY:
 			result *= InitScaleProj(body->Stretch);
 
 			break;
 		case ID_HEAD:
+			result *= InitRotateProj(head->radian, head->center);
 			result *= InitMoveProj(head->center);
 			result *= InitRotateProj(head->radian, head->center);
 			result *= InitScaleProj(head->Stretch);
 
 			break;
-		case ID_EDGE:
+		case ID_EDGE1: case ID_EDGE2:
+			result *= InitRotateProj(edge[id - ID_EDGE1]->radian, edge[id - ID_EDGE1]->center);
+			result *= InitMoveProj(edge[id - ID_EDGE1]->center);
 			result *= InitMoveProj(head->center);
-			result *= InitScaleProj(edge[0]->Stretch);
+			result *= InitScaleProj(edge[id - ID_EDGE1]->Stretch);
 			break;
-		case ID_PAW:
-			result *= InitMoveProj(paw[0]->center);
-			result *= InitScaleProj(paw[0]->Stretch);
+		case ID_PAW1: case ID_PAW2:
+			result *= InitRotateProj(paw[id - ID_PAW1]->radian, paw[id - ID_PAW1]->center);
+			result *= InitMoveProj(paw[id - ID_PAW1]->center);
+			result *= InitScaleProj(paw[id - ID_PAW1]->Stretch);
 			break;
 		}
 
@@ -90,20 +117,18 @@ public:
 
 	void Move(int id, glm::vec3 Delta) {
 		switch (id) {
-		case ID_BODY:case ID_HEAD:
+		case ID_BODY:
 			body->center += Delta;
+		break;
+		case ID_HEAD:
 			head->center += Delta;
-			for (int i = 0; i < 2; i++) {
-				edge[i]->center += Delta;
-				paw[i]->center += Delta;
-			}
 			break;
-		case ID_EDGE:
+		case ID_EDGE1: case ID_EDGE2:
 			for (int i = 0; i < 2; i++) {
 				edge[i]->center += Delta;
 			}
 			break;
-		case ID_PAW:
+		case ID_PAW1: case ID_PAW2:
 			for (int i = 0; i < 2; i++) {
 				paw[i]->center += Delta;
 			}
@@ -122,15 +147,15 @@ public:
 				paw[i]->radian += radian;
 			}
 			break;
-		case ID_EDGE:
+		case ID_EDGE1: case ID_EDGE2:
 			for (int i = 0; i < 2; i++) {
 				edge[i]->radian += radian;
 			}
 			break;
-		case ID_PAW:
+		case ID_PAW1: case ID_PAW2:
 			for (int i = 0; i < 2; i++) {
 				paw[i]->radian += radian;
-			}
+			} 
 			break;
 		}
 	}
