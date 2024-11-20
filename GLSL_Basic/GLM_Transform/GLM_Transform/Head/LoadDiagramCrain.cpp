@@ -51,6 +51,15 @@ public:
 		body->postype = ID_CUBE;
 		body->center = { 0, 0.1f, 0 };
 		body->Stretch = { 0.75f, 0.125f, 0.75f };
+
+		head->postype = ID_CUBE;
+		head->center = { 0, 0.1f, 0 };
+		head->Stretch = { 0.5f, 0.1f, 0.5f };
+
+		edge[0]->Stretch = {0.125f / 2, 0.75f, 0.125f / 2};
+
+		paw[0]->center = { 0.5f, 0.0f, 0.0f };
+		paw[0]->Stretch = { edge[0]->Stretch.y, edge[0]->Stretch.x, edge[0]->Stretch.z };
 	}
 
 	glm::mat4 GetModelTransform(int id) {
@@ -61,13 +70,18 @@ public:
 
 			break;
 		case ID_HEAD:
-			
+			result *= InitMoveProj(head->center);
+			result *= InitRotateProj(head->radian, head->center);
+			result *= InitScaleProj(head->Stretch);
+
 			break;
 		case ID_EDGE:
-			
+			result *= InitMoveProj(head->center);
+			result *= InitScaleProj(edge[0]->Stretch);
 			break;
 		case ID_PAW:
-			
+			result *= InitMoveProj(paw[0]->center);
+			result *= InitScaleProj(paw[0]->Stretch);
 			break;
 		}
 
