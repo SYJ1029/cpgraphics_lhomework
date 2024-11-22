@@ -63,8 +63,8 @@ public:
 		this->center = glm::vec3(0.0f, 0.5f, 0.0f);
 		
 		body->postype = ID_CUBE;
-		body->center = { 0, 0.1f, 0 };
-		body->Stretch = { 0.75f, 0.15f, 0.75f };
+		body->center = { 0, 0.05f, 0 };
+		body->Stretch = { 0.75f, 0.2f, 0.75f };
 
 		head->postype = ID_CUBE;
 		head->center = { 0, 0.1f, 0 };
@@ -76,10 +76,10 @@ public:
 		edge[1]->Stretch = { 0.125f / 2, 0.75f, 0.125f / 2 };
 
 
-		paw[0]->center = { 0.5f, 0.0f, 0.2f };
+		paw[0]->center = { 0.8f, 0.05f, 0.2f };
 		paw[0]->Stretch = { edge[0]->Stretch.y, edge[0]->Stretch.x, edge[0]->Stretch.z };
 
-		paw[1]->center = { 0.5f, 0.0f, -0.2f };
+		paw[1]->center = { 0.8f, 0.05f, -0.2f };
 		paw[1]->Stretch = { edge[0]->Stretch.y, edge[0]->Stretch.x, edge[0]->Stretch.z };
 	}
 
@@ -106,7 +106,7 @@ public:
 			result *= InitScaleProj(edge[id - ID_EDGE1]->Stretch);
 			break;
 		case ID_PAW1: case ID_PAW2:
-			result *= InitRotateProj(paw[id - ID_PAW1]->radian, paw[id - ID_PAW1]->center);
+			result *= InitRotateProj(paw[id - ID_PAW1]->radian, { paw[id - ID_PAW1]->center.x - 0.5f,  paw[id - ID_PAW1]->center.y, paw[id - ID_PAW1]->center.z });
 			result *= InitMoveProj(paw[id - ID_PAW1]->center);
 			result *= InitScaleProj(paw[id - ID_PAW1]->Stretch);
 			break;

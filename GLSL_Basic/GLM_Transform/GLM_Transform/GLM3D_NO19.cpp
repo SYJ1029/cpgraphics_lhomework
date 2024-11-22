@@ -446,7 +446,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		gopersepective = !(gopersepective);
 		SetProjection(gopersepective);
 		break;
-	case 't': case 'T':
+	case 'f': case 'F':
 		for (int i = 0, j = 1; i < 2; i++, j *= -1) {
 			crain->paw[i]->axis = { 0.0f, 0.0f, 1.0f };
 
@@ -460,13 +460,16 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 				crain->paw[i]->radcnt = j * -1;
 			}
 
-			if (crain->paw[i]->radcnt == crain->paw[i]->prevrad) {
+			if (crain->paw[i]->radcnt == crain->paw[i]->prevrad && crain->paw[i]->radian.z * (float)crain->paw[i]->radcnt >= 45.0f) {
+				if (i == 1)
+					cout << "1" << endl;
 				crain->paw[i]->spin = false;
 				crain->paw[i]->radcnt = 0;
-				break;
+				continue;
 			}
 			else {
-
+				if (i == 1)
+					cout << "1" << endl;
 				crain->paw[i]->prevrad = crain->paw[i]->radcnt;
 			}
 
@@ -479,7 +482,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 
 
 		break;
-	case 'f': case 'F':
+	case 't': case 'T':
 		for (int i = 0, j = 1; i < 2; i++, j *= -1) {
 			crain->edge[i]->axis = {0.0f, 1.0f, 0.0f};
 
@@ -691,9 +694,12 @@ GLvoid MyCw(int value) {
 		crain->paw[0]->radian.z += (crain->paw[0]->axis.z * 5) * (float)crain->paw[0]->radcnt;
 
 
-		if (crain->paw[0]->spin && crain->paw[0]->radian.z * (float)crain->paw[0]->radcnt <= 90.0f)
+		if (crain->paw[0]->spin && crain->paw[0]->radian.z * (float)crain->paw[0]->radcnt <= 45.0f)
 			glutTimerFunc(30, MyCw, value);
 		else {
+			if (crain->paw[0]->radian.z * (float)crain->paw[0]->radcnt >= 45.0f)
+				crain->paw[0]->radcnt = 0;
+
 			if (crain->paw[0]->radcnt != 0)
 				crain->paw[0]->Clear();
 		}
@@ -706,9 +712,12 @@ GLvoid MyCw(int value) {
 		crain->paw[1]->radian.z += (crain->paw[1]->axis.z * 5) * (float)crain->paw[1]->radcnt;
 
 
-		if (crain->paw[1]->spin && crain->paw[1]->radian.z * (float)crain->paw[1]->radcnt <= 90.0f)
+		if (crain->paw[1]->spin && crain->paw[1]->radian.z * (float)crain->paw[1]->radcnt <= 45.0f)
 			glutTimerFunc(30, MyCw, value);
 		else {
+			if (crain->paw[1]->radian.z * (float)crain->paw[1]->radcnt >= 45.0f)
+				crain->paw[1]->radcnt = 0;
+
 			if (crain->paw[1]->radcnt != 0)
 				crain->paw[1]->Clear();
 		}

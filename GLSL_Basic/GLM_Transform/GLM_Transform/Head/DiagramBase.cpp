@@ -42,7 +42,7 @@ public:
 		OrbitAxis = glm::vec3(0.0f, 1.0f, 0.0f);
 		delta = { 0, 0, 0 };
 
-		radcnt = 1;
+		radcnt = 0;
 		prevrad = 0;
 
 		for (int i = 0; i < 3; i++) {
