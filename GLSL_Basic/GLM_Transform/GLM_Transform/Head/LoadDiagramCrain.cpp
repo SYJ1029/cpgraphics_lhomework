@@ -59,6 +59,16 @@ public:
 		InitCrain();
 	}
 
+	GLvoid Stop() {
+		this->body->spin = false;
+		this->head->spin = false;
+
+		for (int i = 0; i < 2; i++) {
+			this->edge[i]->spin = false;
+			this->paw[i]->spin = false;
+		}
+	}
+
 	GLvoid InitCrain() {
 		this->center = glm::vec3(0.0f, 0.5f, 0.0f);
 		
@@ -70,16 +80,16 @@ public:
 		head->center = { 0, 0.1f, 0 };
 		head->Stretch = { 0.5f, 0.1f, 0.5f };
 
-		edge[0]->center = { 0.0f, 0.0f, 0.1f };
+		edge[0]->center = { 0.0f, 0.2f, 0.1f };
 		edge[0]->Stretch = {0.125f / 2, 0.75f, 0.125f / 2};
-		edge[1]->center = { 0.0f, 0.0f, -0.1f };
+		edge[1]->center = { 0.0f, 0.2f, -0.1f };
 		edge[1]->Stretch = { 0.125f / 2, 0.75f, 0.125f / 2 };
 
 
-		paw[0]->center = { 0.8f, 0.05f, 0.2f };
+		paw[0]->center = { 0.7f, 0.05f, 0.2f };
 		paw[0]->Stretch = { edge[0]->Stretch.y, edge[0]->Stretch.x, edge[0]->Stretch.z };
 
-		paw[1]->center = { 0.8f, 0.05f, -0.2f };
+		paw[1]->center = { 0.7f, 0.05f, -0.2f };
 		paw[1]->Stretch = { edge[0]->Stretch.y, edge[0]->Stretch.x, edge[0]->Stretch.z };
 	}
 
@@ -124,9 +134,9 @@ public:
 			head->center += Delta;
 			break;
 		case ID_EDGE1: case ID_EDGE2:
-			for (int i = 0; i < 2; i++) {
-				edge[i]->center += Delta;
-			}
+			edge[0]->center += Delta;
+			edge[1]->center -= Delta;
+			
 			break;
 		case ID_PAW1: case ID_PAW2:
 			for (int i = 0; i < 2; i++) {

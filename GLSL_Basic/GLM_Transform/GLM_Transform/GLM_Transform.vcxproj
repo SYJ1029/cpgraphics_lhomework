@@ -144,8 +144,8 @@
     <ClInclude Include="Head\VertexMethod.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shader\fragment.txt" />
-    <Text Include="Shader\vertex.txt" />
+    <Text Include="Shader\fragment.glsl" />
+    <Text Include="Shader\vertex.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

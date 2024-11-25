@@ -36,10 +36,46 @@
     <ClCompile Include="GLM3D_NO19.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Head\Proj\OPM.h">
+      <Filter>헤더 파일\Proj</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\Proj\VPM.h">
+      <Filter>헤더 파일\Proj</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\LoadDiagramCrain.h">
+      <Filter>헤더 파일\No19</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\3DDiagram.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\GetShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\LoadDiagramCrain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\TimerProcedure.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\VertexMethod.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Head\Proj\WPM.h">
+      <Filter>헤더 파일\Proj</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\3DDiagram.h">
+      <Filter>헤더 파일\Objclass</Filter>
+    </ClInclude>
+>>>>>>> parent of acc5168 (WPM을  Vertex헤더로 통합)
     <ClInclude Include="Head\ProjMethod.h">
       <Filter>헤더 파일\Proj</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\LoadDiagram.h">
+      <Filter>헤더 파일\prevheader</Filter>
     </ClInclude>
     <ClInclude Include="Head\ColorStructs.h">
       <Filter>헤더 파일\BaseHeader</Filter>
@@ -53,30 +89,12 @@
     <ClInclude Include="Head\DiagramBase.cpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Head\3DDiagram.cpp">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\GetShader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\LoadDiagramCrain.cpp">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\Proj\OPM.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\Proj\VPM.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Head\VertexMethod.cpp">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="Shader\vertex.glsl">
+    <Text Include="Shader\vertex.txt">
       <Filter>리소스 파일</Filter>
     </Text>
-    <Text Include="Shader\fragment.glsl">
+    <Text Include="Shader\fragment.txt">
       <Filter>리소스 파일</Filter>
     </Text>
   </ItemGroup>

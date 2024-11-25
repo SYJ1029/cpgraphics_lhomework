@@ -22,13 +22,11 @@ GLUquadricObj* qobj = gluNewQuadric();
 GLvoid Mouse(int button, int state, int x, int y);
 GLvoid Keyboard(unsigned char key, int x, int y);
 GLvoid MyCw(int value);
-GLvoid OrbitCcw(int value);
-GLvoid OrbitCw(int value);
+GLvoid OrbitView(int value);
 GLvoid specialKeyboard(int key, int x, int y);
-GLvoid MyStretch(int value);
 GLvoid MyMove(int value);
-
-
+GLvoid MoveView(int value);
+//GLvoid MyStretch(int value);
 
 
 
@@ -446,6 +444,29 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		gopersepective = !(gopersepective);
 		SetProjection(gopersepective);
 		break;
+
+	case 'e': case 'E':
+
+
+		if (direct) {
+			for (int i = 0, j = 1; i < 2; i++, j *= -1) {
+				crain->edge[i]->radcnt = j;
+				crain->edge[i]->delta = { 0.0f, 0.0f, -0.01f };
+				crain->edge[i]->delta = crain->edge[i]->delta * crain->edge[i]->radcnt;
+			}
+		}
+		else {
+			for (int i = 0, j = 1; i < 2; i++, j *= -1) {
+				crain->edge[i]->radcnt = j;
+				crain->edge[i]->delta = { 0.0f, 0.0f, 0.01f };
+				crain->edge[i]->delta = crain->edge[i]->delta * crain->edge[i]->radcnt;
+			}
+		}
+
+		direct = !(direct);
+		gomove = true;
+		glutTimerFunc(30, MyMove, ID_EDGE1);
+		break;
 	case 'f': case 'F':
 		for (int i = 0, j = 1; i < 2; i++, j *= -1) {
 			crain->paw[i]->axis = { 0.0f, 0.0f, 1.0f };
@@ -515,11 +536,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 
 
 		break;
-	case 's':
-		gomove = false;
 
-		crain->Revert();
-		break;
 	case 'm': case 'M':
 		crain->head->axis = { 0.0f, 1.0f, 0.0f };
 		if ((int)key - (int)'a' < 0) {
@@ -581,8 +598,55 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case 'x': case 'X':
+		if ((int)key - (int)'a' < 0 && camera->radcnt > 0 ||
+			(int)key - (int)'a' >= 0 && camera->radcnt < 0) {
+			camera->radcnt *= -1;
+		}
+		else {
+			
+		}
+		
+		if (camera->move == false) {
+			camera->move = true;
+			glutTimerFunc(30, MoveView, 100);
+		}
 		break;
 	case 'y': case 'Y':
+		camera->radcnt *= -1;
+
+		if (camera->spin == false) {
+			camera->spin = true;
+
+			glutTimerFunc(30, OrbitView, 10);
+		}
+		break;
+
+	case 'z': case 'Z':
+		if ((int)key - (int)'a' < 0 && camera->radcnt > 0 ||
+			(int)key - (int)'a' >= 0 && camera->radcnt < 0) {
+			camera->radcnt *= -1;
+		}
+		else {
+
+		}
+
+		if (camera->move == false) {
+			camera->move = true;
+			glutTimerFunc(30, MoveView, 1);
+		}
+		break;
+
+	case 's':
+		gomove = false;
+
+		crain->Stop();
+		camera->Stop();
+		break;
+	case 'c':
+		gomove = false;
+
+		crain->Revert();
+		camera->Revert();
 		break;
 	case 'q':
 		delete cube;
@@ -694,14 +758,19 @@ GLvoid MyCw(int value) {
 		crain->paw[0]->radian.z += (crain->paw[0]->axis.z * 5) * (float)crain->paw[0]->radcnt;
 
 
-		if (crain->paw[0]->spin && crain->paw[0]->radian.z * (float)crain->paw[0]->radcnt <= 45.0f)
+		if (crain->paw[0]->spin && crain->paw[0]->radian.z * (float)crain->paw[0]->radcnt <= 45.0f) {
 			glutTimerFunc(30, MyCw, value);
+		}
 		else {
 			if (crain->paw[0]->radian.z * (float)crain->paw[0]->radcnt >= 45.0f)
 				crain->paw[0]->radcnt = 0;
 
 			if (crain->paw[0]->radcnt != 0)
 				crain->paw[0]->Clear();
+
+
+			crain->paw[value - ID_PAW1]->spin = false;
+			crain->paw[value - ID_PAW1]->radcnt = 0;
 		}
 		break;
 	case ID_PAW2:
@@ -720,6 +789,9 @@ GLvoid MyCw(int value) {
 
 			if (crain->paw[1]->radcnt != 0)
 				crain->paw[1]->Clear();
+
+			crain->paw[value - ID_PAW1]->spin = false;
+			crain->paw[value - ID_PAW1]->radcnt = 0;
 		}
 		break;
 	}
@@ -743,28 +815,17 @@ GLvoid OrbitCcw(int value) {
 
 
 
-GLvoid OrbitCw(int value) {
-	playground.Orbit -= Vec3ToGLPos(playground.OrbitAxis) * 5;
+GLvoid OrbitView(int value) {
+
+	camera->TimerSpinView(value);
 
 
-	if (goorbit && playground.orbitccw == false) {
-
-		if (endorbit && playground.Orbit.y <= -180) {
-			playground.center = playground.target;
-			playground.Orbit = 0.0f;
-
-			//glm::mat4 result = glm::mat4(1.0);
-
-			//result *= InitRotateProj(playground[value].Orbit, { 0.0f, 0.0f, 0.0f });
-			//result *= InitMoveProj(playground[value].center);
-			//result *= InitScaleProj(playground[value].Stretch);
-
-			//playground[value].center = GetProjedPos(playground[value].center, result);
-			//playground[value].Orbit = 0.0f;
-		}
-		else
-			glutTimerFunc(30, OrbitCw, value);
+	if(camera->spin)
+		glutTimerFunc(30, OrbitView, value);
+	else {
+		camera->Stop();
 	}
+
 	glutPostRedisplay();
 }
 
@@ -835,12 +896,46 @@ GLvoid MyStretchCube(int value) {
 GLvoid MyMove(int value) {
 	int token = value - ID_BODY;
 	
+	switch (value) {
+	case ID_BODY:
+		crain->Move(ID_BODY, GLPosToVec3(crain->delta));
+		break;
+	case ID_EDGE1: case ID_EDGE2:
+		crain->Move(ID_EDGE1, GLPosToVec3(crain->edge[0]->delta));
 
-	crain->Move(ID_BODY, GLPosToVec3(crain->delta));
+		if ((crain->edge[0]->delta.z < 0 && crain->edge[0]->center.z <= -0.0f) ||
+			(crain->edge[0]->delta.z > 0 && crain->edge[0]->center.z >= 0.1f)) {
+			gomove = false;
+		}
+
+		break;
+	}
 
 
-	if(gomove)
+	if (gomove) {
+
+		
+
 		glutTimerFunc(10, MyMove, value);
+	}
+
+	glutPostRedisplay();
+}
+
+
+
+GLvoid MoveView(int value) {
+	glm::vec3 axis = { (float)(value / 100), (float)((value % 100) / 10.0f), (float)(value % 10) };
+	axis /= 5.0f * camera->radcnt;
+
+
+	camera->MoveViewPos(axis);
+
+	if (camera->move)
+		glutTimerFunc(30, MoveView, value);
+	else {
+		camera->Stop();
+	}
 
 	glutPostRedisplay();
 }

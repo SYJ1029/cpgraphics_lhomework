@@ -75,7 +75,7 @@ GLchar* filetobuf(const char* vertexSource) {
 
 void make_vertexShaders() {
 
-	vertexSource = filetobuf("Shader/vertex.txt");
+	vertexSource = filetobuf("Shader/vertex.glsl");
 	vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, (const GLchar**) & vertexSource, NULL);
 	glCompileShader(vertexShader);
@@ -95,7 +95,7 @@ void make_vertexShaders() {
 
 void make_fragmentShaders() 
 {
-	fragmentSource = filetobuf("Shader/fragment.txt");    // 프래그세이더 읽어오기
+	fragmentSource = filetobuf("Shader/fragment.glsl");    // 프래그세이더 읽어오기
 	fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
 	glShaderSource(fragmentShader, 1, (const GLchar**)&fragmentSource, NULL);
