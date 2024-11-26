@@ -46,10 +46,10 @@ GLvoid Robot::Stop() {
 }
 
 GLvoid Robot::InitRobot() {
-	this->center = glm::vec3(0.0f, 0.5f, 0.0f);
+	this->center = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	body->postype = ID_CUBE;
-	body->center = { 0, 0.05f, 0 };
+	body->center = { 0, -4.5f, 0 };
 	body->Stretch = { 0.25f, 0.5f, 0.25f };
 
 	head->postype = ID_CUBE;
@@ -76,7 +76,6 @@ glm::mat4 Robot::GetModelTransform(int id) {
 	switch (id) {
 	case ID_BODY:
 		result *= InitScaleProj(body->Stretch);
-
 		break;
 	case ID_HEAD:
 		result *= InitRotateProj(head->radian, head->center);
@@ -86,7 +85,7 @@ glm::mat4 Robot::GetModelTransform(int id) {
 
 		break;
 	case ID_ARM1: case ID_ARM2:
-		result *= InitRotateProj(arm[id - ID_ARM1]->radian, arm[id - ID_ARM1]->center);
+		result *= InitRotateProj(arm[id - ID_ARM1]->radian, { arm[id - ID_ARM1]->center.x,  arm[id - ID_ARM1]->center.y + 0.5f, arm[id - ID_ARM1]->center.z });
 		result *= InitMoveProj(arm[id - ID_ARM1]->center);
 		result *= InitMoveProj(head->center);
 		result *= InitScaleProj(arm[id - ID_ARM1]->Stretch);

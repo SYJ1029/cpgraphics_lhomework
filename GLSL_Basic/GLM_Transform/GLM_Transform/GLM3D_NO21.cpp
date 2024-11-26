@@ -8,7 +8,7 @@ MyCol mycolor = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLPos Screensize = { 800, 800, 0 };
 
 GLUquadricObj* qobj = gluNewQuadric();
-
+GL_Cube* cubeCw = new GL_Cube;
 
 
 
@@ -25,13 +25,16 @@ GLvoid OrbitView(int value);
 GLvoid specialKeyboard(int key, int x, int y);
 GLvoid MyMove(int value);
 GLvoid MoveView(int value);
+GLvoid InitArmMove();
+GLvoid InitLegMove();
+GLvoid OpenFront(int value);
 //GLvoid MyStretch(int value);
 
 
 
 Robot* robot = new Robot;
 
-Diagram playground;
+Diagram* playground = new Diagram;
 
 
 bool depthed = true;
@@ -42,9 +45,11 @@ bool goorbit = false;
 bool endorbit = false;
 bool checkPoint = false;
 bool goStretch = false;
-bool gomove = false;
+bool gomove = true;
 
 int RedisplayID = 1;
+int system_time = 20;
+float speed = 0.075;
 
 
 float base_axis[6][3] = {
@@ -68,19 +73,19 @@ int mulcount = 1;
 
 GLvoid Setplayground() {
 
-	playground.center = { 0.0f, 0.0f, 0.0f };
+	playground->center = { 0.0f, 0.0f, 0.0f };
 
-	playground.radian = { 0.0f, 0.0f, 0.0f };
+	playground->radian = { 0.0f, 0.0f, 0.0f };
 
-	playground.Stretch = { 0.2f, 0.2f, 0.2f };
+	playground->Stretch = { 10.0f, 10.0f, 10.0f };
 
-	playground.Orbit = { 0.0f, 0.0f, 0.0f };
+	playground->Orbit = { 0.0f, 0.0f, 0.0f };
 
-	playground.postype = ID_CUBE;
+	playground->postype = ID_CUBE;
 }
 
 GLvoid InitCamera() {
-	camera = new Camera(glm::vec3(3.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	camera = new Camera(glm::vec3(20.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 GLvoid SetCamera(int id) {
@@ -122,8 +127,7 @@ void DepthCheck() {
 
 void Setindex() {
 	int* p1 = cube->AddIndexList();
-
-	cout << sizeof((p1));
+	int* p2 = cubeCw->AddIndexList();
 
 	int present_bit = index_count;
 	int cnt = 0;
@@ -147,14 +151,26 @@ void Setindex() {
 
 	//cnt += 12;
 
+	cubeCw->start_index = index_count;
 
 	present_bit = index_count;
 	baseAxisIndex = index_count;
 
-	for (index_count; index_count < present_bit + 6; index_count++, index_array_count++) {
-		index[index_count] = 8 + index_array_count;
+	for (index_count; index_count < present_bit + 36; index_count += 3) {
+		index[index_count] = 8 + p2[index_count - begin];
+		index[index_count + 1] = 8 + p2[index_count - begin + 2];
+		index[index_count + 2] = 8 + p2[index_count - begin + 1];
+
+		cnt += 3;
 	}
 
+	present_bit = index_count;
+
+	begin = cnt;
+
+	//cnt += 12;
+
+	baseAxisIndex = index_count;
 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -185,12 +201,16 @@ GLvoid SetBuffer() {
 	}
 	cube->Setcol(mycol);
 
+	for (int i = 0; i < 8; i++) {
+		mycol[i] = SetRandObjCol();
+	}
+	cubeCw->Setcol(mycol);
+
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	//glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 10000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 	cube->SetPos();
+	cubeCw->SetPos();
 
-	//float* counter = new FLOAT();
 	int* counter = new INT();
 	(*counter) = 0;
 	int type = 0;
@@ -205,18 +225,13 @@ GLvoid SetBuffer() {
 		(*counter) += 3 * sizeof(GLfloat);
 	}
 
-
-
-
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 8; i++) {
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), base_axis[i]);
+			3 * sizeof(GLfloat), cubeCw->pos[i]);
 
 		(*counter) += 3 * sizeof(GLfloat);
 	}
 
-	/*index_count = 0;
-	index_array_count = 0;*/
 
 	Setindex();
 
@@ -239,18 +254,19 @@ GLvoid SetBuffer() {
 
 		(*counter) += 3 * sizeof(GLfloat);
 
-		//cout << "(" << cube.pos[i][0] << ", " << cube.pos[i][1] << ", " << cube.pos[i][2] << ')' << endl << endl;
 	}
 
+	for (int i = 0; i < 8; i++) {
 
 
-
-	for (int i = 0; i < 6; i++) {
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), base_axis_col[i]);
+			3 * sizeof(GLfloat), cubeCw->col[i]);
 
 		(*counter) += 3 * sizeof(GLfloat);
+
 	}
+
+
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -291,6 +307,7 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	InitCamera();
 	SetProjection(PROJ_PERSPECTIVE);
 	cube->SetTranPos(200);
+	cubeCw->SetTranPos(200);
 	robot->InitRobot();
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -304,7 +321,8 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	glutMouseFunc(Mouse);
 
 
-
+	InitArmMove();
+	InitLegMove();
 
 
 
@@ -333,114 +351,94 @@ void drawScene()
 	glClearColor(mycolor.red, mycolor.green, mycolor.blue, mycolor.alpha);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (RedisplayID = 1; RedisplayID <= 3; RedisplayID++) {
-		switch (RedisplayID) {
-		case 1:
-			glViewport(0, 0, Screensize.x, Screensize.y);
-			SetProjection(PROJ_PERSPECTIVE);
-			break;
-		case 2:
-			glViewport(0, 0, Screensize.x / 4, Screensize.y / 4);
-			SetProjection(PROJ_ORTHO);
-			break;
-		case 3:
-			glViewport(Screensize.x / 4 * 2, 0, Screensize.x, Screensize.y / 4);
-			SetProjection(PROJ_ORTHO);
-			break;
+	glViewport(0, 0, Screensize.x, Screensize.y);
+	//SetCamera(RedisplayID);
+
+
+
+	glUseProgram(shaderProgramID);
+	glm::mat4 basemat = glm::mat4(1.0f);
+	glm::mat4 rm = basemat;
+	glm::mat4 rm2 = basemat;
+	glm::mat4 model = basemat;
+	glm::mat4 submodel = basemat;
+	//glm::mat4 rm3 = glm::mat4(1.0f);
+
+	/*model = glm::translate(model, glm::vec3(0.1f, 0.5f, 0.0f));*/
+	int modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
+
+	glBindVertexArray(vao);
+
+
+
+
+	int counter = 0;
+
+
+
+
+	gluQuadricDrawStyle(qobj, playground->qset.drawstyle);
+	gluQuadricNormals(qobj, playground->qset.normals);
+	gluQuadricOrientation(qobj, playground->qset.orientation);
+
+
+
+	glm::mat4 projection = glm::mat4(1.0);
+	projection = proj->GetProjMatrix();
+	unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+
+
+	glm::mat4 view = glm::mat4(1.0);
+	view = camera->GetViewMatix();
+	unsigned int viewLocation = glGetUniformLocation(shaderProgramID, "viewTransform");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+
+
+	model *= InitRotateProj(robot->Orbit, { 0.0f, 0.0f, 0.0f });
+	model *= InitRotateProj(robot->radian, robot->body->center);
+	model *= InitMoveProj(robot->center);
+	//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+
+
+
+	for (int i = ID_BODY; i <= ID_LEG2; i++) {
+		counter = cube->start_index;
+		submodel = model * robot->GetModelTransform(i);
+
+
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+		for (int j = 0; j < 6; j++) {
+
+
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+			counter += 6;
 		}
-
-		SetCamera(RedisplayID);
-
-
-		//gluLookAt(0.0, 0.0, 100.0f, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
-		glUseProgram(shaderProgramID);
-		glm::mat4 basemat = glm::mat4(1.0f);
-		glm::mat4 rm = basemat;
-		glm::mat4 rm2 = basemat;
-		glm::mat4 model = basemat;
-		glm::mat4 submodel = basemat;
-		//glm::mat4 rm3 = glm::mat4(1.0f);
-
-		/*model = glm::translate(model, glm::vec3(0.1f, 0.5f, 0.0f));*/
-		int modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
-
-		glBindVertexArray(vao);
-
-
-
-
-		int counter = 0;
-
-
-
-
-		gluQuadricDrawStyle(qobj, playground.qset.drawstyle);
-		gluQuadricNormals(qobj, playground.qset.normals);
-		gluQuadricOrientation(qobj, playground.qset.orientation);
-
-
-
-		glm::mat4 projection = glm::mat4(1.0);
-		projection = proj->GetProjMatrix();
-		unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
-		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
-
-
-		glm::mat4 view = glm::mat4(1.0);
-		view = camera->GetViewMatix();
-		unsigned int viewLocation = glGetUniformLocation(shaderProgramID, "viewTransform");
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
-
-
-		model *= InitRotateProj(robot->Orbit, { 0.0f, 0.0f, 0.0f });
-		model *= InitRotateProj(robot->radian, robot->center);
-		model *= InitMoveProj(robot->center);
-		//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-
-
-
-		for (int i = ID_BODY; i <= ID_LEG2; i++) {
-			counter = cube->start_index;
-			submodel = model * robot->GetModelTransform(i);
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
-			for (int j = 0; j < 6; j++) {
-
-
-				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
-				counter += 6;
-			}
-		}
-
-
-
-
-
-
-		model = basemat;
-
-
-
-
-
-
-
-
-		model = basemat;
-
-
-		model = rm2 * rm;
-
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-		glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, (void*)(baseAxisIndex * sizeof(GLfloat)));
-		counter += 6 * sizeof(GLint);
-
-
-
-
 	}
+
+
+
+	model = glm::mat4(1.0f);
+
+	model *= InitRotateProj(playground->Orbit, { 0.0f, 0.0f, 0.0f });
+	model *= InitRotateProj(playground->radian, playground->center);
+	model *= InitMoveProj(playground->center);
+	model *= InitScaleProj(playground->Stretch);
+
+	counter = cubeCw->start_index;
+
+	for (int j = 0; j < 6; j++) {
+		submodel = model * cubeCw->GetWorldTransMatrix(projection, view, j);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+		counter += 6;
+	}
+
+
+	model = basemat;
+
 	glutSwapBuffers();
 
 }
@@ -454,8 +452,64 @@ GLvoid Mouse(int button, int state, int x, int y) {
 	glutPostRedisplay();
 }
 
+GLvoid InitArmMove() {
+	for (int i = 0, j = -1; i < 2; i++, j *= -1) {
+		robot->arm[i]->axis = { 0.0f, 0.0f, 1.0f };
 
 
+
+		robot->arm[i]->radcnt = j;
+
+		if (robot->arm[i]->radcnt == robot->arm[i]->prevrad) {
+			robot->arm[i]->spin = false;
+			robot->arm[i]->radcnt = 0;
+			break;
+		}
+		else {
+
+			robot->arm[i]->prevrad = robot->arm[i]->radcnt;
+		}
+
+		if (robot->arm[i]->spin == false) {
+			robot->arm[i]->spin = true;
+
+			glutTimerFunc(10, MyCw, ID_ARM1 + i);
+		}
+	}
+
+
+}
+
+GLvoid InitLegMove() {
+
+	for (int i = 0, j = 1; i < 2; i++, j *= -1) {
+		robot->leg[i]->axis = { 0.0f, 0.0f, 1.0f };
+
+
+
+		robot->leg[i]->radcnt = j;
+
+
+		if (robot->leg[i]->radcnt == robot->leg[i]->prevrad && robot->leg[i]->radian.z * (float)robot->leg[i]->radcnt >= 45.0f) {
+			if (i == 1)
+				cout << "1" << endl;
+			robot->leg[i]->spin = false;
+			robot->leg[i]->radcnt = 0;
+			continue;
+		}
+		else {
+			if (i == 1)
+				cout << "1" << endl;
+			robot->leg[i]->prevrad = robot->leg[i]->radcnt;
+		}
+
+		if (robot->leg[i]->spin == false) {
+			robot->leg[i]->spin = true;
+
+			glutTimerFunc(10, MyCw, ID_LEG1 + i);
+		}
+	}
+}
 
 GLvoid Keyboard(unsigned char key, int x, int y) {
 
@@ -474,97 +528,14 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		gopersepective = !(gopersepective);
 		SetProjection(gopersepective);
 		break;
-
-	case 'e': case 'E':
-
-
-		if (direct) {
-			for (int i = 0, j = 1; i < 2; i++, j *= -1) {
-				robot->arm[i]->radcnt = j;
-				robot->arm[i]->delta = { 0.0f, 0.0f, -0.01f };
-				robot->arm[i]->delta = robot->arm[i]->delta * robot->arm[i]->radcnt;
-			}
-		}
-		else {
-			for (int i = 0, j = 1; i < 2; i++, j *= -1) {
-				robot->arm[i]->radcnt = j;
-				robot->arm[i]->delta = { 0.0f, 0.0f, 0.01f };
-				robot->arm[i]->delta = robot->arm[i]->delta * robot->arm[i]->radcnt;
-			}
+	case 'o': case 'O':
+		cubeCw->Delta[2] = { 0.0f, 0.0f, -1.0f };
+		
+		if ((int)key - (int)'a' < 0) {
+			cubeCw->Delta[2].z *= -1.0f;
 		}
 
-		direct = !(direct);
-		gomove = true;
-		glutTimerFunc(30, MyMove, ID_ARM1);
-		break;
-	case 'f': case 'F':
-		for (int i = 0, j = 1; i < 2; i++, j *= -1) {
-			robot->leg[i]->axis = { 0.0f, 0.0f, 1.0f };
-
-
-
-			if ((int)key - (int)'a' < 0) {
-
-				robot->leg[i]->radcnt = j;
-			}
-			else {
-				robot->leg[i]->radcnt = j * -1;
-			}
-
-			if (robot->leg[i]->radcnt == robot->leg[i]->prevrad && robot->leg[i]->radian.z * (float)robot->leg[i]->radcnt >= 45.0f) {
-				if (i == 1)
-					cout << "1" << endl;
-				robot->leg[i]->spin = false;
-				robot->leg[i]->radcnt = 0;
-				continue;
-			}
-			else {
-				if (i == 1)
-					cout << "1" << endl;
-				robot->leg[i]->prevrad = robot->leg[i]->radcnt;
-			}
-
-			if (robot->leg[i]->spin == false) {
-				robot->leg[i]->spin = true;
-
-				glutTimerFunc(10, MyCw, ID_LEG1 + i);
-			}
-		}
-
-
-		break;
-	case 't': case 'T':
-		for (int i = 0, j = 1; i < 2; i++, j *= -1) {
-			robot->arm[i]->axis = { 0.0f, 1.0f, 0.0f };
-
-
-
-			if ((int)key - (int)'a' < 0) {
-
-				robot->arm[i]->radcnt = j;
-			}
-			else {
-				robot->arm[i]->radcnt = j * -1;
-			}
-
-			if (robot->arm[i]->radcnt == robot->arm[i]->prevrad) {
-				robot->arm[i]->spin = false;
-				robot->arm[i]->radcnt = 0;
-				break;
-			}
-			else {
-
-				robot->arm[i]->prevrad = robot->arm[i]->radcnt;
-			}
-
-			if (robot->arm[i]->spin == false) {
-				robot->arm[i]->spin = true;
-
-				glutTimerFunc(10, MyCw, ID_ARM1 + i);
-			}
-		}
-
-
+		glutTimerFunc(system_time, OpenFront, 2);
 		break;
 
 	case 'm': case 'M':
@@ -606,23 +577,23 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		}
 		break;
 	case 'w': case 'W':
-		if ((int)key - (int)'a' < 0) {
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-			for (int i = 0; i < 2; i++) {
-				playground.qset.drawstyle = GLU_FILL;
-			}
+		robot->body->delta = { -speed, 0.0f, 0.0f };
 
-		}
-		else {
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			for (int i = 0; i < 2; i++) {
-				playground.qset.drawstyle = GLU_LINE;
-			}
-		}
-
+		robot->radian.y = 180;
 		break;
+	case 's':
+		robot->body->delta = { speed, 0.0f, 0.0f };
 
-	case 'o':
+		robot->radian.y = 0;
+		break;
+	case 'a': case 'A':
+		robot->body->delta = { 0.0, 0.0f, speed };
+
+		robot->radian.y = -90;
+		break;
+	case 'd': case 'D':
+		robot->body->delta = { 0.0, 0.0f, -speed };
+		robot->radian.y = 90;
 		break;
 	case 'R': case'r':
 		break;
@@ -666,16 +637,9 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		}
 		break;
 
-	case 's':
-		gomove = false;
 
-		robot->Stop();
-		camera->Stop();
-		break;
-	case 'c':
-		gomove = false;
+	case 'i':
 
-		robot->Revert();
 		camera->Revert();
 		break;
 	case 'q':
@@ -694,16 +658,16 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 GLvoid specialKeyboard(int key, int x, int y) {
 	switch (key) {
 	case GLUT_KEY_LEFT:
-		playground.center -= glm::vec3(1.0f, 0.0f, 0.0f);
+		playground->center -= glm::vec3(1.0f, 0.0f, 0.0f);
 		break;
 	case GLUT_KEY_RIGHT:
-		playground.center += glm::vec3(1.0f, 0.0f, 0.0f);
+		playground->center += glm::vec3(1.0f, 0.0f, 0.0f);
 		break;
 	case GLUT_KEY_UP:
-		playground.center -= glm::vec3(0.0f, 1.0f, 0.0f);
+		playground->center -= glm::vec3(0.0f, 1.0f, 0.0f);
 		break;
 	case GLUT_KEY_DOWN:
-		playground.center += glm::vec3(0.0f, 1.0f, 0.0f);
+		playground->center += glm::vec3(0.0f, 1.0f, 0.0f);
 		break;
 	}
 
@@ -714,11 +678,11 @@ GLvoid specialKeyboard(int key, int x, int y) {
 
 //GLvoid MyCcw(int value) {
 //
-//	.radian.x += (playground.axis.x * 5);
+//	.radian.x += (playground->axis.x * 5);
 //
-//	playground.radian.y += (playground.axis.y * 5);
+//	playground->radian.y += (playground->axis.y * 5);
 //
-//	playground.radian.z += (playground.axis.z * 5);
+//	playground->radian.z += (playground->axis.z * 5);
 //
 //
 //
@@ -753,7 +717,8 @@ GLvoid MyCw(int value) {
 				robot->head->Clear();
 		}
 		break;
-	case ID_ARM1:
+	case ID_ARM1:	case ID_ARM2:
+
 		index -= ID_ARM1;
 		robot->arm[index]->radian.x += (robot->arm[index]->axis.x * 5) * (float)robot->arm[index]->radcnt;
 
@@ -762,26 +727,18 @@ GLvoid MyCw(int value) {
 		robot->arm[index]->radian.z += (robot->arm[index]->axis.z * 5) * (float)robot->arm[index]->radcnt;
 
 
-		if (robot->arm[index]->spin)
-			glutTimerFunc(30, MyCw, value);
+		if (robot->arm[index]->spin && robot->arm[index]->radian.z * (float)robot->arm[index]->radcnt <= 45.0f)
+			glutTimerFunc(system_time, MyCw, value);
 		else {
-			if (robot->arm[index]->radcnt != index)
+			if (robot->arm[index]->radian.z * robot->arm[index]->radcnt >= 45.0f)
+				robot->arm[index]->radcnt *= -1;
+
+			if (robot->arm[index]->spin == false) {
 				robot->arm[index]->Clear();
-		}
-		break;
-	case ID_ARM2:
-		robot->arm[1]->radian.x += (robot->arm[1]->axis.x * 5) * (float)robot->arm[1]->radcnt;
+				break;
+			}
 
-		robot->arm[1]->radian.y += (robot->arm[1]->axis.y * 5) * (float)robot->arm[1]->radcnt;
-
-		robot->arm[1]->radian.z += (robot->arm[1]->axis.z * 5) * (float)robot->arm[1]->radcnt;
-
-
-		if (robot->arm[1]->spin)
-			glutTimerFunc(30, MyCw, value);
-		else {
-			if (robot->arm[1]->radcnt != index)
-				robot->arm[1]->Clear();
+			glutTimerFunc(system_time, MyCw, value);
 		}
 		break;
 	case ID_LEG1: case ID_LEG2:
@@ -795,7 +752,7 @@ GLvoid MyCw(int value) {
 
 
 		if (robot->leg[index]->spin && robot->leg[index]->radian.z * (float)robot->leg[index]->radcnt <= 45.0f) {
-			glutTimerFunc(30, MyCw, value);
+			glutTimerFunc(system_time, MyCw, value);
 		}
 		else {
 			if (robot->leg[index]->radian.z * (float)robot->leg[index]->radcnt >= 45.0f)
@@ -807,7 +764,7 @@ GLvoid MyCw(int value) {
 			}
 
 
-			glutTimerFunc(30, MyCw, value);
+			glutTimerFunc(system_time, MyCw, value);
 		}
 		break;
 	}
@@ -819,9 +776,9 @@ GLvoid MyCw(int value) {
 
 GLvoid OrbitCcw(int value) {
 
-	playground.Orbit += Vec3ToGLPos(playground.OrbitAxis) * 5;
+	playground->Orbit += Vec3ToGLPos(playground->OrbitAxis) * 5;
 
-	if (goorbit && playground.orbitccw) {
+	if (goorbit && playground->orbitccw) {
 		glutTimerFunc(30, OrbitCcw, value);
 	}
 	glutPostRedisplay();
@@ -847,42 +804,6 @@ GLvoid OrbitView(int value) {
 
 
 
-//GLvoid MyLineMoveCube(int value) {
-//	GLPos token = { 0 };
-//
-//
-//	//cube->center[value] += {0.0f, 2.0f, 0.0f};
-//
-//
-//
-//	if (cube->fifo[value].empty());
-//	else {
-//		token = cube->fifo[value].front();
-//		cube->center[value] += InitDelta(cube->center[value], token) * cube->mulcount;
-//	}
-//
-//	if (cube->GetCrash(InitDelta(cube->center[value], token) * cube->mulcount, token, value) == false) {
-//		glutTimerFunc(10, MyLineMoveCube, value);
-//	}
-//
-//	else {
-//		cube->center[value] = token;
-//
-//		cube->fifo[value].pop();
-//
-//		if (cube->fifo[value].empty()) {
-//			cout << "empty!" << endl << endl;
-//		}
-//		else {
-//			glutTimerFunc(30, MyLineMoveCube, value);
-//		}
-//
-//
-//	}
-//
-//	glutPostRedisplay();
-//}
-
 
 
 GLvoid MyStretchCube(int value) {
@@ -896,10 +817,6 @@ GLvoid MyStretchCube(int value) {
 	}
 	else;
 
-	//if (cube->StretchDelta[value].x >= 0.0f && cube->Stretch[value].x >= 1.0f) {
-	//	TimerOn = false;
-	//}
-	//else;
 
 
 	if (TimerOn)
@@ -914,7 +831,25 @@ GLvoid MyMove(int value) {
 
 	switch (value) {
 	case ID_BODY:
-		robot->Move(ID_BODY, GLPosToVec3(robot->delta));
+		robot->Move(ID_BODY, GLPosToVec3(robot->body->delta));
+
+		if (robot->body->center.x <= -5.0f || robot->body->center.x >= 5.0f) {
+			if (robot->body->radian.x < 0) robot->body->radian.x += 180;
+			if (robot->body->radian.x > 0)robot->body->radian.x -= 180;
+
+			robot->body->delta.x *= -1;
+
+		}
+
+		else if (robot->body->center.z <= -5.0f || robot->body->center.z >= 5.0f) {
+			if (robot->body->radian.z < 0) robot->body->radian.z += 180;
+			if (robot->body->radian.z > 0)robot->body->radian.z -= 180;
+
+			robot->body->delta.z *= -1;
+
+		}
+
+
 		break;
 	case ID_ARM1: case ID_ARM2:
 		robot->Move(ID_ARM1, GLPosToVec3(robot->arm[0]->delta));
@@ -938,6 +873,21 @@ GLvoid MyMove(int value) {
 	glutPostRedisplay();
 }
 
+
+GLvoid OpenFront(int value) {
+
+	cubeCw->center[value] += cubeCw->Delta[value];
+
+	if (cubeCw->center[value].z * cubeCw->Delta[value].z >= 200.0f) {
+		robot->body->delta = { speed, 0.0f, 0.0f };
+		glutTimerFunc(system_time, MyMove, ID_BODY);
+	}
+	else {
+		glutTimerFunc(system_time / 4, OpenFront, value);
+	}
+
+	glutPostRedisplay();
+}
 
 
 GLvoid MoveView(int value) {
