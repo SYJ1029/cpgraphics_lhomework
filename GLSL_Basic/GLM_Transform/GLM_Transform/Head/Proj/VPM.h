@@ -40,6 +40,13 @@ public:
 		this->InitEYE = EYE;
 	}
 
+	void SetCamera(glm::vec3 EYE, glm::vec3 AT, glm::vec3 UP) {
+		this->EYE = EYE;
+		this->AT = AT;
+		this->UP = UP;
+		this->InitEYE = EYE;
+	}
+
 	void Stop() {
 		this->spin = false;
 		this->move = false;

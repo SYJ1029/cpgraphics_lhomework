@@ -45,6 +45,8 @@ bool checkPoint = false;
 bool goStretch = false;
 bool gomove = false;
 
+int RedisplayID = 1;
+
 
 float base_axis[6][3] = {
 	-1.0f, 0.0f, 0.0f,
@@ -78,11 +80,23 @@ GLvoid Setplayground() {
 	playground.postype = ID_CUBE;
 }
 
-
-GLvoid SetCamera() {
-	delete camera;
-
+GLvoid InitCamera() {
 	camera = new Camera(glm::vec3(3.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+}
+
+GLvoid SetCamera(int id) {
+
+	switch (id) {
+	case 1:
+   		camera->SetCamera(glm::vec3(3.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		break;
+	case 2:
+		camera->SetCamera(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		break;
+	case 3:
+		camera->SetCamera(glm::vec3(9.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		break;
+	}
 }
 
 GLvoid SetProjection(int projtype) {
@@ -91,7 +105,7 @@ GLvoid SetProjection(int projtype) {
 	proj = new Projection();
 
 	if (projtype == PROJ_ORTHO) {
-		proj->InitOrtho(-5.0f, 5.0f, 5.0f, -5.0f, -30.0f, 15.0f);
+		proj->InitOrtho(-1.0f, 1.0f, 1.0f, -1.0f, -15.0f, 30.0f);
 	}
 	else {
 		proj->InitPerspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
@@ -275,7 +289,7 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	glBindVertexArray(vao);
 	SetBuffer();
 	Setplayground();
-	SetCamera();
+	InitCamera();
 	SetProjection(PROJ_PERSPECTIVE);
 	cube->SetTranPos(200);
 	crain->InitCrain();
@@ -303,11 +317,11 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 }
 
 
-void drawCube(float* counter, int index) {
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
-	//glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+GLvoid Reshape(int w, int h) { //--- 콜백 함수: 다시 그리기 콜백 함수 {
 
-
+	glViewport(0, 0, w, h);
+	
+	Screensize = { (float)w, (float)h, 0.0f };
 }
 
 float radian = 10.0f;
@@ -317,105 +331,122 @@ glm::vec3 allAxis = glm::vec3(0.0f, 0.0f, 0.0f);
 void drawScene()
 {
 
-
 	glClearColor(mycolor.red, mycolor.green, mycolor.blue, mycolor.alpha);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	//gluLookAt(0.0, 0.0, 100.0f, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
-	glUseProgram(shaderProgramID);
-	glm::mat4 basemat = glm::mat4(1.0f);
-	glm::mat4 rm = basemat;
-	glm::mat4 rm2 = basemat;
-	glm::mat4 model = basemat;
-	glm::mat4 submodel = basemat;
-	//glm::mat4 rm3 = glm::mat4(1.0f);
-
-	/*model = glm::translate(model, glm::vec3(0.1f, 0.5f, 0.0f));*/
-	int modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
-
-	glBindVertexArray(vao);
-
-
-
-
-	int counter = 0;
-
-
-
-
-	gluQuadricDrawStyle(qobj, playground.qset.drawstyle);
-	gluQuadricNormals(qobj, playground.qset.normals);
-	gluQuadricOrientation(qobj, playground.qset.orientation);
-
-
-
-	glm::mat4 projection = glm::mat4(1.0);
-	projection = proj->GetProjMatrix();
-	unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
-	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
-
-
-	glm::mat4 view = glm::mat4(1.0);
-	view = camera->GetViewMatix();
-	unsigned int viewLocation = glGetUniformLocation(shaderProgramID, "viewTransform");
-	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
-
-
-	model *= InitRotateProj(crain->Orbit, { 0.0f, 0.0f, 0.0f });
-	model *= InitRotateProj(crain->radian, crain->center);
-	model *= InitMoveProj(crain->center);
-	//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-
-
-
-	for (int i = ID_BODY; i <= ID_PAW2; i++) {
-		counter = cube->start_index;
-		submodel = model * crain->GetModelTransform(i);
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
-		for (int j = 0; j < 6; j++) {
-
-
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
-			counter += 6;
+	for (RedisplayID = 1; RedisplayID <= 3; RedisplayID++) {
+		switch (RedisplayID) {
+		case 1:
+			glViewport(0, 0, Screensize.x, Screensize.y);
+			SetProjection(PROJ_PERSPECTIVE);
+			break;
+		case 2:
+			glViewport(0, 0, Screensize.x / 4, Screensize.y / 4);
+			SetProjection(PROJ_ORTHO);
+			break;
+		case 3:
+			glViewport(Screensize.x / 4 * 2, 0, Screensize.x, Screensize.y / 4);
+			SetProjection(PROJ_ORTHO);
+			break;
 		}
+
+		SetCamera(RedisplayID);
+
+
+		//gluLookAt(0.0, 0.0, 100.0f, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+
+		glUseProgram(shaderProgramID);
+		glm::mat4 basemat = glm::mat4(1.0f);
+		glm::mat4 rm = basemat;
+		glm::mat4 rm2 = basemat;
+		glm::mat4 model = basemat;
+		glm::mat4 submodel = basemat;
+		//glm::mat4 rm3 = glm::mat4(1.0f);
+
+		/*model = glm::translate(model, glm::vec3(0.1f, 0.5f, 0.0f));*/
+		int modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
+
+		glBindVertexArray(vao);
+
+
+
+
+		int counter = 0;
+
+
+
+
+		gluQuadricDrawStyle(qobj, playground.qset.drawstyle);
+		gluQuadricNormals(qobj, playground.qset.normals);
+		gluQuadricOrientation(qobj, playground.qset.orientation);
+
+
+
+		glm::mat4 projection = glm::mat4(1.0);
+		projection = proj->GetProjMatrix();
+		unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
+		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+
+
+		glm::mat4 view = glm::mat4(1.0);
+		view = camera->GetViewMatix();
+		unsigned int viewLocation = glGetUniformLocation(shaderProgramID, "viewTransform");
+		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+
+
+		model *= InitRotateProj(crain->Orbit, { 0.0f, 0.0f, 0.0f });
+		model *= InitRotateProj(crain->radian, crain->center);
+		model *= InitMoveProj(crain->center);
+		//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+
+
+
+		for (int i = ID_BODY; i <= ID_PAW2; i++) {
+			counter = cube->start_index;
+			submodel = model * crain->GetModelTransform(i);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+			for (int j = 0; j < 6; j++) {
+
+
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+				counter += 6;
+			}
+		}
+
+
+
+
+
+
+		model = basemat;
+
+
+
+
+
+
+
+
+		model = basemat;
+
+
+		model = rm2 * rm;
+
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+		glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, (void*)(baseAxisIndex * sizeof(GLfloat)));
+		counter += 6 * sizeof(GLint);
+
+
+
+
 	}
-
-	
-
-
-
-
-	model = basemat;
-
-
-
-
-
-
-
-
-	model = basemat;
-
-
-	model = rm2 * rm;
-
-	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-	glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, (void*)(baseAxisIndex * sizeof(GLfloat)));
-	counter += 6 * sizeof(GLint);
-
-
-
-
 	glutSwapBuffers();
 
 }
 
-GLvoid Reshape(int w, int h) { //--- 콜백 함수: 다시 그리기 콜백 함수 {
-	glViewport(0, 0, w, h);
-}
+
 
 
 GLvoid Mouse(int button, int state, int x, int y) {
@@ -650,7 +681,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		break;
 	case 'q':
 		delete cube;
-
+		delete camera;
 		glutLeaveMainLoop();
 		break;
 
