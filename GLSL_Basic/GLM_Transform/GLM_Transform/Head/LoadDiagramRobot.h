@@ -9,10 +9,10 @@
 #define ID_BG 10
 #define ID_BODY 11
 #define ID_HEAD 12
-#define ID_EDGE1 13
-#define ID_EDGE2 14
-#define ID_PAW1 15
-#define ID_PAW2 16
+#define ID_ARM1 13
+#define ID_ARM2 14
+#define ID_LEG1 15
+#define ID_LEG2 16
 
 
 
@@ -69,6 +69,7 @@ GLvoid IsobjsProjed(bool proj) {
 
 
 class Robot : public Diagram {
+public:
 	Diagram* body;
 	Diagram* head;
 	Diagram* arm[2];
@@ -86,7 +87,7 @@ class Robot : public Diagram {
 
 	GLvoid Stop();
 
-	GLvoid InitCrain();
+	GLvoid InitRobot();
 
 	glm::mat4 GetModelTransform(int id);
 

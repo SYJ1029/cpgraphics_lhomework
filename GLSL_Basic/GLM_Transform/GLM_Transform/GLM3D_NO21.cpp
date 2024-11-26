@@ -29,7 +29,7 @@ GLvoid MoveView(int value);
 
 
 
-Crain* crain = new Crain;
+Robot* robot = new Robot;
 
 Diagram playground;
 
@@ -291,7 +291,7 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	InitCamera();
 	SetProjection(PROJ_PERSPECTIVE);
 	cube->SetTranPos(200);
-	crain->InitCrain();
+	robot->InitRobot();
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_DEPTH_TEST);
@@ -393,17 +393,17 @@ void drawScene()
 		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
 
-		model *= InitRotateProj(crain->Orbit, { 0.0f, 0.0f, 0.0f });
-		model *= InitRotateProj(crain->radian, crain->center);
-		model *= InitMoveProj(crain->center);
+		model *= InitRotateProj(robot->Orbit, { 0.0f, 0.0f, 0.0f });
+		model *= InitRotateProj(robot->radian, robot->center);
+		model *= InitMoveProj(robot->center);
 		//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
 
 
 
-		for (int i = ID_BODY; i <= ID_PAW2; i++) {
+		for (int i = ID_BODY; i <= ID_LEG2; i++) {
 			counter = cube->start_index;
-			submodel = model * crain->GetModelTransform(i);
+			submodel = model * robot->GetModelTransform(i);
 			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
 			for (int j = 0; j < 6; j++) {
 
@@ -480,54 +480,54 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 
 		if (direct) {
 			for (int i = 0, j = 1; i < 2; i++, j *= -1) {
-				crain->edge[i]->radcnt = j;
-				crain->edge[i]->delta = { 0.0f, 0.0f, -0.01f };
-				crain->edge[i]->delta = crain->edge[i]->delta * crain->edge[i]->radcnt;
+				robot->arm[i]->radcnt = j;
+				robot->arm[i]->delta = { 0.0f, 0.0f, -0.01f };
+				robot->arm[i]->delta = robot->arm[i]->delta * robot->arm[i]->radcnt;
 			}
 		}
 		else {
 			for (int i = 0, j = 1; i < 2; i++, j *= -1) {
-				crain->edge[i]->radcnt = j;
-				crain->edge[i]->delta = { 0.0f, 0.0f, 0.01f };
-				crain->edge[i]->delta = crain->edge[i]->delta * crain->edge[i]->radcnt;
+				robot->arm[i]->radcnt = j;
+				robot->arm[i]->delta = { 0.0f, 0.0f, 0.01f };
+				robot->arm[i]->delta = robot->arm[i]->delta * robot->arm[i]->radcnt;
 			}
 		}
 
 		direct = !(direct);
 		gomove = true;
-		glutTimerFunc(30, MyMove, ID_EDGE1);
+		glutTimerFunc(30, MyMove, ID_ARM1);
 		break;
 	case 'f': case 'F':
 		for (int i = 0, j = 1; i < 2; i++, j *= -1) {
-			crain->paw[i]->axis = { 0.0f, 0.0f, 1.0f };
+			robot->leg[i]->axis = { 0.0f, 0.0f, 1.0f };
 
 
 
 			if ((int)key - (int)'a' < 0) {
 
-				crain->paw[i]->radcnt = j;
+				robot->leg[i]->radcnt = j;
 			}
 			else {
-				crain->paw[i]->radcnt = j * -1;
+				robot->leg[i]->radcnt = j * -1;
 			}
 
-			if (crain->paw[i]->radcnt == crain->paw[i]->prevrad && crain->paw[i]->radian.z * (float)crain->paw[i]->radcnt >= 45.0f) {
+			if (robot->leg[i]->radcnt == robot->leg[i]->prevrad && robot->leg[i]->radian.z * (float)robot->leg[i]->radcnt >= 45.0f) {
 				if (i == 1)
 					cout << "1" << endl;
-				crain->paw[i]->spin = false;
-				crain->paw[i]->radcnt = 0;
+				robot->leg[i]->spin = false;
+				robot->leg[i]->radcnt = 0;
 				continue;
 			}
 			else {
 				if (i == 1)
 					cout << "1" << endl;
-				crain->paw[i]->prevrad = crain->paw[i]->radcnt;
+				robot->leg[i]->prevrad = robot->leg[i]->radcnt;
 			}
 
-			if (crain->paw[i]->spin == false) {
-				crain->paw[i]->spin = true;
+			if (robot->leg[i]->spin == false) {
+				robot->leg[i]->spin = true;
 
-				glutTimerFunc(10, MyCw, ID_PAW1 + i);
+				glutTimerFunc(10, MyCw, ID_LEG1 + i);
 			}
 		}
 
@@ -535,32 +535,32 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		break;
 	case 't': case 'T':
 		for (int i = 0, j = 1; i < 2; i++, j *= -1) {
-			crain->edge[i]->axis = { 0.0f, 1.0f, 0.0f };
+			robot->arm[i]->axis = { 0.0f, 1.0f, 0.0f };
 
 
 
 			if ((int)key - (int)'a' < 0) {
 
-				crain->edge[i]->radcnt = j;
+				robot->arm[i]->radcnt = j;
 			}
 			else {
-				crain->edge[i]->radcnt = j * -1;
+				robot->arm[i]->radcnt = j * -1;
 			}
 
-			if (crain->edge[i]->radcnt == crain->edge[i]->prevrad) {
-				crain->edge[i]->spin = false;
-				crain->edge[i]->radcnt = 0;
+			if (robot->arm[i]->radcnt == robot->arm[i]->prevrad) {
+				robot->arm[i]->spin = false;
+				robot->arm[i]->radcnt = 0;
 				break;
 			}
 			else {
 
-				crain->edge[i]->prevrad = crain->edge[i]->radcnt;
+				robot->arm[i]->prevrad = robot->arm[i]->radcnt;
 			}
 
-			if (crain->edge[i]->spin == false) {
-				crain->edge[i]->spin = true;
+			if (robot->arm[i]->spin == false) {
+				robot->arm[i]->spin = true;
 
-				glutTimerFunc(10, MyCw, ID_EDGE1 + i);
+				glutTimerFunc(10, MyCw, ID_ARM1 + i);
 			}
 		}
 
@@ -568,36 +568,36 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case 'm': case 'M':
-		crain->head->axis = { 0.0f, 1.0f, 0.0f };
+		robot->head->axis = { 0.0f, 1.0f, 0.0f };
 		if ((int)key - (int)'a' < 0) {
-			if (crain->head->radcnt > 0) {
-				crain->head->spin = false;
-				crain->head->radcnt = 0;
+			if (robot->head->radcnt > 0) {
+				robot->head->spin = false;
+				robot->head->radcnt = 0;
 				break;
 			}
-			crain->head->radcnt = 1;
+			robot->head->radcnt = 1;
 		}
 		else {
-			if (crain->head->radcnt < 0) {
-				crain->head->spin = false;
-				crain->head->radcnt = 0;
+			if (robot->head->radcnt < 0) {
+				robot->head->spin = false;
+				robot->head->radcnt = 0;
 				break;
 			}
-			crain->head->radcnt = -1;
+			robot->head->radcnt = -1;
 		}
 
-		if (crain->head->spin == false) {
-			crain->head->spin = true;
+		if (robot->head->spin == false) {
+			robot->head->spin = true;
 
 			glutTimerFunc(10, MyCw, ID_HEAD);
 		}
 		break;
 	case 'b': case 'B':
 		if ((int)key - (int)'a' < 0) {
-			crain->delta = { 0.02f, 0.0f, 0.0f };
+			robot->delta = { 0.02f, 0.0f, 0.0f };
 		}
 		else {
-			crain->delta = { -0.02f, 0.0f, 0.0f };
+			robot->delta = { -0.02f, 0.0f, 0.0f };
 		}
 
 		if (gomove == false) {
@@ -669,13 +669,13 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	case 's':
 		gomove = false;
 
-		crain->Stop();
+		robot->Stop();
 		camera->Stop();
 		break;
 	case 'c':
 		gomove = false;
 
-		crain->Revert();
+		robot->Revert();
 		camera->Revert();
 		break;
 	case 'q':
@@ -736,92 +736,92 @@ GLvoid MyCw(int value) {
 
 	switch (value) {
 	case ID_HEAD:
-		crain->head->radian.x += (crain->head->axis.x * 5) * (float)crain->head->radcnt;
+		robot->head->radian.x += (robot->head->axis.x * 5) * (float)robot->head->radcnt;
 
-		crain->head->radian.y += (crain->head->axis.y * 5) * (float)crain->head->radcnt;
+		robot->head->radian.y += (robot->head->axis.y * 5) * (float)robot->head->radcnt;
 
-		crain->head->radian.z += (crain->head->axis.z * 5) * (float)crain->head->radcnt;
+		robot->head->radian.z += (robot->head->axis.z * 5) * (float)robot->head->radcnt;
 
 
-		if (crain->head->spin)
+		if (robot->head->spin)
 			glutTimerFunc(30, MyCw, value);
 		else {
-			if (crain->head->radcnt != 0)
-				crain->head->Clear();
+			if (robot->head->radcnt != 0)
+				robot->head->Clear();
 		}
 		break;
-	case ID_EDGE1:
-		crain->edge[0]->radian.x += (crain->edge[0]->axis.x * 5) * (float)crain->edge[0]->radcnt;
+	case ID_ARM1:
+		robot->arm[0]->radian.x += (robot->arm[0]->axis.x * 5) * (float)robot->arm[0]->radcnt;
 
-		crain->edge[0]->radian.y += (crain->edge[0]->axis.y * 5) * (float)crain->edge[0]->radcnt;
+		robot->arm[0]->radian.y += (robot->arm[0]->axis.y * 5) * (float)robot->arm[0]->radcnt;
 
-		crain->edge[0]->radian.z += (crain->edge[0]->axis.z * 5) * (float)crain->edge[0]->radcnt;
+		robot->arm[0]->radian.z += (robot->arm[0]->axis.z * 5) * (float)robot->arm[0]->radcnt;
 
 
-		if (crain->edge[0]->spin)
+		if (robot->arm[0]->spin)
 			glutTimerFunc(30, MyCw, value);
 		else {
-			if (crain->edge[0]->radcnt != 0)
-				crain->edge[0]->Clear();
+			if (robot->arm[0]->radcnt != 0)
+				robot->arm[0]->Clear();
 		}
 		break;
-	case ID_EDGE2:
-		crain->edge[1]->radian.x += (crain->edge[1]->axis.x * 5) * (float)crain->edge[1]->radcnt;
+	case ID_ARM2:
+		robot->arm[1]->radian.x += (robot->arm[1]->axis.x * 5) * (float)robot->arm[1]->radcnt;
 
-		crain->edge[1]->radian.y += (crain->edge[1]->axis.y * 5) * (float)crain->edge[1]->radcnt;
+		robot->arm[1]->radian.y += (robot->arm[1]->axis.y * 5) * (float)robot->arm[1]->radcnt;
 
-		crain->edge[1]->radian.z += (crain->edge[1]->axis.z * 5) * (float)crain->edge[1]->radcnt;
+		robot->arm[1]->radian.z += (robot->arm[1]->axis.z * 5) * (float)robot->arm[1]->radcnt;
 
 
-		if (crain->edge[1]->spin)
+		if (robot->arm[1]->spin)
 			glutTimerFunc(30, MyCw, value);
 		else {
-			if (crain->edge[1]->radcnt != 0)
-				crain->edge[1]->Clear();
+			if (robot->arm[1]->radcnt != 0)
+				robot->arm[1]->Clear();
 		}
 		break;
-	case ID_PAW1:
-		crain->paw[0]->radian.x += (crain->paw[0]->axis.x * 5) * (float)crain->paw[0]->radcnt;
+	case ID_LEG1:
+		robot->leg[0]->radian.x += (robot->leg[0]->axis.x * 5) * (float)robot->leg[0]->radcnt;
 
-		crain->paw[0]->radian.y += (crain->paw[0]->axis.y * 5) * (float)crain->paw[0]->radcnt;
+		robot->leg[0]->radian.y += (robot->leg[0]->axis.y * 5) * (float)robot->leg[0]->radcnt;
 
-		crain->paw[0]->radian.z += (crain->paw[0]->axis.z * 5) * (float)crain->paw[0]->radcnt;
+		robot->leg[0]->radian.z += (robot->leg[0]->axis.z * 5) * (float)robot->leg[0]->radcnt;
 
 
-		if (crain->paw[0]->spin && crain->paw[0]->radian.z * (float)crain->paw[0]->radcnt <= 45.0f) {
+		if (robot->leg[0]->spin && robot->leg[0]->radian.z * (float)robot->leg[0]->radcnt <= 45.0f) {
 			glutTimerFunc(30, MyCw, value);
 		}
 		else {
-			if (crain->paw[0]->radian.z * (float)crain->paw[0]->radcnt >= 45.0f)
-				crain->paw[0]->radcnt = 0;
+			if (robot->leg[0]->radian.z * (float)robot->leg[0]->radcnt >= 45.0f)
+				robot->leg[0]->radcnt = 0;
 
-			if (crain->paw[0]->radcnt != 0)
-				crain->paw[0]->Clear();
+			if (robot->leg[0]->radcnt != 0)
+				robot->leg[0]->Clear();
 
 
-			crain->paw[value - ID_PAW1]->spin = false;
-			crain->paw[value - ID_PAW1]->radcnt = 0;
+			robot->leg[value - ID_LEG1]->spin = false;
+			robot->leg[value - ID_LEG1]->radcnt = 0;
 		}
 		break;
-	case ID_PAW2:
-		crain->paw[1]->radian.x += (crain->paw[1]->axis.x * 5) * (float)crain->paw[1]->radcnt;
+	case ID_LEG2:
+		robot->leg[1]->radian.x += (robot->leg[1]->axis.x * 5) * (float)robot->leg[1]->radcnt;
 
-		crain->paw[1]->radian.y += (crain->paw[1]->axis.y * 5) * (float)crain->paw[1]->radcnt;
+		robot->leg[1]->radian.y += (robot->leg[1]->axis.y * 5) * (float)robot->leg[1]->radcnt;
 
-		crain->paw[1]->radian.z += (crain->paw[1]->axis.z * 5) * (float)crain->paw[1]->radcnt;
+		robot->leg[1]->radian.z += (robot->leg[1]->axis.z * 5) * (float)robot->leg[1]->radcnt;
 
 
-		if (crain->paw[1]->spin && crain->paw[1]->radian.z * (float)crain->paw[1]->radcnt <= 45.0f)
+		if (robot->leg[1]->spin && robot->leg[1]->radian.z * (float)robot->leg[1]->radcnt <= 45.0f)
 			glutTimerFunc(30, MyCw, value);
 		else {
-			if (crain->paw[1]->radian.z * (float)crain->paw[1]->radcnt >= 45.0f)
-				crain->paw[1]->radcnt = 0;
+			if (robot->leg[1]->radian.z * (float)robot->leg[1]->radcnt >= 45.0f)
+				robot->leg[1]->radcnt = 0;
 
-			if (crain->paw[1]->radcnt != 0)
-				crain->paw[1]->Clear();
+			if (robot->leg[1]->radcnt != 0)
+				robot->leg[1]->Clear();
 
-			crain->paw[value - ID_PAW1]->spin = false;
-			crain->paw[value - ID_PAW1]->radcnt = 0;
+			robot->leg[value - ID_LEG1]->spin = false;
+			robot->leg[value - ID_LEG1]->radcnt = 0;
 		}
 		break;
 	}
@@ -928,13 +928,13 @@ GLvoid MyMove(int value) {
 
 	switch (value) {
 	case ID_BODY:
-		crain->Move(ID_BODY, GLPosToVec3(crain->delta));
+		robot->Move(ID_BODY, GLPosToVec3(robot->delta));
 		break;
-	case ID_EDGE1: case ID_EDGE2:
-		crain->Move(ID_EDGE1, GLPosToVec3(crain->edge[0]->delta));
+	case ID_ARM1: case ID_ARM2:
+		robot->Move(ID_ARM1, GLPosToVec3(robot->arm[0]->delta));
 
-		if ((crain->edge[0]->delta.z < 0 && crain->edge[0]->center.z <= -0.0f) ||
-			(crain->edge[0]->delta.z > 0 && crain->edge[0]->center.z >= 0.1f)) {
+		if ((robot->arm[0]->delta.z < 0 && robot->arm[0]->center.z <= -0.0f) ||
+			(robot->arm[0]->delta.z > 0 && robot->arm[0]->center.z >= 0.1f)) {
 			gomove = false;
 		}
 

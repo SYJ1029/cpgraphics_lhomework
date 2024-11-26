@@ -4,47 +4,48 @@
 
 
 
-GLvoid Crain::Clear() {
+GLvoid Robot::Clear() {
 	body = new Diagram;
 	head = new Diagram;
-	edge[0] = new Diagram;
-	paw[0] = new Diagram;
-	edge[1] = new Diagram;
-	paw[1] = new Diagram;
+	arm[0] = new Diagram;
+	leg[0] = new Diagram;
+	arm[1] = new Diagram;
+	leg[1] = new Diagram;
 
 
 	body->postype = ID_CUBE;
 	head->postype = ID_CUBE;
 
 	for (int i = 0; i < 2; i++) {
-		edge[i]->postype = ID_CUBE;
+		arm[i]->postype = ID_CUBE;
 		head->postype = ID_CUBE;
+		leg[i]->postype = ID_CUBE;
 	}
 
 }
 
-GLvoid Crain::Revert() {
+GLvoid Robot::Revert() {
 	Clear();
-	InitCrain();
+	InitRobot();
 }
 
-//Crain::Crain() : Diagram(){
+//Robot::Robot() : Diagram(){
 //	Clear();
 //}
 
 
 
-GLvoid Crain::Stop() {
+GLvoid Robot::Stop() {
 	this->body->spin = false;
 	this->head->spin = false;
 
 	for (int i = 0; i < 2; i++) {
-		this->edge[i]->spin = false;
-		this->paw[i]->spin = false;
+		this->arm[i]->spin = false;
+		this->leg[i]->spin = false;
 	}
 }
 
-GLvoid Crain::InitCrain() {
+GLvoid Robot::InitRobot() {
 	this->center = glm::vec3(0.0f, 0.5f, 0.0f);
 
 	body->postype = ID_CUBE;
@@ -55,20 +56,20 @@ GLvoid Crain::InitCrain() {
 	head->center = { 0, 0.1f, 0 };
 	head->Stretch = { 0.5f, 0.1f, 0.5f };
 
-	edge[0]->center = { 0.0f, 0.2f, 0.1f };
-	edge[0]->Stretch = { 0.125f / 2, 0.75f, 0.125f / 2 };
-	edge[1]->center = { 0.0f, 0.2f, -0.1f };
-	edge[1]->Stretch = { 0.125f / 2, 0.75f, 0.125f / 2 };
+	arm[0]->center = { 0.0f, 0.2f, 0.1f };
+	arm[0]->Stretch = { 0.125f / 2, 0.75f, 0.125f / 2 };
+	arm[1]->center = { 0.0f, 0.2f, -0.1f };
+	arm[1]->Stretch = { 0.125f / 2, 0.75f, 0.125f / 2 };
 
 
-	paw[0]->center = { 0.7f, 0.05f, 0.2f };
-	paw[0]->Stretch = { edge[0]->Stretch.y, edge[0]->Stretch.x, edge[0]->Stretch.z };
+	leg[0]->center = { 0.7f, 0.05f, 0.2f };
+	leg[0]->Stretch = { arm[0]->Stretch.y, arm[0]->Stretch.x, arm[0]->Stretch.z };
 
-	paw[1]->center = { 0.7f, 0.05f, -0.2f };
-	paw[1]->Stretch = { edge[0]->Stretch.y, edge[0]->Stretch.x, edge[0]->Stretch.z };
+	leg[1]->center = { 0.7f, 0.05f, -0.2f };
+	leg[1]->Stretch = { arm[0]->Stretch.y, arm[0]->Stretch.x, arm[0]->Stretch.z };
 }
 
-glm::mat4 Crain::GetModelTransform(int id) {
+glm::mat4 Robot::GetModelTransform(int id) {
 	glm::mat4 result = glm::mat4(1.0f);
 
 	result *= InitMoveProj(body->center);
@@ -84,23 +85,23 @@ glm::mat4 Crain::GetModelTransform(int id) {
 		result *= InitScaleProj(head->Stretch);
 
 		break;
-	case ID_EDGE1: case ID_EDGE2:
-		result *= InitRotateProj(edge[id - ID_EDGE1]->radian, edge[id - ID_EDGE1]->center);
-		result *= InitMoveProj(edge[id - ID_EDGE1]->center);
+	case ID_ARM1: case ID_ARM2:
+		result *= InitRotateProj(arm[id - ID_ARM1]->radian, arm[id - ID_ARM1]->center);
+		result *= InitMoveProj(arm[id - ID_ARM1]->center);
 		result *= InitMoveProj(head->center);
-		result *= InitScaleProj(edge[id - ID_EDGE1]->Stretch);
+		result *= InitScaleProj(arm[id - ID_ARM1]->Stretch);
 		break;
-	case ID_PAW1: case ID_PAW2:
-		result *= InitRotateProj(paw[id - ID_PAW1]->radian, { paw[id - ID_PAW1]->center.x - 0.5f,  paw[id - ID_PAW1]->center.y, paw[id - ID_PAW1]->center.z });
-		result *= InitMoveProj(paw[id - ID_PAW1]->center);
-		result *= InitScaleProj(paw[id - ID_PAW1]->Stretch);
+	case ID_LEG1: case ID_LEG2:
+		result *= InitRotateProj(leg[id - ID_LEG1]->radian, { leg[id - ID_LEG1]->center.x - 0.5f,  leg[id - ID_LEG1]->center.y, leg[id - ID_LEG1]->center.z });
+		result *= InitMoveProj(leg[id - ID_LEG1]->center);
+		result *= InitScaleProj(leg[id - ID_LEG1]->Stretch);
 		break;
 	}
 
 	return result;
 }
 
-void Crain::Move(int id, glm::vec3 Delta) {
+void Robot::Move(int id, glm::vec3 Delta) {
 	switch (id) {
 	case ID_BODY:
 		body->center += Delta;
@@ -108,38 +109,38 @@ void Crain::Move(int id, glm::vec3 Delta) {
 	case ID_HEAD:
 		head->center += Delta;
 		break;
-	case ID_EDGE1: case ID_EDGE2:
-		edge[0]->center += Delta;
-		edge[1]->center -= Delta;
+	case ID_ARM1: case ID_ARM2:
+		arm[0]->center += Delta;
+		arm[1]->center -= Delta;
 
 		break;
-	case ID_PAW1: case ID_PAW2:
+	case ID_LEG1: case ID_LEG2:
 		for (int i = 0; i < 2; i++) {
-			paw[i]->center += Delta;
+			leg[i]->center += Delta;
 		}
 		break;
 	}
 
 }
 
-void Crain::Spin(int id, GLPos radian) {
+void Robot::Spin(int id, GLPos radian) {
 	switch (id) {
 	case ID_BODY:case ID_HEAD:
 		body->radian += radian;
 		head->radian += radian;
 		for (int i = 0; i < 2; i++) {
-			edge[i]->radian += radian;
-			paw[i]->radian += radian;
+			arm[i]->radian += radian;
+			leg[i]->radian += radian;
 		}
 		break;
-	case ID_EDGE1: case ID_EDGE2:
+	case ID_ARM1: case ID_ARM2:
 		for (int i = 0; i < 2; i++) {
-			edge[i]->radian += radian;
+			arm[i]->radian += radian;
 		}
 		break;
-	case ID_PAW1: case ID_PAW2:
+	case ID_LEG1: case ID_LEG2:
 		for (int i = 0; i < 2; i++) {
-			paw[i]->radian += radian;
+			leg[i]->radian += radian;
 		}
 		break;
 	}
