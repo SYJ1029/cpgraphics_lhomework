@@ -64,3 +64,33 @@ GLvoid IsobjsProjed(bool proj) {
 
 
 }
+
+
+
+
+class Robot : public Diagram {
+	Diagram* body;
+	Diagram* head;
+	Diagram* arm[2];
+	Diagram* leg[2];
+
+	glm::vec3 center;
+
+	Robot() : Diagram() {
+		Clear();
+	}
+
+	GLvoid Clear();
+
+	GLvoid Revert();
+
+	GLvoid Stop();
+
+	GLvoid InitCrain();
+
+	glm::mat4 GetModelTransform(int id);
+
+	void Move(int id, glm::vec3 Delta);
+
+	void Spin(int id, GLPos radian);
+};
