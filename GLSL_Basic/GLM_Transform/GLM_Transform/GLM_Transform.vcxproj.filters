@@ -31,11 +31,9 @@
     <Filter Include="헤더 파일\BaseHeader">
       <UniqueIdentifier>{dd236d9f-f17d-4b8e-a3a5-93a82aa897f2}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="GLM3D_NO20.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
+    <Filter Include="소스 파일\19~20">
+      <UniqueIdentifier>{3656f510-f4f2-43a4-a3e7-bde386dfbbe6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Head\ProjMethod.h">
@@ -59,9 +57,6 @@
     <ClInclude Include="Head\GetShader.cpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Head\LoadDiagramCrain.cpp">
-      <Filter>소스 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Head\Proj\OPM.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -71,6 +66,12 @@
     <ClInclude Include="Head\VertexMethod.cpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Head\LoadDiagramCrain.cpp">
+      <Filter>소스 파일\19~20</Filter>
+    </ClInclude>
+    <ClInclude Include="Head\HomeworkMacro.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shader\vertex.glsl">
@@ -79,5 +80,19 @@
     <Text Include="Shader\fragment.glsl">
       <Filter>리소스 파일</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="GLM3D_NO20.cpp">
+      <Filter>소스 파일\19~20</Filter>
+    </ClCompile>
+    <ClCompile Include="GLM3D_NO21.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Head\LoadDiagramRobot.h">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadDiagramRobot.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
