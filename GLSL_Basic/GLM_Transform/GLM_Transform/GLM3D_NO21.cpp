@@ -734,6 +734,9 @@ GLvoid specialKeyboard(int key, int x, int y) {
 
 GLvoid MyCw(int value) {
 
+	int index = value;
+
+
 	switch (value) {
 	case ID_HEAD:
 		robot->head->radian.x += (robot->head->axis.x * 5) * (float)robot->head->radcnt;
@@ -751,18 +754,19 @@ GLvoid MyCw(int value) {
 		}
 		break;
 	case ID_ARM1:
-		robot->arm[0]->radian.x += (robot->arm[0]->axis.x * 5) * (float)robot->arm[0]->radcnt;
+		index -= ID_ARM1;
+		robot->arm[index]->radian.x += (robot->arm[index]->axis.x * 5) * (float)robot->arm[index]->radcnt;
 
-		robot->arm[0]->radian.y += (robot->arm[0]->axis.y * 5) * (float)robot->arm[0]->radcnt;
+		robot->arm[index]->radian.y += (robot->arm[index]->axis.y * 5) * (float)robot->arm[index]->radcnt;
 
-		robot->arm[0]->radian.z += (robot->arm[0]->axis.z * 5) * (float)robot->arm[0]->radcnt;
+		robot->arm[index]->radian.z += (robot->arm[index]->axis.z * 5) * (float)robot->arm[index]->radcnt;
 
 
-		if (robot->arm[0]->spin)
+		if (robot->arm[index]->spin)
 			glutTimerFunc(30, MyCw, value);
 		else {
-			if (robot->arm[0]->radcnt != 0)
-				robot->arm[0]->Clear();
+			if (robot->arm[index]->radcnt != index)
+				robot->arm[index]->Clear();
 		}
 		break;
 	case ID_ARM2:
@@ -776,52 +780,34 @@ GLvoid MyCw(int value) {
 		if (robot->arm[1]->spin)
 			glutTimerFunc(30, MyCw, value);
 		else {
-			if (robot->arm[1]->radcnt != 0)
+			if (robot->arm[1]->radcnt != index)
 				robot->arm[1]->Clear();
 		}
 		break;
-	case ID_LEG1:
-		robot->leg[0]->radian.x += (robot->leg[0]->axis.x * 5) * (float)robot->leg[0]->radcnt;
+	case ID_LEG1: case ID_LEG2:
+		index -= ID_LEG1;
 
-		robot->leg[0]->radian.y += (robot->leg[0]->axis.y * 5) * (float)robot->leg[0]->radcnt;
+		robot->leg[index]->radian.x += (robot->leg[index]->axis.x * 5) * (float)robot->leg[index]->radcnt;
 
-		robot->leg[0]->radian.z += (robot->leg[0]->axis.z * 5) * (float)robot->leg[0]->radcnt;
+		robot->leg[index]->radian.y += (robot->leg[index]->axis.y * 5) * (float)robot->leg[index]->radcnt;
+
+		robot->leg[index]->radian.z += (robot->leg[index]->axis.z * 5) * (float)robot->leg[index]->radcnt;
 
 
-		if (robot->leg[0]->spin && robot->leg[0]->radian.z * (float)robot->leg[0]->radcnt <= 45.0f) {
+		if (robot->leg[index]->spin && robot->leg[index]->radian.z * (float)robot->leg[index]->radcnt <= 45.0f) {
 			glutTimerFunc(30, MyCw, value);
 		}
 		else {
-			if (robot->leg[0]->radian.z * (float)robot->leg[0]->radcnt >= 45.0f)
-				robot->leg[0]->radcnt = 0;
+			if (robot->leg[index]->radian.z * (float)robot->leg[index]->radcnt >= 45.0f)
+				robot->leg[index]->radcnt *= -1;
 
-			if (robot->leg[0]->radcnt != 0)
-				robot->leg[0]->Clear();
-
-
-			robot->leg[value - ID_LEG1]->spin = false;
-			robot->leg[value - ID_LEG1]->radcnt = 0;
-		}
-		break;
-	case ID_LEG2:
-		robot->leg[1]->radian.x += (robot->leg[1]->axis.x * 5) * (float)robot->leg[1]->radcnt;
-
-		robot->leg[1]->radian.y += (robot->leg[1]->axis.y * 5) * (float)robot->leg[1]->radcnt;
-
-		robot->leg[1]->radian.z += (robot->leg[1]->axis.z * 5) * (float)robot->leg[1]->radcnt;
+			if (robot->leg[index]->spin == false) {
+				robot->leg[index]->Clear();
+				break;
+			}
 
 
-		if (robot->leg[1]->spin && robot->leg[1]->radian.z * (float)robot->leg[1]->radcnt <= 45.0f)
 			glutTimerFunc(30, MyCw, value);
-		else {
-			if (robot->leg[1]->radian.z * (float)robot->leg[1]->radcnt >= 45.0f)
-				robot->leg[1]->radcnt = 0;
-
-			if (robot->leg[1]->radcnt != 0)
-				robot->leg[1]->Clear();
-
-			robot->leg[value - ID_LEG1]->spin = false;
-			robot->leg[value - ID_LEG1]->radcnt = 0;
 		}
 		break;
 	}

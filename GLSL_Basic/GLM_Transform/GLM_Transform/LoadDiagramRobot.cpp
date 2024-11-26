@@ -50,23 +50,23 @@ GLvoid Robot::InitRobot() {
 
 	body->postype = ID_CUBE;
 	body->center = { 0, 0.05f, 0 };
-	body->Stretch = { 0.75f, 0.2f, 0.75f };
+	body->Stretch = { 0.25f, 0.5f, 0.25f };
 
 	head->postype = ID_CUBE;
-	head->center = { 0, 0.1f, 0 };
-	head->Stretch = { 0.5f, 0.1f, 0.5f };
+	head->center = { 0, 0.35f, 0 };
+	head->Stretch = { 0.25f, 0.25f, 0.25f };
 
-	arm[0]->center = { 0.0f, 0.2f, 0.1f };
-	arm[0]->Stretch = { 0.125f / 2, 0.75f, 0.125f / 2 };
-	arm[1]->center = { 0.0f, 0.2f, -0.1f };
-	arm[1]->Stretch = { 0.125f / 2, 0.75f, 0.125f / 2 };
+	arm[0]->center = { 0.0f, -0.3f, 0.15f };
+	arm[0]->Stretch = { 0.125f / 2, 0.4f, 0.125f / 2 };
+	arm[1]->center = { 0.0f, -0.3f, -0.15f };
+	arm[1]->Stretch = { 0.125f / 2, 0.4f, 0.125f / 2 };
 
 
-	leg[0]->center = { 0.7f, 0.05f, 0.2f };
-	leg[0]->Stretch = { arm[0]->Stretch.y, arm[0]->Stretch.x, arm[0]->Stretch.z };
+	leg[0]->center = { 0.0f, -0.4f, 0.075f };
+	leg[0]->Stretch = { 0.125f / 2, 0.4f, 0.125f / 2 };
 
-	leg[1]->center = { 0.7f, 0.05f, -0.2f };
-	leg[1]->Stretch = { arm[0]->Stretch.y, arm[0]->Stretch.x, arm[0]->Stretch.z };
+	leg[1]->center = { 0.0f, -0.4f, -0.075f };
+	leg[1]->Stretch = { 0.125f / 2, 0.4f, 0.125f / 2 };
 }
 
 glm::mat4 Robot::GetModelTransform(int id) {
@@ -92,7 +92,7 @@ glm::mat4 Robot::GetModelTransform(int id) {
 		result *= InitScaleProj(arm[id - ID_ARM1]->Stretch);
 		break;
 	case ID_LEG1: case ID_LEG2:
-		result *= InitRotateProj(leg[id - ID_LEG1]->radian, { leg[id - ID_LEG1]->center.x - 0.5f,  leg[id - ID_LEG1]->center.y, leg[id - ID_LEG1]->center.z });
+		result *= InitRotateProj(leg[id - ID_LEG1]->radian, { leg[id - ID_LEG1]->center.x,  leg[id - ID_LEG1]->center.y + 0.2f, leg[id - ID_LEG1]->center.z });
 		result *= InitMoveProj(leg[id - ID_LEG1]->center);
 		result *= InitScaleProj(leg[id - ID_LEG1]->Stretch);
 		break;
@@ -144,4 +144,15 @@ void Robot::Spin(int id, GLPos radian) {
 		}
 		break;
 	}
+}
+
+
+
+GLvoid IsobjsProjed(bool proj) {
+	if (proj) {
+		cube->SetTranPos(SIZEMAKRO);
+	}
+
+
+
 }

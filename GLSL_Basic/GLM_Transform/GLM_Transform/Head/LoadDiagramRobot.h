@@ -21,53 +21,6 @@ GL_Cube* cube = new GL_Cube;
 
 
 
-class Crain : public Diagram {
-public:
-	Diagram* body;
-	Diagram* head;
-	Diagram* edge[2];
-	Diagram* paw[2];
-
-	glm::vec3 center;
-
-
-
-	Crain() : Diagram() {
-		Clear();
-	}
-
-	GLvoid Clear();
-
-	GLvoid Revert();
-
-	GLvoid Stop();
-
-	GLvoid InitCrain();
-
-	glm::mat4 GetModelTransform(int id);
-
-	void Move(int id, glm::vec3 Delta);
-
-	void Spin(int id, GLPos radian);
-
-
-
-
-};
-
-
-GLvoid IsobjsProjed(bool proj) {
-	if (proj) {
-		cube->SetTranPos(SIZEMAKRO);
-	}
-
-
-
-}
-
-
-
-
 class Robot : public Diagram {
 public:
 	Diagram* body;
