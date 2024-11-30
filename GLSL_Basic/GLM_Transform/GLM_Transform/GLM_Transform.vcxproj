@@ -131,7 +131,10 @@
     <ClCompile Include="GLM3D_NO20.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-	  <ClCompile Include="GLM3D_NO21.cpp" />
+    <ClCompile Include="GLM3D_NO21.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="GLM3D_NO24.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Head\BaseHeader.h" />
@@ -142,8 +145,8 @@
     <ClInclude Include="Head\DiagramBase.cpp" />
     <ClInclude Include="Head\GetShader.cpp" />
     <ClInclude Include="Head\LoadDiagramRobot.h" />
-	<ClInclude Include="LoadDiagramRobot.cpp" />
-	  <ClInclude Include="Head\LoadDiagramCrain.cpp">
+    <ClInclude Include="LoadDiagramRobot.cpp" />
+    <ClInclude Include="Head\LoadDiagramCrain.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Head\Proj\OPM.h" />
