@@ -8,7 +8,8 @@ MyCol mycolor = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLPos Screensize = { 800, 800, 0 };
 
 GLUquadricObj* qobj = gluNewQuadric();
-GL_Cube* cubeCw = new GL_Cube;
+GL_Pyramid* pyr = new GL_Pyramid();
+
 
 
 
@@ -24,19 +25,13 @@ GLvoid OrbitView(int value);
 GLvoid specialKeyboard(int key, int x, int y);
 GLvoid MyMove(int value);
 GLvoid MoveView(int value);
-GLvoid InitArmMove();
-GLvoid InitLegMove();
-GLvoid OpenFront(int value);
 GLvoid MyJump(int value);
 //GLvoid MyStretch(int value);
 
 
 
-Robot* robot = new Robot;
 
 Diagram* playground = new Diagram;
-Diagram* obstacle = new Diagram[3];
-
 
 bool depthed = true;
 bool gopersepective = true;
@@ -81,48 +76,16 @@ GLvoid Setplayground() {
 
 	playground->radian = { 0.0f, 0.0f, 0.0f };
 
-	playground->Stretch = { 10.0f, 10.0f, 10.0f };
+	playground->Stretch = { 1.0f, 1.0f, 1.0f };
 
 	playground->Orbit = { 0.0f, 0.0f, 0.0f };
 
 	playground->postype = ID_CUBE;
 
-	obstacle[0].center = { 4.0f, -4.5f, 2.0f };
-
-	obstacle[0].radian = { 0.0f, 0.0f, 0.0f };
-
-	obstacle[0].Stretch = { 1.0f, 1.0f, 1.0f };
-
-	obstacle[0].Orbit = { 0.0f, 0.0f, 0.0f };
-
-	obstacle[0].postype = ID_CUBE;
-
-
-	obstacle[1].center = { -3.0f, -4.5f, -2.5f };
-
-	obstacle[1].radian = { 0.0f, 0.0f, 0.0f };
-
-	obstacle[1].Stretch = { 2.0f, 1.0f, 1.0f };
-
-	obstacle[1].Orbit = { 0.0f, 0.0f, 0.0f };
-
-	obstacle[1].postype = ID_CUBE;
-
-
-	obstacle[2].center = { 0.0f, -4.5f, 2.0f };
-
-	obstacle[2].radian = { 0.0f, 0.0f, 0.0f };
-
-	obstacle[2].Stretch = { 1.0f, 1.0f, 2.0f };
-
-	obstacle[2].Orbit = { 0.0f, 0.0f, 0.0f };
-
-	obstacle[2].postype = ID_CUBE;
-
 }
 
 GLvoid InitCamera() {
-	camera = new Camera(glm::vec3(20.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	camera = new Camera(glm::vec3(5.0f, 5.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 GLvoid SetCamera(int id) {
@@ -164,7 +127,7 @@ void DepthCheck() {
 
 void Setindex() {
 	int* p1 = cube->AddIndexList();
-	int* p2 = cubeCw->AddIndexList();
+	int* p2 = pyr->AddIndexList();
 
 	int present_bit = index_count;
 	int cnt = 0;
@@ -188,7 +151,7 @@ void Setindex() {
 
 	//cnt += 12;
 
-	cubeCw->start_index = index_count;
+	pyr->start_index = index_count;
 
 	present_bit = index_count;
 	baseAxisIndex = index_count;
@@ -241,12 +204,12 @@ GLvoid SetBuffer() {
 	for (int i = 0; i < 8; i++) {
 		mycol[i] = SetRandObjCol();
 	}
-	cubeCw->Setcol(mycol);
+	pyr->Setcol(mycol);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 10000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 	cube->SetPos();
-	cubeCw->SetPos();
+	pyr->SetPos();
 
 	int* counter = new INT();
 	(*counter) = 0;
@@ -264,7 +227,7 @@ GLvoid SetBuffer() {
 
 	for (int i = 0; i < 8; i++) {
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), cubeCw->pos[i]);
+			3 * sizeof(GLfloat), pyr->pos[i]);
 
 		(*counter) += 3 * sizeof(GLfloat);
 	}
@@ -297,7 +260,7 @@ GLvoid SetBuffer() {
 
 
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), cubeCw->col[i]);
+			3 * sizeof(GLfloat), pyr->col[i]);
 
 		(*counter) += 3 * sizeof(GLfloat);
 
@@ -344,8 +307,7 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	InitCamera();
 	SetProjection(PROJ_PERSPECTIVE);
 	cube->SetTranPos(200);
-	cubeCw->SetTranPos(200);
-	robot->InitRobot();
+	pyr->SetTranPos(200);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	glEnable(GL_DEPTH_TEST);
@@ -356,10 +318,6 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 	glutKeyboardFunc(Keyboard);
 	glutSpecialFunc(specialKeyboard);
 	glutMouseFunc(Mouse);
-
-
-	InitArmMove();
-	InitLegMove();
 
 
 
@@ -432,18 +390,18 @@ void drawScene()
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
 
 
-	model *= InitRotateProj(robot->Orbit, { 0.0f, 0.0f, 0.0f });
-	model *= InitRotateProj(robot->radian, robot->body->center);
-	model *= InitMoveProj(robot->center);
+	model *= glm::mat4(1.0f);
 	//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
 
-
+	model *= InitRotateProj(playground->Orbit, { 0.0f, 0.0f, 0.0f });
+	model *= InitRotateProj(playground->radian, playground->center);
+	model *= InitMoveProj(playground->center);
+	model *= InitScaleProj(playground->Stretch);
 
 	for (int i = ID_BODY; i <= ID_LEG2; i++) {
 		counter = cube->start_index;
-		submodel = model * robot->GetModelTransform(i);
-
+		submodel = model;
 
 		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
 		for (int j = 0; j < 6; j++) {
@@ -458,39 +416,12 @@ void drawScene()
 
 	model = glm::mat4(1.0f);
 
-	model *= InitRotateProj(playground->Orbit, { 0.0f, 0.0f, 0.0f });
-	model *= InitRotateProj(playground->radian, playground->center);
-	model *= InitMoveProj(playground->center);
-	model *= InitScaleProj(playground->Stretch);
 
-	counter = cubeCw->start_index;
 
-	for (int j = 0; j < 6; j++) {
-		submodel = model * cubeCw->GetWorldTransMatrix(projection, view, j);
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
 
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
-		counter += 6;
-	}
 
-	for (int i = 0; i < 3; i++) {
-		model = glm::mat4(1.0f);
 
-		model *= InitRotateProj(obstacle[i].Orbit, { 0.0f, 0.0f, 0.0f });
-		model *= InitRotateProj(obstacle[i].radian, obstacle[i].center);
-		model *= InitMoveProj(obstacle[i].center);
-		model *= InitScaleProj(obstacle[i].Stretch);
-
-		counter = cube->start_index;
-
-		for (int j = 0; j < 6; j++) {
-			submodel = model * cube->GetWorldTransMatrix(projection, view, j);
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
-
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
-			counter += 6;
-		}
-	}
 
 
 	model = basemat;
@@ -508,64 +439,6 @@ GLvoid Mouse(int button, int state, int x, int y) {
 	glutPostRedisplay();
 }
 
-GLvoid InitArmMove() {
-	for (int i = 0, j = -1; i < 2; i++, j *= -1) {
-		robot->arm[i]->axis = { 0.0f, 0.0f, 1.0f };
-
-
-
-		robot->arm[i]->radcnt = j;
-
-		if (robot->arm[i]->radcnt == robot->arm[i]->prevrad) {
-			robot->arm[i]->spin = false;
-			robot->arm[i]->radcnt = 0;
-			break;
-		}
-		else {
-
-			robot->arm[i]->prevrad = robot->arm[i]->radcnt;
-		}
-
-		if (robot->arm[i]->spin == false) {
-			robot->arm[i]->spin = true;
-
-			glutTimerFunc(10, MyCw, ID_ARM1 + i);
-		}
-	}
-
-
-}
-
-GLvoid InitLegMove() {
-
-	for (int i = 0, j = 1; i < 2; i++, j *= -1) {
-		robot->leg[i]->axis = { 0.0f, 0.0f, 1.0f };
-
-
-
-		robot->leg[i]->radcnt = j;
-
-
-		if (robot->leg[i]->radcnt == robot->leg[i]->prevrad && robot->leg[i]->radian.z * (float)robot->leg[i]->radcnt >= 45.0f) {
-			if (i == 1)
-				cout << "1" << endl;
-			robot->leg[i]->spin = false;
-			robot->leg[i]->radcnt = 0;
-			continue;
-		}
-		else {
-			if (i == 1)
-				cout << "1" << endl;
-			robot->leg[i]->prevrad = robot->leg[i]->radcnt;
-		}
-
-		if (robot->leg[i]->spin == false) {
-			robot->leg[i]->spin = true;
-
-			glutTimerFunc(10, MyCw, ID_LEG1 + i);
-		}
-	}
-}
 
 GLvoid Keyboard(unsigned char key, int x, int y) {
 
@@ -585,71 +458,25 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		SetProjection(gopersepective);
 		break;
 	case 'o': case 'O':
-		cubeCw->Delta[2] = { 0.0f, 0.0f, -1.0f };
+		pyr->Delta[2] = { 0.0f, 0.0f, -1.0f };
 
 		if ((int)key - (int)'a' < 0) {
-			cubeCw->Delta[2].z *= -1.0f;
+			pyr->Delta[2].z *= -1.0f;
 		}
 
-		glutTimerFunc(system_time, OpenFront, 2);
 		break;
 
 	case 'm': case 'M':
-		robot->head->axis = { 0.0f, 1.0f, 0.0f };
-		if ((int)key - (int)'a' < 0) {
-			if (robot->head->radcnt > 0) {
-				robot->head->spin = false;
-				robot->head->radcnt = 0;
-				break;
-			}
-			robot->head->radcnt = 1;
-		}
-		else {
-			if (robot->head->radcnt < 0) {
-				robot->head->spin = false;
-				robot->head->radcnt = 0;
-				break;
-			}
-			robot->head->radcnt = -1;
-		}
-
-		if (robot->head->spin == false) {
-			robot->head->spin = true;
-
-			glutTimerFunc(10, MyCw, ID_HEAD);
-		}
 		break;
 	case 'b': case 'B':
-		if ((int)key - (int)'a' < 0) {
-			robot->delta = { 0.02f, 0.0f, 0.0f };
-		}
-		else {
-			robot->delta = { -0.02f, 0.0f, 0.0f };
-		}
-
-		if (gomove == false) {
-			gomove = true;
-			glutTimerFunc(10, MyMove, ID_BODY);
-		}
 		break;
 	case 'w': case 'W':
-		robot->body->delta = { -speed, 0.0f, 0.0f };
-
-		robot->radian.y = 180;
 		break;
 	case 's':
-		robot->body->delta = { speed, 0.0f, 0.0f };
-
-		robot->radian.y = 0;
 		break;
 	case 'a': case 'A':
-		robot->body->delta = { 0.0, 0.0f, speed };
-
-		robot->radian.y = -90;
 		break;
 	case 'd': case 'D':
-		robot->body->delta = { 0.0, 0.0f, -speed };
-		robot->radian.y = 90;
 		break;
 	case 'R': case'r':
 		break;
@@ -694,10 +521,6 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case 32:
-		robot->body->delta.y = jumpPower;
-
-		glutTimerFunc(system_time, MyJump, ID_BODY);
-		break;
 
 	case 'i':
 
@@ -733,8 +556,6 @@ GLvoid specialKeyboard(int key, int x, int y) {
 		break;
 	}
 
-	groundpoint = playground->center.y - 4.0f;
-	robot->body->center.y += (playground->center.y - prev.y);
 	glutPostRedisplay();
 }
 
@@ -765,75 +586,7 @@ GLvoid MyCw(int value) {
 	int index = value;
 
 
-	switch (value) {
-	case ID_HEAD:
-		robot->head->radian.x += (robot->head->axis.x * 5) * (float)robot->head->radcnt;
-
-		robot->head->radian.y += (robot->head->axis.y * 5) * (float)robot->head->radcnt;
-
-		robot->head->radian.z += (robot->head->axis.z * 5) * (float)robot->head->radcnt;
-
-
-		if (robot->head->spin)
-			glutTimerFunc(30, MyCw, value);
-		else {
-			if (robot->head->radcnt != 0)
-				robot->head->Clear();
-		}
-		break;
-	case ID_ARM1:	case ID_ARM2:
-
-		index -= ID_ARM1;
-		robot->arm[index]->radian.x += (robot->arm[index]->axis.x * 5) * (float)robot->arm[index]->radcnt;
-
-		robot->arm[index]->radian.y += (robot->arm[index]->axis.y * 5) * (float)robot->arm[index]->radcnt;
-
-		robot->arm[index]->radian.z += (robot->arm[index]->axis.z * 5) * (float)robot->arm[index]->radcnt;
-
-
-		if (robot->arm[index]->spin && robot->arm[index]->radian.z * (float)robot->arm[index]->radcnt <= 45.0f)
-			glutTimerFunc(system_time, MyCw, value);
-		else {
-			if (robot->arm[index]->radian.z * robot->arm[index]->radcnt >= 45.0f)
-				robot->arm[index]->radcnt *= -1;
-
-			if (robot->arm[index]->spin == false) {
-				robot->arm[index]->Clear();
-				break;
-			}
-
-			glutTimerFunc(system_time, MyCw, value);
-		}
-		break;
-	case ID_LEG1: case ID_LEG2:
-		index -= ID_LEG1;
-
-		robot->leg[index]->radian.x += (robot->leg[index]->axis.x * 5) * (float)robot->leg[index]->radcnt;
-
-		robot->leg[index]->radian.y += (robot->leg[index]->axis.y * 5) * (float)robot->leg[index]->radcnt;
-
-		robot->leg[index]->radian.z += (robot->leg[index]->axis.z * 5) * (float)robot->leg[index]->radcnt;
-
-
-		if (robot->leg[index]->spin && robot->leg[index]->radian.z * (float)robot->leg[index]->radcnt <= 45.0f) {
-			glutTimerFunc(system_time, MyCw, value);
-		}
-		else {
-			if (robot->leg[index]->radian.z * (float)robot->leg[index]->radcnt >= 45.0f)
-				robot->leg[index]->radcnt *= -1;
-
-			if (robot->leg[index]->spin == false) {
-				robot->leg[index]->Clear();
-				break;
-			}
-
-
-			glutTimerFunc(system_time, MyCw, value);
-		}
-		break;
-	}
-
-
+	
 	glutPostRedisplay();
 }
 
@@ -892,18 +645,7 @@ GLvoid MyStretchCube(int value) {
 
 int PosInRectxz(glm::vec3 pos1, int index) {
 
-	if (pos1.x >= obstacle[index].center.x - 0.5f * obstacle[index].Stretch.x &&
-		pos1.x <= obstacle[index].center.x + 0.5f * obstacle[index].Stretch.x &&
-		pos1.z >= obstacle[index].center.z - 0.5f * obstacle[index].Stretch.z &&
-		pos1.z <= obstacle[index].center.z + 0.5f * obstacle[index].Stretch.z) {
-
-		if (pos1.x >= obstacle[index].center.x - 0.5f * obstacle[index].Stretch.x &&
-			pos1.x <= obstacle[index].center.x + 0.5f * obstacle[index].Stretch.x)
-			return 0;
-		if (pos1.z >= obstacle[index].center.z - 0.5f * obstacle[index].Stretch.z &&
-			pos1.z <= obstacle[index].center.z + 0.5f * obstacle[index].Stretch.z)
-			return 1;
-	}
+	
 
 
 	return -1;
@@ -913,99 +655,18 @@ int PosInRectxz(glm::vec3 pos1, int index) {
 GLvoid MyJump(int value) {
 
 
-	if (robot->body->center.y > groundpoint) {
-		if (robot->body->delta.y > -gravity)
-			robot->body->delta.y -= gravity;
-
-		glutTimerFunc(system_time, MyJump, value);
-	}
-	else {
-		robot->body->center.y = groundpoint;
-		robot->body->delta.y = 0.0f;
-	}
+	
 
 	glutPostRedisplay();
 }
 
 bool CrashCheck(int value) {
-	if (robot->body->center.x <= playground->center.x + -5.0f || robot->body->center.x >= playground->center.x + 5.0f) {
-		if (robot->body->radian.x < 0) robot->body->radian.x += 180;
-		if (robot->body->radian.x > 0)robot->body->radian.x -= 180;
-
-		robot->body->delta.x *= -1;
-		return true;
-
-	}
-
-	if (robot->body->center.z <= playground->center.z + -5.0f || robot->body->center.z >= playground->center.z + 5.0f) {
-		if (robot->body->radian.z < 0) robot->body->radian.z += 180;
-		if (robot->body->radian.z > 0)robot->body->radian.z -= 180;
-
-		robot->body->delta.z *= -1;
-		return true;
-
-	}
-
-	for (int i = 0; i < 3; i++) {
-		if (PosInRectxz(robot->body->center, i) == 0) {
-			if (robot->body->radian.x < 0) robot->body->radian.x += 180;
-			if (robot->body->radian.x > 0)robot->body->radian.x -= 180;
-
-			robot->body->delta.x *= -1;
-			return true;
-
-		}
-
-		if (PosInRectxz(robot->body->center, i) == 1) {
-			if (robot->body->radian.z < 0) robot->body->radian.z += 180;
-			if (robot->body->radian.z > 0)robot->body->radian.z -= 180;
-
-			robot->body->delta.z *= -1;
-			return true;
-
-		}
-	}
-
+	
 	return false;
 }
 
 GLvoid MyMove(int value) {
 	int token = value - ID_BODY;
-
-	switch (value) {
-	case ID_BODY:
-		robot->Move(ID_BODY, GLPosToVec3(robot->body->delta));
-
-		//if (robot->body->center.x <= playground->center.x + -5.0f || robot->body->center.x >= playground->center.x + 5.0f) {
-		//	if (robot->body->radian.x < 0) robot->body->radian.x += 180;
-		//	if (robot->body->radian.x > 0)robot->body->radian.x -= 180;
-
-		//	robot->body->delta.x *= -1;
-
-		//}
-
-		//else if (robot->body->center.z <= playground->center.z + -5.0f || robot->body->center.z >= playground->center.z + 5.0f) {
-		//	if (robot->body->radian.z < 0) robot->body->radian.z += 180;
-		//	if (robot->body->radian.z > 0)robot->body->radian.z -= 180;
-
-		//	robot->body->delta.z *= -1;
-
-		//}
-
-		if (CrashCheck(value)) {
-		}
-		break;
-	case ID_ARM1: case ID_ARM2:
-		robot->Move(ID_ARM1, GLPosToVec3(robot->arm[0]->delta));
-
-		if ((robot->arm[0]->delta.z < 0 && robot->arm[0]->center.z <= -0.0f) ||
-			(robot->arm[0]->delta.z > 0 && robot->arm[0]->center.z >= 0.1f)) {
-			gomove = false;
-		}
-
-		break;
-	}
-
 
 
 
@@ -1019,21 +680,6 @@ GLvoid MyMove(int value) {
 	glutPostRedisplay();
 }
 
-
-GLvoid OpenFront(int value) {
-
-	cubeCw->center[value] += cubeCw->Delta[value];
-
-	if (cubeCw->center[value].z * cubeCw->Delta[value].z >= 200.0f) {
-		robot->body->delta = { speed, 0.0f, 0.0f };
-		glutTimerFunc(system_time, MyMove, ID_BODY);
-	}
-	else {
-		glutTimerFunc(system_time / 4, OpenFront, value);
-	}
-
-	glutPostRedisplay();
-}
 
 
 GLvoid MoveView(int value) {

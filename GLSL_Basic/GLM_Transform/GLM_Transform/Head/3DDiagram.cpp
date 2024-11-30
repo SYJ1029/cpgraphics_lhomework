@@ -442,6 +442,17 @@ public:
 
 };
 
+
+typedef struct CylinderBox {
+	GLdouble baseRadius;
+	GLdouble topRadius;
+	GLdouble height;
+	GLdouble slices;
+	GLdouble stacks;
+}CylBox;
+
+
+
 class GL_Cylinder {
 public:
 	GLdouble baseRadius;
@@ -457,6 +468,16 @@ public:
 		slices = 20;
 		stacks = 8;
 	}
+
+	GL_Cylinder(CylBox cbox) {
+		this->baseRadius = cbox.baseRadius;
+		this->topRadius = cbox.topRadius;
+		height = cbox.height;
+		slices = cbox.slices;
+		stacks = cbox.stacks;
+	}
+
+	
 };
 
 
