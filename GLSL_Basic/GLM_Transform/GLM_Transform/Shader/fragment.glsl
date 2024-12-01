@@ -33,10 +33,12 @@ void main() {
     vec3 specular = spec * lightColor;              //--- 거울 반사 조명 값
 
     // Combine results (최종 조명 값 계산)
-    if(onLight == 1)
+    if(onLight == 1){
         result = (ambient + diffuse + specular) * outColor; //--- 조명 값 * 객체 색상
-    else
+    }
+    else {
         result = outColor; //--- 객체 색상만
+    }
 
     FragColor = vec4(result, 1.0);                 //--- 최종 픽셀 색상 출력
 }
