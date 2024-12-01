@@ -135,6 +135,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="GLM3D_NO24.cpp" />
+    <ClCompile Include="readObj.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Head\BaseHeader.h" />
@@ -152,10 +153,16 @@
     <ClInclude Include="Head\Proj\OPM.h" />
     <ClInclude Include="Head\Proj\VPM.h" />
     <ClInclude Include="Head\VertexMethod.cpp" />
+    <ClInclude Include="readObj.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shader\fragment.glsl" />
     <Text Include="Shader\vertex.glsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="obj.obj">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </Object>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

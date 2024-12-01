@@ -1,17 +1,20 @@
 #version 330 core
 
-layout (location = 0) in vec3 vPos;   
-layout (location = 1) in vec3 In_Color; 
-out vec3 out_Color; 
+layout (location = 0) in vec3 vPos;       //--- 버텍스 위치
+layout (location = 1) in vec3 vNormal;    //--- 노멀 벡터
+layout (location = 2) in vec3 inColor;
 
-uniform mat4 modelTransform;
-uniform mat4 viewTransform;
-uniform mat4 projectionTransform;
+out vec3 FragPos;                        //--- 객체의 위치값을 프래그먼트 셰이더로 보냄
+out vec3 Normal;                         //--- 노멀 값을 프래그먼트 셰이더로 보냄
+out vec3 outColor;
 
+uniform mat4 modelTransform;                      //--- 모델링 변환값
+uniform mat4 viewTransform;                       //--- 뷰잉 변환값
+uniform mat4 projectionTransform;                 //--- 투영 변환값
 
-void main()
- {
-	 gl_Position = projectionTransform * viewTransform * modelTransform * vec4(vPos, 1.0f);
-
-	out_Color = In_Color;
- }
+void main() {
+    gl_Position = projectionTransform * viewTransform * modelTransform * vec4(vPos, 1.0);
+    FragPos = vec3(modelTransform * vec4(vPos, 1.0)); 
+    Normal = vNormal;         
+    outColor = inColor;
+}

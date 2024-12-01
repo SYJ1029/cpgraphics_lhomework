@@ -75,6 +75,9 @@
     <ClInclude Include="LoadDiagramRobot.cpp">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="readObj.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shader\vertex.glsl">
@@ -94,5 +97,13 @@
     <ClCompile Include="GLM3D_NO21.cpp">
       <Filter>소스 파일\19~20</Filter>
     </ClCompile>
+    <ClCompile Include="readObj.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="obj.obj">
+      <Filter>리소스 파일</Filter>
+    </Object>
   </ItemGroup>
 </Project>

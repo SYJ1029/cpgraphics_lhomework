@@ -24,6 +24,8 @@ public:
 	GLPos Stretch[6];
 	GLPos StretchDelta[6];
 	glm::vec3 axis[6];
+	
+	GLfloat normal[6][3];
 
 	queue<GLPos> fifo[6];
 
@@ -35,13 +37,6 @@ public:
 				pos[i][j] = 0;
 				col[i][j] = 0;
 			}
-
-			if (i < 6) {
-				maked[i] = false;
-				spin[i] = false;
-				endspin[i] = false;
-				ccw[i] = true;
-			}
 		}	
 
 		for (int i = 0; i < 6; i++) {
@@ -52,6 +47,14 @@ public:
 			StretchDelta[i] = { -0.02f, -0.02f, -0.02f };
 			axis[i] = glm::vec3(0.0f);
 			
+			maked[i] = false;
+			spin[i] = false;
+			endspin[i] = false;
+			ccw[i] = true;
+
+			for (int j = 0; j < 3; j++) {
+				normal[i][j] = 0.0f;
+			}
 		}
 
 		start_index = 0;
@@ -85,8 +88,14 @@ public:
 		Delta[4] = { 0.0f, 0.5f, 0.0f }; 
 		Delta[5] = { 0.0f, -0.5f, 0.0f };
 
+		normal[0][0] = 0.0f, normal[0][1] = 0.0f, normal[0][2] = -1.0f;
+		normal[1][0] = 0.0f, normal[1][1] = 0.0f, normal[1][2] = 1.0f;
+		normal[2][0] = 1.0f, normal[2][1] = 0.0f, normal[2][2] = 0.0f;
+		normal[3][0] = -1.0f, normal[3][1] = 0.0f, normal[3][2] = 0.0f;
+		normal[4][0] = 0.0f, normal[4][1] = 1.0f, normal[4][2] = 0.0f;
+		normal[5][0] = 0.0f, normal[5][1] = -1.0f, normal[5][2] = 0.0f;
 
-		
+
 	}
 
 	void SetTranform() {
@@ -305,6 +314,7 @@ public:
 	GLPos Stretch[5];
 	GLPos StretchDelta[5];
 	glm::vec3 axis[5];
+	glm::vec3 normal[6];
 
 	GL_Pyramid() : Diagram() {
 		for (int i = 0; i < 5; i++) {

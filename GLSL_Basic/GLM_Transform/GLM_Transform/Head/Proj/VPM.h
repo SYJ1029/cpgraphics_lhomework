@@ -101,5 +101,9 @@ public:
 
 	}
 
+	glm::vec3 GetEYE() {
+		return EYE;
+	}
+
 };
 

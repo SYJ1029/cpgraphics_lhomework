@@ -1,5 +1,5 @@
 #pragma once
-#include "LoadDiagramRobot.cpp"
+#include "Head/GetShader.cpp"
 
 Camera* camera;
 Projection* proj;
@@ -8,6 +8,8 @@ MyCol mycolor = { 1.0f, 1.0f, 1.0f, 1.0f };
 GLPos Screensize = { 800, 800, 0 };
 
 GLUquadricObj* qobj = gluNewQuadric();
+
+GL_Cube* cube = new GL_Cube;
 GL_Pyramid* pyr = new GL_Pyramid();
 
 
@@ -16,11 +18,14 @@ GL_Pyramid* pyr = new GL_Pyramid();
 #define MAX_INDEX 12
 #define MAX_INDEX13 2
 #define PROJED true
+#define ID_CUBE 0
+#define ID_PYR 1
 
 
 GLvoid Mouse(int button, int state, int x, int y);
 GLvoid Keyboard(unsigned char key, int x, int y);
 GLvoid MyCw(int value);
+GLvoid MyCcw(int value);
 GLvoid OrbitView(int value);
 GLvoid specialKeyboard(int key, int x, int y);
 GLvoid MyMove(int value);
@@ -42,6 +47,7 @@ bool endorbit = false;
 bool checkPoint = false;
 bool goStretch = false;
 bool gomove = true;
+bool onLight = true;
 
 int RedisplayID = 1;
 int system_time = 20;
@@ -70,6 +76,9 @@ int baseAxisIndex = 0;
 int mulcount = 1;
 
 
+
+
+
 GLvoid Setplayground() {
 
 	playground->center = { 0.0f, 0.0f, 0.0f };
@@ -85,7 +94,7 @@ GLvoid Setplayground() {
 }
 
 GLvoid InitCamera() {
-	camera = new Camera(glm::vec3(5.0f, 5.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	camera = new Camera(glm::vec3(3.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 GLvoid SetCamera(int id) {
@@ -115,7 +124,6 @@ GLvoid SetProjection(int projtype) {
 		proj->InitPerspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
 	}
 
-	IsobjsProjed(false);
 }
 
 void DepthCheck() {
@@ -140,43 +148,36 @@ void Setindex() {
 	for (index_count; index_count < 36; index_count++) {
 		index[index_count] = p1[index_count];
 
-		cnt++;
 	}
 
-	//cnt += 36;
+	cnt += 8;
 
 	present_bit = index_count;
 
-	begin = cnt;
-
-	//cnt += 12;
+	begin = present_bit;
 
 	pyr->start_index = index_count;
 
-	present_bit = index_count;
-	baseAxisIndex = index_count;
+	for (index_count; index_count < present_bit + 18; index_count++) {
+		index[index_count] = cnt + p2[index_count - begin];
 
-	for (index_count; index_count < present_bit + 36; index_count += 3) {
-		index[index_count] = 8 + p2[index_count - begin];
-		index[index_count + 1] = 8 + p2[index_count - begin + 2];
-		index[index_count + 2] = 8 + p2[index_count - begin + 1];
-
-		cnt += 3;
 	}
 
+	cnt += 5;
+
+
 	present_bit = index_count;
+	baseAxisIndex = index_count;
+
 
 	begin = cnt;
-
-	//cnt += 12;
-
-	baseAxisIndex = index_count;
 
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_DYNAMIC_DRAW);
 
 	free(p1);
+	free(p2);
 }
 
 MyObjCol SetRandObjCol() {
@@ -204,7 +205,8 @@ GLvoid SetBuffer() {
 	for (int i = 0; i < 8; i++) {
 		mycol[i] = SetRandObjCol();
 	}
-	pyr->Setcol(mycol);
+	pyr->Setcol(mycol3);
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
 	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 10000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
@@ -225,7 +227,8 @@ GLvoid SetBuffer() {
 		(*counter) += 3 * sizeof(GLfloat);
 	}
 
-	for (int i = 0; i < 8; i++) {
+
+	for (int i = 0; i < 5; i++) {
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
 			3 * sizeof(GLfloat), pyr->pos[i]);
 
@@ -235,9 +238,24 @@ GLvoid SetBuffer() {
 
 	Setindex();
 
-
-
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 10000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+
+	(*counter) = 0;
+
+	for (int i = 0; i < 6; i++) {
+
+
+		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
+			3 * sizeof(GLfloat), cube->normal[i]);
+
+		(*counter) += 3 * sizeof(GLfloat);
+
+	}
+
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 10000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 
 
@@ -256,7 +274,7 @@ GLvoid SetBuffer() {
 
 	}
 
-	for (int i = 0; i < 8; i++) {
+	for (int i = 0; i < 5; i++) {
 
 
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
@@ -268,8 +286,10 @@ GLvoid SetBuffer() {
 
 
 
+
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
 }
 
 
@@ -302,9 +322,9 @@ void main(int argc, char** argv) { //--- 윈도우 출력하고 콜백함수 설정 { //--- �
 
 
 	glBindVertexArray(vao);
+	InitCamera();
 	SetBuffer();
 	Setplayground();
-	InitCamera();
 	SetProjection(PROJ_PERSPECTIVE);
 	cube->SetTranPos(200);
 	pyr->SetTranPos(200);
@@ -378,6 +398,27 @@ void drawScene()
 
 
 
+
+	glm::vec3 eye = camera->GetEYE();
+
+	unsigned int lightPosLocation = glGetUniformLocation(shaderProgramID, "lightPos"); //--- lightPos 값 전달
+	unsigned int lightColorLocation = glGetUniformLocation(shaderProgramID, "lightColor"); //--- lightColor 값 전달
+	unsigned int objColorLocation = glGetUniformLocation(shaderProgramID, "objectColor"); //--- object Color값 전달: (1.0, 0.5, 0.3)
+	unsigned int viewPosLocation = glGetUniformLocation(shaderProgramID, "viewPos"); //--- viewPos 값 전달: 카메라 위치
+	unsigned int onLightLocation = glGetUniformLocation(shaderProgramID, "onLight"); //--- viewPos 값 전달: 카메라 위치
+
+
+	glUniform3f(lightPosLocation, 2.0, 2.0, 2.0); // 광원의 위치
+
+	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0); // 광원의 색
+
+
+	glUniform3f(viewPosLocation, eye.x, eye.y, eye.z); // 카메라의 위치
+
+	glUniform1i(onLightLocation, onLight);
+
+
+
 	glm::mat4 projection = glm::mat4(1.0);
 	projection = proj->GetProjMatrix();
 	unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
@@ -399,18 +440,47 @@ void drawScene()
 	model *= InitMoveProj(playground->center);
 	model *= InitScaleProj(playground->Stretch);
 
-	for (int i = ID_BODY; i <= ID_LEG2; i++) {
+
+
+
+	switch (playground->postype) {
+
+	case ID_CUBE:
 		counter = cube->start_index;
-		submodel = model;
-
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
 		for (int j = 0; j < 6; j++) {
+			glUniform3f(objColorLocation, 1.0, 0.5, 0.3);
 
+
+
+			submodel = model * cube->GetWorldTransMatrix(projection, view, j);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
 			counter += 6;
 		}
+		break;
+	case ID_PYR:
+		counter = pyr->start_index;
+		for (int j = 0; j < 5; j++) {
+			glUniform3f(objColorLocation, 1.0, 0.5, 0.3);
+
+
+			submodel = model * pyr->GetWorldTransMatrix(projection, view, j);
+			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+
+			if (j < 4) {
+
+				glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+				counter += 3;
+			}
+			else {
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+				counter += 6;
+			}
+		}
+		break;
 	}
+
 
 
 
@@ -465,8 +535,17 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		}
 
 		break;
+	case 'n':
+		if (playground->postype == ID_CUBE)
+			playground->postype = ID_PYR;
+		else
+			playground->postype = ID_CUBE;
+		break;
 
 	case 'm': case 'M':
+		onLight = !(onLight);
+
+
 		break;
 	case 'b': case 'B':
 		break;
@@ -496,12 +575,12 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		}
 		break;
 	case 'y': case 'Y':
-		camera->radcnt *= -1;
+		playground->radcnt = -1;
 
-		if (camera->spin == false) {
-			camera->spin = true;
+		if (playground->spin == false) {
+			playground->spin = true;
 
-			glutTimerFunc(30, OrbitView, 10);
+			glutTimerFunc(30, MyCcw, 10);
 		}
 		break;
 
@@ -524,7 +603,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 
 	case 'i':
 
-		camera->Revert();
+		playground->Revert();
 		break;
 	case 'q':
 		delete cube;
@@ -561,25 +640,21 @@ GLvoid specialKeyboard(int key, int x, int y) {
 
 
 
-//GLvoid MyCcw(int value) {
-//
-//	.radian.x += (playground->axis.x * 5);
-//
-//	playground->radian.y += (playground->axis.y * 5);
-//
-//	playground->radian.z += (playground->axis.z * 5);
-//
-//
-//
-//
-//	if (gospin[value] && direct) {
-//		glutTimerFunc(10, MyCcw, value);
-//	}
-//	else if (gospin[1 - value] && direct) {
-//		glutTimerFunc(10, MyCcw, 1 - value);
-//	}
-//	glutPostRedisplay();
-//}
+GLvoid MyCcw(int value) {
+
+	playground->radian.x -= (playground->axis.x * 5) * playground->radcnt;
+
+	playground->radian.y -= (playground->axis.y * 5) * playground->radcnt;
+
+	playground->radian.z -= (playground->axis.z * 5) * playground->radcnt;
+
+
+	if (playground->spin) {
+		glutTimerFunc(10, MyCcw, value);
+	}
+
+	glutPostRedisplay();
+}
 
 GLvoid MyCw(int value) {
 
@@ -666,7 +741,6 @@ bool CrashCheck(int value) {
 }
 
 GLvoid MyMove(int value) {
-	int token = value - ID_BODY;
 
 
 
