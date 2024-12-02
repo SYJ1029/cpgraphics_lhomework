@@ -31,7 +31,7 @@
     <Filter Include="헤더 파일\BaseHeader">
       <UniqueIdentifier>{dd236d9f-f17d-4b8e-a3a5-93a82aa897f2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\19~20">
+    <Filter Include="소스 파일\prevsource">
       <UniqueIdentifier>{3656f510-f4f2-43a4-a3e7-bde386dfbbe6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -67,7 +67,7 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="Head\LoadDiagramCrain.cpp">
-      <Filter>소스 파일\19~20</Filter>
+      <Filter>소스 파일\prevsource</Filter>
     </ClInclude>
     <ClInclude Include="Head\LoadDiagramRobot.h">
       <Filter>헤더 파일</Filter>
@@ -89,16 +89,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GLM3D_NO20.cpp">
-      <Filter>소스 파일\19~20</Filter>
-    </ClCompile>
-    <ClCompile Include="GLM3D_NO24.cpp">
-      <Filter>소스 파일</Filter>
+      <Filter>소스 파일\prevsource</Filter>
     </ClCompile>
     <ClCompile Include="GLM3D_NO21.cpp">
-      <Filter>소스 파일\19~20</Filter>
+      <Filter>소스 파일\prevsource</Filter>
     </ClCompile>
     <ClCompile Include="readObj.cpp">
       <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GLM3D_NO25.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="GLM3D_NO24.cpp">
+      <Filter>소스 파일\prevsource</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

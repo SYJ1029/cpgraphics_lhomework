@@ -429,7 +429,7 @@ void drawScene()
 	unsigned int lightColorLocation = glGetUniformLocation(shaderProgramID, "lightColor"); //--- lightColor 값 전달
 	unsigned int objColorLocation = glGetUniformLocation(shaderProgramID, "objectColor"); //--- object Color값 전달: (1.0, 0.5, 0.3)
 	unsigned int viewPosLocation = glGetUniformLocation(shaderProgramID, "viewPos"); //--- viewPos 값 전달: 카메라 위치
-	unsigned int onLightLocation = glGetUniformLocation(shaderProgramID, "onLight"); 
+	unsigned int onLightLocation = glGetUniformLocation(shaderProgramID, "onLight");
 	unsigned int normalLocation = glGetUniformLocation(shaderProgramID, "vNormal");
 	unsigned int rotateLocation = glGetUniformLocation(shaderProgramID, "RotateTransform");
 
@@ -474,7 +474,7 @@ void drawScene()
 	model *= InitScaleProj(playground->Stretch);
 
 
-	glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(InitRotateProj(playground->radian, playground->center)));
+
 
 	switch (playground->postype) {
 
@@ -487,7 +487,7 @@ void drawScene()
 
 			submodel = model * cube->GetWorldTransMatrix(projection, view, j);
 			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
-			
+			glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(InitRotateProj(playground->radian, playground->center)));
 
 			glUniform3f(normalLocation, cube->normal[j][0], cube->normal[j][1], cube->normal[j][2]);
 
@@ -505,8 +505,6 @@ void drawScene()
 
 			submodel = model * pyr->GetWorldTransMatrix(projection, view, j);
 			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
-
-			glUniform3f(normalLocation, pyr->normal[j][0], pyr->normal[j][1], pyr->normal[j][2]);
 
 			if (j < 4) {
 
@@ -651,7 +649,7 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	case 'z': case 'Z':
 		if ((int)key - (int)'a' < 0 && camera->radcnt > 0 ||
 			(int)key - (int)'a' >= 0 && camera->radcnt < 0) {
-			 light->radcnt = -1;
+			light->radcnt = -1;
 		}
 		else {
 			light->radcnt = 1;
@@ -725,7 +723,7 @@ GLvoid MyCw(int value) {
 	int index = value;
 
 
-	
+
 	glutPostRedisplay();
 }
 
@@ -794,7 +792,7 @@ GLvoid MyStretchCube(int value) {
 
 int PosInRectxz(glm::vec3 pos1, int index) {
 
-	
+
 
 
 	return -1;
@@ -804,13 +802,13 @@ int PosInRectxz(glm::vec3 pos1, int index) {
 GLvoid MyJump(int value) {
 
 
-	
+
 
 	glutPostRedisplay();
 }
 
 bool CrashCheck(int value) {
-	
+
 	return false;
 }
 

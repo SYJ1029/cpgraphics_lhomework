@@ -364,7 +364,11 @@ public:
 		Delta[3] = { -0.5f, -0.5f, 0.0f };
 		Delta[4] = { 0.0f, -0.5f, 0.0f };
 
-
+		normal[0][0] = 0.0f, normal[0][1] = 1.0f, normal[0][2] = -1.0f;
+		normal[1][0] = 1.0f, normal[1][1] = 1.0f, normal[1][2] = 0.0f;
+		normal[2][0] = 0.0f, normal[2][1] = 1.0f, normal[2][2] = 1.0f;
+		normal[3][0] = -1.0f, normal[3][1] = 1.0f, normal[3][2] = 0.0f;
+		normal[4][0] = 0.0f, normal[4][1] = -1.0f, normal[4][2] = 0.0f;
 	}
 
 	void SetTranPos(int mulcount) {
