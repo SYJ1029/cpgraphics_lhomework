@@ -134,6 +134,8 @@ void DepthCheck() {
 }
 
 void Setindex() {
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
+
 	int* p1 = cube->AddIndexList();
 	int* p2 = pyr->AddIndexList();
 
@@ -173,11 +175,21 @@ void Setindex() {
 	begin = cnt;
 
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_DYNAMIC_DRAW);
 
 	free(p1);
 	free(p2);
+}
+
+
+void SetNormalIndex() {
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[1]);
+
+	for (int i = 0; i < 36; i++) {
+		nindex[i] = i / 6;
+	}
+
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(nindex), nindex, GL_DYNAMIC_DRAW);
 }
 
 MyObjCol SetRandObjCol() {
@@ -243,17 +255,18 @@ GLvoid SetBuffer() {
 
 	(*counter) = 0;
 
-	for (int i = 0; i < 36; i++) {
+	for (int i = 0; i < 6; i++) {
 
 
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), cube->normal[i / 6]);
+			3 * sizeof(GLfloat), cube->normal[i]);
 
 		(*counter) += 3 * sizeof(GLfloat);
 
 	}
 
 
+	SetNormalIndex();
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 10000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
@@ -405,10 +418,11 @@ void drawScene()
 	unsigned int lightColorLocation = glGetUniformLocation(shaderProgramID, "lightColor"); //--- lightColor 값 전달
 	unsigned int objColorLocation = glGetUniformLocation(shaderProgramID, "objectColor"); //--- object Color값 전달: (1.0, 0.5, 0.3)
 	unsigned int viewPosLocation = glGetUniformLocation(shaderProgramID, "viewPos"); //--- viewPos 값 전달: 카메라 위치
-	unsigned int onLightLocation = glGetUniformLocation(shaderProgramID, "onLight"); //--- viewPos 값 전달: 카메라 위치
+	unsigned int onLightLocation = glGetUniformLocation(shaderProgramID, "onLight"); 
+	unsigned int normalLocation = glGetUniformLocation(shaderProgramID, "vNormal");
 
 
-	glUniform3f(lightPosLocation, 0.0, 5.0, 0.0); // 광원의 위치
+	glUniform3f(lightPosLocation, 3.0, 3.0, 3.0); // 광원의 위치
 
 	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0); // 광원의 색
 
@@ -449,13 +463,16 @@ void drawScene()
 		counter = cube->start_index;
 		for (int j = 0; j < 6; j++) {
 			glUniform3f(objColorLocation, 1.0, 0.5, 0.3);
-
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
 
 
 			submodel = model * cube->GetWorldTransMatrix(projection, view, j);
 			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+			glUniform3f(normalLocation, cube->normal[j][0], cube->normal[j][1], cube->normal[j][2]);
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+
+
 			counter += 6;
 		}
 		break;

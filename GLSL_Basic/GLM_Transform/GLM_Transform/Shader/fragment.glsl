@@ -10,6 +10,7 @@ uniform vec3 lightPos;    //--- 광원의 위치
 uniform vec3 viewPos;     //--- 카메라(뷰어)의 위치
 uniform vec3 lightColor;  //--- 광원의 색상
 uniform vec3 objectColor; //--- 객체의 색상
+uniform vec3 vNormal;
 uniform int onLight;
 
 void main() {
@@ -20,7 +21,7 @@ void main() {
     vec3 ambient = ambientStrength * lightColor; //--- 주변 조명 값
 
     // Diffuse (산란 반사 조명)
-    vec3 norm = normalize(Normal);                  //--- 노멀 벡터 정규화
+    vec3 norm = normalize(vNormal);                  //--- 노멀 벡터 정규화
     vec3 lightDir = normalize(lightPos - FragPos);  //--- 광원 방향 벡터
     float diff = max(dot(norm, lightDir), 0.0);     //--- 내적 값 계산 (음수 방지)
     vec3 diffuse = diff * lightColor;               //--- 산란 반사 조명 값
@@ -40,6 +41,5 @@ void main() {
         result = outColor; //--- 객체 색상만
     }
 
-    //FragColor = vec4(result, 1.0);                 //--- 최종 픽셀 색상 출력
-    FragColor = vec4(Normal, 1.0);
+    FragColor = vec4(result, 1.0);                 //--- 최종 픽셀 색상 출력
 }

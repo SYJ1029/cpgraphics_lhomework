@@ -24,12 +24,12 @@ GLuint fragmentShader; //--- 프래그먼트 세이더객체
 
 GLint result;
 GLchar errorLog[512];
-GLuint vao, vbo[3], EBO;
+GLuint vao, vbo[3], EBO[2];
 GLchar* vertexSource;
 GLchar* fragmentSource;
 
 int index[1000];
-
+int nindex[1000];
 
 GLfloat triShape[3][3] = {
  { -0.5, -0.5, 0.0 }, { 0.0, -0.5, 0.0 }, { -0.25, 0.5, 0.0} };
@@ -170,8 +170,8 @@ GLvoid InitBuffer() {
 	/*glBufferData(GL_ARRAY_BUFFER, 18 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);*/
 	glBufferData(GL_ARRAY_BUFFER, 100 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glGenBuffers(2, EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -182,6 +182,9 @@ GLvoid InitBuffer() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 	glBufferData(GL_ARRAY_BUFFER, 1000 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[1]);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(nindex), NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
