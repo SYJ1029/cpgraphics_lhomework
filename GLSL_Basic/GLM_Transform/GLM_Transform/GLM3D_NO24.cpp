@@ -37,6 +37,7 @@ GLvoid MyJump(int value);
 
 
 Diagram* playground = new Diagram;
+Diagram* light = new Diagram;
 
 bool depthed = true;
 bool gopersepective = true;
@@ -91,6 +92,13 @@ GLvoid Setplayground() {
 
 	playground->postype = ID_CUBE;
 
+
+	light->center = { 3.0f, 0.0f, 0.0f };
+	light->radian = { 0.0f, 0.0f, 0.0f };
+	light->Stretch = { 0.5f, 0.5f, 0.5f };
+	light->Orbit = { 0.0f, 0.0f, 0.0f };
+
+	light->postype = ID_CUBE;
 }
 
 GLvoid InitCamera() {
@@ -420,9 +428,10 @@ void drawScene()
 	unsigned int viewPosLocation = glGetUniformLocation(shaderProgramID, "viewPos"); //--- viewPos 값 전달: 카메라 위치
 	unsigned int onLightLocation = glGetUniformLocation(shaderProgramID, "onLight"); 
 	unsigned int normalLocation = glGetUniformLocation(shaderProgramID, "vNormal");
+	unsigned int rotateLocation = glGetUniformLocation(shaderProgramID, "RotateTransform");
 
 
-	glUniform3f(lightPosLocation, 3.0, 3.0, 3.0); // 광원의 위치
+	glUniform3f(lightPosLocation, light->center.x, light->center.y, light->center.z); // 광원의 위치
 
 	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0); // 광원의 색
 
@@ -468,6 +477,8 @@ void drawScene()
 
 			submodel = model * cube->GetWorldTransMatrix(projection, view, j);
 			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+			glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(InitRotateProj(playground->radian, playground->center)));
+
 			glUniform3f(normalLocation, cube->normal[j][0], cube->normal[j][1], cube->normal[j][2]);
 
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));

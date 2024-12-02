@@ -139,3 +139,16 @@ public:
 
 
 };
+
+
+
+class Light : Diagram {
+public:
+
+	Light() : Diagram() {
+		this->postype = 0;
+
+
+	}
+
+};

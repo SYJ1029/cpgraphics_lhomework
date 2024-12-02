@@ -142,7 +142,6 @@
   <ItemGroup>
     <ClInclude Include="Head\BaseHeader.h" />
     <ClInclude Include="Head\ColorStructs.h" />
-    <ClInclude Include="Head\Light.h" />
     <ClInclude Include="Head\ObjStruct.h" />
     <ClInclude Include="Head\ProjMethod.h" />
     <ClInclude Include="Head\3DDiagram.cpp" />

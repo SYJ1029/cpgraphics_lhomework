@@ -78,9 +78,6 @@
     <ClInclude Include="readObj.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Head\Light.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Shader\vertex.glsl">
