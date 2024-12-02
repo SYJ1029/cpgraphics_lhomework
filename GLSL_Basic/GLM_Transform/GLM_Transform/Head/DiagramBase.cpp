@@ -25,6 +25,7 @@ public:
 	GLPos Orbit;
 	bool ccw, orbitccw;
 	bool spin;
+	bool move;
 
 	QuadSetting qset;
 
@@ -42,7 +43,7 @@ public:
 		OrbitAxis = glm::vec3(0.0f, 1.0f, 0.0f);
 		delta = { 0, 0, 0 };
 
-		radcnt = 0;
+		radcnt = 1;
 		prevrad = 0;
 
 		for (int i = 0; i < 3; i++) {
@@ -52,6 +53,7 @@ public:
 		ccw = true;
 		orbitccw = true;
 		spin = false;
+		move = false;
 
 
 

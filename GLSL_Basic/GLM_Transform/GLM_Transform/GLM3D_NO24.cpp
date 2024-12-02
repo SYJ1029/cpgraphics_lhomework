@@ -31,6 +31,7 @@ GLvoid specialKeyboard(int key, int x, int y);
 GLvoid MyMove(int value);
 GLvoid MoveView(int value);
 GLvoid MyJump(int value);
+GLvoid OrbitLight(int value);
 //GLvoid MyStretch(int value);
 
 
@@ -93,10 +94,12 @@ GLvoid Setplayground() {
 	playground->postype = ID_CUBE;
 
 
-	light->center = { 3.0f, 0.0f, 0.0f };
+	light->center = { 2.0f, 0.0f, 0.0f };
 	light->radian = { 0.0f, 0.0f, 0.0f };
 	light->Stretch = { 0.5f, 0.5f, 0.5f };
 	light->Orbit = { 0.0f, 0.0f, 0.0f };
+	light->OrbitAxis = { 0.0f, 1.0f, 0.0f };
+
 
 	light->postype = ID_CUBE;
 }
@@ -430,8 +433,15 @@ void drawScene()
 	unsigned int normalLocation = glGetUniformLocation(shaderProgramID, "vNormal");
 	unsigned int rotateLocation = glGetUniformLocation(shaderProgramID, "RotateTransform");
 
+	glm::mat4 lmodel = glm::mat4(1.0f);
+	lmodel *= InitRotateProj(light->Orbit, glm::vec3(0.0f));
+	lmodel *= InitMoveProj(light->center);
 
-	glUniform3f(lightPosLocation, light->center.x, light->center.y, light->center.z); // ±¤¿øÀÇ À§Ä¡
+	glm::vec3 lcenter = glm::vec3(lmodel * glm::vec4(light->center, 1.0f));
+
+	lmodel *= InitScaleProj(light->Stretch);
+
+	glUniform3f(lightPosLocation, lcenter.x, lcenter.y, lcenter.z); // ±¤¿øÀÇ À§Ä¡
 
 	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0); // ±¤¿øÀÇ »ö
 
@@ -510,9 +520,25 @@ void drawScene()
 	}
 
 
+	counter = cube->start_index;
+	for (int j = 0; j < 6; j++) {
+		glUniform3f(objColorLocation, 1.0, 0.5, 0.3);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
 
 
-	model = glm::mat4(1.0f);
+		submodel = lmodel * cube->GetWorldTransMatrix(projection, view, j);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(InitRotateProj(light->radian, light->center)));
+
+		glUniform3f(normalLocation, cube->normal[j][0], cube->normal[j][1], cube->normal[j][2]);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+
+
+		counter += 6;
+	}
+
+
 
 
 
@@ -585,7 +611,15 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		break;
 	case 'd': case 'D':
 		break;
-	case 'R': case'r':
+	case 'R': case 'r':
+		light->radcnt *= -1;
+		light->OrbitAxis *= -1.0f;
+
+		if (light->spin == false) {
+			light->spin = true;
+
+			glutTimerFunc(system_time, OrbitLight, 1);
+		}
 		break;
 
 	case 'x': case 'X':
@@ -615,15 +649,15 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	case 'z': case 'Z':
 		if ((int)key - (int)'a' < 0 && camera->radcnt > 0 ||
 			(int)key - (int)'a' >= 0 && camera->radcnt < 0) {
-			camera->radcnt *= -1;
+			 light->radcnt = -1;
 		}
 		else {
-
+			light->radcnt = 1;
 		}
 
-		if (camera->move == false) {
-			camera->move = true;
-			glutTimerFunc(30, MoveView, 1);
+		if (light->move == false) {
+			light->move = true;
+			glutTimerFunc(30, MoveView, 100);
 		}
 		break;
 
@@ -705,7 +739,17 @@ GLvoid OrbitCcw(int value) {
 }
 
 
+GLvoid OrbitLight(int value) {
 
+	light->Orbit += Vec3ToGLPos(light->OrbitAxis) * 5;
+
+	if (light->spin) {
+		glutTimerFunc(system_time, OrbitLight, value);
+	}
+
+
+	glutPostRedisplay();
+}
 
 
 GLvoid OrbitView(int value) {
@@ -785,16 +829,16 @@ GLvoid MyMove(int value) {
 
 
 GLvoid MoveView(int value) {
-	glm::vec3 axis = { (float)(value / 100), (float)((value % 100) / 10.0f), (float)(value % 10) };
-	axis /= 5.0f * camera->radcnt;
+	glm::vec3 axis = { (float)(value / 100), (float)((int)(value % 100) / 10.0f), (float)(value % 10) };
+	axis /= 5.0f * light->radcnt;
 
 
-	camera->MoveViewPos(axis);
+	light->center += axis;
 
-	if (camera->move)
-		glutTimerFunc(30, MoveView, value);
+	if (light->move)
+		glutTimerFunc(system_time * 5, MoveView, value);
 	else {
-		camera->Stop();
+		light->Revert();
 	}
 
 	glutPostRedisplay();

@@ -15,7 +15,7 @@ uniform int onLight;
 
 void main() {
     vec3 result;
-    vec3 Normal = vec3(RotateTransform * vec4(vNormal, 1.0));
+    vec3 Normal = vec3(RotateTransform * vec4(vNormal, 1.0)); //노멀 벡터에 회전 변환 적용
 
     // Ambient (주변 조명)
     float ambientStrength = 0.3; //--- 주변 조명 계수
