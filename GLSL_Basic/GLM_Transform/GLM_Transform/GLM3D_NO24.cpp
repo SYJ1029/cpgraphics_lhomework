@@ -243,11 +243,11 @@ GLvoid SetBuffer() {
 
 	(*counter) = 0;
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 36; i++) {
 
 
 		glBufferSubData(GL_ARRAY_BUFFER, (*counter),
-			3 * sizeof(GLfloat), cube->normal[i]);
+			3 * sizeof(GLfloat), cube->normal[i / 6]);
 
 		(*counter) += 3 * sizeof(GLfloat);
 
@@ -408,7 +408,7 @@ void drawScene()
 	unsigned int onLightLocation = glGetUniformLocation(shaderProgramID, "onLight"); //--- viewPos 값 전달: 카메라 위치
 
 
-	glUniform3f(lightPosLocation, 2.0, 2.0, 2.0); // 광원의 위치
+	glUniform3f(lightPosLocation, 0.0, 5.0, 0.0); // 광원의 위치
 
 	glUniform3f(lightColorLocation, 1.0, 1.0, 1.0); // 광원의 색
 

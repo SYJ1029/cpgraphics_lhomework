@@ -181,7 +181,7 @@ GLvoid InitBuffer() {
 
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
-	glBufferData(GL_ARRAY_BUFFER, 1000 * sizeof(GLfloat), vertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 1000 * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 

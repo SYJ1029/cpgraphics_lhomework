@@ -40,5 +40,6 @@ void main() {
         result = outColor; //--- 객체 색상만
     }
 
-    FragColor = vec4(result, 1.0);                 //--- 최종 픽셀 색상 출력
+    //FragColor = vec4(result, 1.0);                 //--- 최종 픽셀 색상 출력
+    FragColor = vec4(Normal, 1.0);
 }
