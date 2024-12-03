@@ -94,7 +94,7 @@ GLvoid Setplayground() {
 	playground->postype = ID_CUBE;
 
 
-	light->center = { 2.0f, 0.0f, 0.0f };
+	light->center = { 1.0f, 1.0f, 1.0f };
 	light->radian = { 0.0f, 0.0f, 0.0f };
 	light->Stretch = { 0.5f, 0.5f, 0.5f };
 	light->Orbit = { 0.0f, 0.0f, 0.0f };
@@ -419,8 +419,7 @@ void drawScene()
 	gluQuadricDrawStyle(qobj, playground->qset.drawstyle);
 	gluQuadricNormals(qobj, playground->qset.normals);
 	gluQuadricOrientation(qobj, playground->qset.orientation);
-
-
+	glEnableClientState(GL_NORMAL_ARRAY);
 
 
 	glm::vec3 eye = camera->GetEYE();
@@ -473,21 +472,29 @@ void drawScene()
 	model *= InitMoveProj(playground->center);
 	model *= InitScaleProj(playground->Stretch);
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
+	glUniform3f(objColorLocation, 1.0, 0.5, 0.3);
+
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+	glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(InitRotateProj(playground->radian, playground->center)));
+
+	glUniform3f(objColorLocation, 1.0, 0.0, 0.0);
+
+	glDisable(GL_LIGHTING);      // 조명 활성화
+	glDisable(GL_NORMALIZE);     // 법선 정규화 활성화
+	glDisableClientState(GL_NORMAL_ARRAY); // 법선 배열 활성화
+	gluSphere(qobj, 0.5, 100, 100);
 
 
-
-	switch (playground->postype) {
+	/*switch (playground->postype) {
 
 	case ID_CUBE:
 		counter = cube->start_index;
 		for (int j = 0; j < 6; j++) {
-			glUniform3f(objColorLocation, 1.0, 0.5, 0.3);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
 
 
 			submodel = model * cube->GetWorldTransMatrix(projection, view, j);
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
-			glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(InitRotateProj(playground->radian, playground->center)));
+
 
 			glUniform3f(normalLocation, cube->normal[j][0], cube->normal[j][1], cube->normal[j][2]);
 
@@ -536,7 +543,7 @@ void drawScene()
 
 
 		counter += 6;
-	}
+	}*/
 
 
 

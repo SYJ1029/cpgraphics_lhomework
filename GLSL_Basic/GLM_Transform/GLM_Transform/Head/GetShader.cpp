@@ -221,3 +221,57 @@ GLvoid UpdateBuffer() {
 
 	glEnableVertexAttribArray(0);
 }
+
+
+
+// 구체 데이터 생성
+void generateSphere(float radius, int sectors, int stacks,
+	std::vector<float>& vertices,
+	std::vector<float>& normals,
+	std::vector<float>& texCoords,
+	std::vector<unsigned int>& indices) {
+	const float PI = 3.14159265359f;
+
+	for (int i = 0; i <= stacks; ++i) {
+		float stackAngle = PI / 2 - i * (PI / stacks); // 위에서 아래로
+		float xy = radius * cosf(stackAngle);          // x-y 평면 반지름
+		float z = radius * sinf(stackAngle);           // z 좌표
+
+		for (int j = 0; j <= sectors; ++j) {
+			float sectorAngle = j * (2 * PI / sectors); // 동쪽에서 서쪽으로
+
+			float x = xy * cosf(sectorAngle); // x 좌표
+			float y = xy * sinf(sectorAngle); // y 좌표
+
+			// 정점 좌표
+			vertices.push_back(x);
+			vertices.push_back(y);
+			vertices.push_back(z);
+
+			// 노멀 벡터 (구의 중심에서 정점으로 향하는 벡터)
+			normals.push_back(x / radius);
+			normals.push_back(y / radius);
+			normals.push_back(z / radius);
+
+			// 텍스처 좌표
+			texCoords.push_back((float)j / sectors);
+			texCoords.push_back((float)i / stacks);
+		}
+	}
+
+	// 삼각형 인덱스 계산
+	for (int i = 0; i < stacks; ++i) {
+		for (int j = 0; j < sectors; ++j) {
+			int first = i * (sectors + 1) + j;
+			int second = first + sectors + 1;
+
+			indices.push_back(first);
+			indices.push_back(second);
+			indices.push_back(first + 1);
+
+			indices.push_back(second);
+			indices.push_back(second + 1);
+			indices.push_back(first + 1);
+		}
+	}
+}

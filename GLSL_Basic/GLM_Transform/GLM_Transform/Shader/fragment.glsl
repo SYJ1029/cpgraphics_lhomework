@@ -1,6 +1,7 @@
 #version 330 core
 
 in vec3 FragPos;    //--- 객체의 위치값 (버텍스 셰이더에서 전달받음)
+in vec3 FragNormal;
 in vec3 outColor; // 파이프라인을 따라 입력 받는 경우 객체의 정점별 색상임
 
 out vec4 FragColor; //--- 최종 픽셀 색상 출력
@@ -15,7 +16,7 @@ uniform int onLight;
 
 void main() {
     vec3 result;
-    vec3 Normal = vec3(RotateTransform * vec4(vNormal, 1.0)); //노멀 벡터에 회전 변환 적용
+    vec3 Normal = FragNormal; //노멀 벡터에 회전 변환 적용
 
     // Ambient (주변 조명)
     float ambientStrength = 0.3; //--- 주변 조명 계수
@@ -36,11 +37,11 @@ void main() {
 
     // Combine results (최종 조명 값 계산)
     if(onLight == 1){
-        result = (ambient + diffuse + specular) * outColor; //--- 조명 값 * 객체 색상
+        result = (ambient + diffuse + specular) * objectColor; //--- 조명 값 * 객체 색상
     }
     else {
-        result = outColor; //--- 객체 색상만
+        result = objectColor; //--- 객체 색상만
     }
 
-    FragColor = vec4(result, 1.0);                 //--- 최종 픽셀 색상 출력
+    FragColor = vec4(FragNormal + 0.5, 1.0);    //--- 최종 픽셀 색상 출력
 }
