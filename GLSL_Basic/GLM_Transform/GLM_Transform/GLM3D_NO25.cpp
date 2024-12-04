@@ -480,6 +480,7 @@ void drawScene()
 
 	glUniform3f(objColorLocation, 1.0, 0.0, 0.0);
 
+
 	glDisable(GL_LIGHTING);      // 조명 활성화
 	glDisable(GL_NORMALIZE);     // 법선 정규화 활성화
 	glDisableClientState(GL_NORMAL_ARRAY); // 법선 배열 활성화

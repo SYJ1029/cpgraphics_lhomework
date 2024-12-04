@@ -26,6 +26,7 @@ GLvoid OrbitView(int value);
 GLvoid specialKeyboard(int key, int x, int y);
 GLvoid MyMove(int value);
 GLvoid MoveView(int value);
+GLvoid OrbitLight(int value);
 //GLvoid MyStretch(int value);
 
 
@@ -33,6 +34,8 @@ GLvoid MoveView(int value);
 Crain* crain = new Crain;
 
 Diagram playground;
+Diagram background;
+Diagram* light = new Diagram;
 
 
 bool depthed = true;
@@ -44,6 +47,7 @@ bool endorbit = false;
 bool checkPoint = false;
 bool goStretch = false;
 bool gomove = false;
+int onLight = 1;
 
 int RedisplayID = 1;
 
@@ -66,6 +70,8 @@ float base_axis_col[6][3] = {
 int baseAxisIndex = 0;
 int mulcount = 1;
 
+GLfloat lightcol[3][3];
+int lightcnt = 0;
 
 GLvoid Setplayground() {
 
@@ -78,6 +84,25 @@ GLvoid Setplayground() {
 	playground.Orbit = { 0.0f, 0.0f, 0.0f };
 
 	playground.postype = ID_CUBE;
+
+	background.center = { 0.0f, -0.5f, 0.0f };
+	background.radian = { 0.0f, 0.0f, 0.0f };
+	background.Stretch = { 4.0f, 2.0f, 4.0f };
+	background.Orbit = { 0.0f, 0.0f, 0.0f };
+	background.postype = ID_CUBE;
+
+	light->center = { 2.0f, 2.0f, 2.0f };
+	light->radian = { 0.0f, 0.0f, 0.0f };
+	light->Stretch = { 0.125f, 0.125f, 0.125f };
+	light->Orbit = { 0.0f, 0.0f, 0.0f };
+	light->OrbitAxis = { 0.0f, 1.0f, 0.0f };
+
+	lightcol[0][0] = 1.0f, lightcol[0][1] = 1.0f, lightcol[0][2] = 1.0f;
+	lightcol[1][0] = 1.0f, lightcol[1][1] = 0.0f, lightcol[1][2] = 0.0f;
+	lightcol[2][0] = 0.0f, lightcol[2][1] = 0.0f, lightcol[2][2] = 1.0f;
+	
+
+	light->postype = ID_CUBE;
 }
 
 GLvoid InitCamera() {
@@ -158,7 +183,7 @@ void Setindex() {
 
 
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(index), index, GL_DYNAMIC_DRAW);
 
 	free(p1);
@@ -223,7 +248,7 @@ GLvoid SetBuffer() {
 
 
 
-	glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 	glBufferData(GL_ARRAY_BUFFER, (MAX_INDEX * 10000) * sizeof(GLfloat), NULL, GL_DYNAMIC_DRAW);
 
 
@@ -334,114 +359,165 @@ void drawScene()
 	glClearColor(mycolor.red, mycolor.green, mycolor.blue, mycolor.alpha);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	for (RedisplayID = 1; RedisplayID <= 3; RedisplayID++) {
-		switch (RedisplayID) {
-		case 1:
-			glViewport(0, 0, Screensize.x, Screensize.y);
-			SetProjection(PROJ_PERSPECTIVE);
-			break;
-		case 2:
-			glViewport(0, 0, Screensize.x / 4, Screensize.y / 4);
-			SetProjection(PROJ_ORTHO);
-			break;
-		case 3:
-			glViewport(Screensize.x / 4 * 2, 0, Screensize.x, Screensize.y / 4);
-			SetProjection(PROJ_ORTHO);
-			break;
-		}
-
-		SetCamera(RedisplayID);
+	glViewport(0, 0, Screensize.x, Screensize.y);
+	SetProjection(PROJ_PERSPECTIVE);
 
 
-		//gluLookAt(0.0, 0.0, 100.0f, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
+	//gluLookAt(0.0, 0.0, 100.0f, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
 
-		glUseProgram(shaderProgramID);
-		glm::mat4 basemat = glm::mat4(1.0f);
-		glm::mat4 rm = basemat;
-		glm::mat4 rm2 = basemat;
-		glm::mat4 model = basemat;
-		glm::mat4 submodel = basemat;
-		//glm::mat4 rm3 = glm::mat4(1.0f);
+	glUseProgram(shaderProgramID);
+	glm::mat4 basemat = glm::mat4(1.0f);
+	glm::mat4 rm = basemat;
+	glm::mat4 rm2 = basemat;
+	glm::mat4 model = basemat;
+	glm::mat4 submodel = basemat;
+	//glm::mat4 rm3 = glm::mat4(1.0f);
 
-		/*model = glm::translate(model, glm::vec3(0.1f, 0.5f, 0.0f));*/
-		int modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
+	/*model = glm::translate(model, glm::vec3(0.1f, 0.5f, 0.0f));*/
+	int modelLocation = glGetUniformLocation(shaderProgramID, "modelTransform");
 
-		glBindVertexArray(vao);
+	glBindVertexArray(vao);
 
 
 
 
-		int counter = 0;
+	int counter = 0;
 
 
 
 
-		gluQuadricDrawStyle(qobj, playground.qset.drawstyle);
-		gluQuadricNormals(qobj, playground.qset.normals);
-		gluQuadricOrientation(qobj, playground.qset.orientation);
+	gluQuadricDrawStyle(qobj, playground.qset.drawstyle);
+	gluQuadricNormals(qobj, playground.qset.normals);
+	gluQuadricOrientation(qobj, playground.qset.orientation);
+
+	glm::vec3 eye = camera->GetEYE();
+
+	unsigned int lightPosLocation = glGetUniformLocation(shaderProgramID, "lightPos"); //--- lightPos 값 전달
+	unsigned int lightColorLocation = glGetUniformLocation(shaderProgramID, "lightColor"); //--- lightColor 값 전달
+	unsigned int objColorLocation = glGetUniformLocation(shaderProgramID, "objectColor"); //--- object Color값 전달: (1.0, 0.5, 0.3)
+	unsigned int viewPosLocation = glGetUniformLocation(shaderProgramID, "viewPos"); //--- viewPos 값 전달: 카메라 위치
+	unsigned int onLightLocation = glGetUniformLocation(shaderProgramID, "onLight");
+	unsigned int normalLocation = glGetUniformLocation(shaderProgramID, "vNormal");
+	unsigned int rotateLocation = glGetUniformLocation(shaderProgramID, "RotateTransform");
+
+	glm::mat4 lmodel = glm::mat4(1.0f);
+	lmodel *= InitRotateProj(light->Orbit, glm::vec3(0.0f));
+	lmodel *= InitMoveProj(light->center);
+
+	glm::vec3 lcenter = glm::vec3(lmodel * glm::vec4(light->center, 1.0f));
+
+	lmodel *= InitScaleProj(light->Stretch);
+
+	glUniform3f(lightPosLocation, lcenter.x, lcenter.y, lcenter.z); // 광원의 위치
+
+	glUniform3f(lightColorLocation, lightcol[lightcnt][0], lightcol[lightcnt][1], lightcol[lightcnt][2]); // 광원의 색
 
 
+	glUniform3f(viewPosLocation, eye.x, eye.y, eye.z); // 카메라의 위치
 
-		glm::mat4 projection = glm::mat4(1.0);
-		projection = proj->GetProjMatrix();
-		unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
-		glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
+	glUniform1i(onLightLocation, onLight);
 
-
-		glm::mat4 view = glm::mat4(1.0);
-		view = camera->GetViewMatix();
-		unsigned int viewLocation = glGetUniformLocation(shaderProgramID, "viewTransform");
-		glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+	glm::mat4 projection = glm::mat4(1.0);
+	projection = proj->GetProjMatrix();
+	unsigned int projectionLocation = glGetUniformLocation(shaderProgramID, "projectionTransform");
+	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, &projection[0][0]);
 
 
-		model *= InitRotateProj(crain->Orbit, { 0.0f, 0.0f, 0.0f });
-		model *= InitRotateProj(crain->radian, crain->center);
-		model *= InitMoveProj(crain->center);
-		//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+	glm::mat4 view = glm::mat4(1.0);
+	view = camera->GetViewMatix();
+	unsigned int viewLocation = glGetUniformLocation(shaderProgramID, "viewTransform");
+	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, &view[0][0]);
+
+	glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(InitRotateProj(crain->body->radian, crain->body->center)));
 
 
+	model *= InitRotateProj(background.Orbit, { 0.0f, 0.0f, 0.0f });
+	model *= InitRotateProj(background.radian, background.center);
+	model *= InitMoveProj(background.center);
+	model *= InitScaleProj(background.Stretch);
 
+	counter = cube->start_index;
+	for (int j = 0; j < 6; j++) {
+		submodel = model * cube->GetWorldTransMatrix(projection, view, j);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
 
-		for (int i = ID_BODY; i <= ID_PAW2; i++) {
-			counter = cube->start_index;
-			submodel = model * crain->GetModelTransform(i);
-			glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
-			for (int j = 0; j < 6; j++) {
-
-
-				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
-				counter += 6;
-			}
-		}
-
-
-
-
-
-
-		model = basemat;
-
-
-
-
-
-
-
-
-		model = basemat;
-
-
-		model = rm2 * rm;
-
-		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
-
-		glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, (void*)(baseAxisIndex * sizeof(GLfloat)));
-		counter += 6 * sizeof(GLint);
-
-
-
-
+		glUniform3f(normalLocation, cube->normal[j][0], cube->normal[j][1], cube->normal[j][2]);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+		counter += 6;
 	}
+
+	model = glm::mat4(1.0f);
+
+	model *= InitRotateProj(crain->Orbit, { 0.0f, 0.0f, 0.0f });
+	model *= InitRotateProj(crain->radian, crain->center);
+	model *= InitMoveProj(crain->center);
+	//glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
+	glUniform3f(objColorLocation, 1.0, 0.5, 0.3);
+
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+	glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(InitRotateProj(crain->body->radian, crain->body->center)));
+
+	glUniform3f(objColorLocation, 1.0, 0.0, 0.0);
+
+
+	for (int i = ID_BODY; i <= ID_PAW2; i++) {
+		counter = cube->start_index;
+		submodel = model * crain->GetModelTransform(i);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+		for (int j = 0; j < 6; j++) {
+
+			glUniform3f(normalLocation, cube->normal[j][0], cube->normal[j][1], cube->normal[j][2]);
+			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+			counter += 6;
+		}
+	}
+
+
+	counter = cube->start_index;
+	for (int j = 0; j < 6; j++) {
+		glUniform3f(objColorLocation, 1.0, 0.5, 0.3);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO[0]);
+
+
+		submodel = lmodel * cube->GetWorldTransMatrix(projection, view, j);
+		glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(submodel));
+		glUniformMatrix4fv(rotateLocation, 1, GL_FALSE, glm::value_ptr(InitRotateProj(light->radian, light->center)));
+
+		glUniform3f(normalLocation, cube->normal[j][0], cube->normal[j][1], cube->normal[j][2]);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (void*)(counter * sizeof(GLfloat)));
+
+
+		counter += 6;
+	}
+
+
+
+	model = basemat;
+
+
+
+
+
+
+
+
+	model = basemat;
+
+
+	model = rm2 * rm;
+
+	glUniformMatrix4fv(modelLocation, 1, GL_FALSE, glm::value_ptr(model));
+
+	glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, (void*)(baseAxisIndex * sizeof(GLfloat)));
+	counter += 6 * sizeof(GLint);
+
+
+
+
+
 	glutSwapBuffers();
 
 }
@@ -624,8 +700,20 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case 'o':
+		if (onLight == 1)
+			onLight = 0;
+		else
+			onLight = 1;
 		break;
 	case 'R': case'r':
+
+		camera->radcnt *= -1;
+
+		if (camera->spin == false) {
+			camera->spin = true;
+
+			glutTimerFunc(30, OrbitView, 10);
+		}
 		break;
 
 	case 'x': case 'X':
@@ -643,15 +731,15 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 		}
 		break;
 	case 'y': case 'Y':
-		camera->radcnt *= -1;
+		light->radcnt *= -1;
+		light->OrbitAxis *= -1.0f;
 
-		if (camera->spin == false) {
-			camera->spin = true;
+		if (light->spin == false) {
+			light->spin = true;
 
-			glutTimerFunc(30, OrbitView, 10);
+			glutTimerFunc(10, OrbitLight, 1);
 		}
 		break;
-
 	case 'z': case 'Z':
 		if ((int)key - (int)'a' < 0 && camera->radcnt > 0 ||
 			(int)key - (int)'a' >= 0 && camera->radcnt < 0) {
@@ -670,14 +758,13 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	case 's':
 		gomove = false;
 
-		crain->Stop();
-		camera->Stop();
-		break;
-	case 'c':
-		gomove = false;
-
 		crain->Revert();
 		camera->Revert();
+		light->Revert();
+		break;
+	case 'c':
+		lightcnt = (lightcnt + 1) % 3;
+
 		break;
 	case 'q':
 		delete cube;
@@ -967,6 +1054,18 @@ GLvoid MoveView(int value) {
 	else {
 		camera->Stop();
 	}
+
+	glutPostRedisplay();
+}
+
+GLvoid OrbitLight(int value) {
+
+	light->Orbit += Vec3ToGLPos(light->OrbitAxis) * 5;
+
+	if (light->spin) {
+		glutTimerFunc(30, OrbitLight, value);
+	}
+
 
 	glutPostRedisplay();
 }

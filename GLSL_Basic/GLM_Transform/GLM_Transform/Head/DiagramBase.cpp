@@ -91,6 +91,8 @@ public:
 
 	void Revert() {
 		delta = { 0, 0, 0 };
+		spin = false;
+		move = false;
 	}
 
 	void Clear() {

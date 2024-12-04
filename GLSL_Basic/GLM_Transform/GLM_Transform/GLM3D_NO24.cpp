@@ -668,6 +668,11 @@ GLvoid Keyboard(unsigned char key, int x, int y) {
 	case 'i':
 
 		playground->Revert();
+		light->Revert();
+		break;
+	case 'c':
+		playground->Clear();
+		light->Clear();
 		break;
 	case 'q':
 		delete cube;
